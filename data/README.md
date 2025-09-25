@@ -1,4 +1,4 @@
-### Custom Modification
+### Global Modification
 ==============================================
 
 data/abilities.ts: this is where all abilities go. You can code out custom abilities like any other pre-existing one, check mine at https://github.com/TheAnimemer/pokemon-showdown/blob/master/data/abilities.ts#L5584 for inspiration. Keep all new abilities 
@@ -9,7 +9,22 @@ data/learnsets.ts: this is where every mon's movepool is listed. It's pretty int
 
 data/moves.ts: this is where ALL moves go. You can code out custom moves like any other pre-existing move, check https://github.com/TheAnimemer/pokemon-showdown/blob/master/data/moves.ts#L22077 for inspiration. The most important thing to remember is to use negative numbers! the num string for each entry should be -1000, -1001, and so on. 
 
-data/pokedex.ts: this is arguably the most important file. Every Pokemon needs to have an entry here to exist. There's examples of how to write it out in the file, so use those for reference. ALWAYS double check that you have strings in the correct order by looking at previous entries. 
+data/pokedex.ts: this is arguably the most important file. Every Pokemon needs to have an entry here to exist. There's examples of how to write it out in the file, so use those for reference. ALWAYS double check that you have strings in the correct order by looking at previous entries. If you want a Pokémon to be accessable in previous generations, you just have to make its `gen:` string be equal or less than the gen you want it to be available in. 
+
+### Old Gen Modification
+==============================================
+
+You'll follow the same instructions for global modification as you would for Old Gens, except the location for old gens are all in `data/mods`, for example `data/mods/gen3`
+
+the string `inherit:` means that the pokemon, move, ability, or learnset will use the global files for everything EXCEPT what you want to be different in that gen. For an example, Zacian has a different statspread in Gen 8, so it's listed as such in `data/mods/gen8/pokedex.ts`: 
+
+```	zacian: {
+		inherit: true,
+		baseStats: { hp: 92, atk: 130, def: 115, spa: 80, spd: 115, spe: 138 },
+	},
+```
+
+You do NOT need to give every pokemon an entry in their old gen folder, you'll only need to give them an entry if you want something to be different for that generation only.
 
 ### Sprite Modification
 ==============================================
