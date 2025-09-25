@@ -1,19 +1,25 @@
 ### Custom Modification
+==============================================
 
-data/abilities.ts: this is where all abilities go. You can code out custom abilities like any other pre-existing one, check mine at https://github.com/TheAnimemer/pokemon-showdown/blob/a06f35d788f33276e746420e480051d337d7b805/data/abilities.ts#L5584 for inspiration. Keep all new abilities 
+data/abilities.ts: this is where all abilities go. You can code out custom abilities like any other pre-existing one, check mine at https://github.com/TheAnimemer/pokemon-showdown/blob/master/data/abilities.ts#L5584 for inspiration. Keep all new abilities 
 
-data/formats-data.ts: all this file does is give your mons a "tier" in the teambuilder. You can rank them however you want just make sure they all have an entry here.
+data/formats-data.ts: this file decides what tiers ALL Pokémon belong to. You can rank them however you want just make sure they all have an entry here. Check Pokémon Mood's file for how to properly remove pre-existing pokemon: https://github.com/NeyOkaou/pokemon-showdown/blob/master/data/formats-data.ts
 
-data/mods/moodmons/learnsets.ts: this is where every mons movepool is listed. again, it's pretty intuitive to figure out, shouldn't be hard. off the top of my head, [9L4] essentially means "in gen 9, this mon learns this move at level 4." [9M] means it learns it from a either TM, level-up, egg move or move tutor. for most cases, you can use [9M] for everything unless its important to you to specify where it was learned.
+data/learnsets.ts: this is where every mon's movepool is listed. It's pretty intuitive to figure out, shouldn't be hard. off the top of my head, [9L4] essentially means "in gen 9, this mon learns this move at level 4." [9M] means it learns it from a either TM, level-up, egg move or move tutor. for most cases, you can use [9M] for everything unless its important to you to specify where it was learned.
 
-data/mods/moodmons/moves.ts: this is where CUSTOM moves go. If you want to change an existing move, @TheAnimemer on discord and I'll show you how. Otherwise you can code out custom moves like any other pre-existing move, check data/moves.ts for inspiration. I left some examples in the file as well to get you started with a template / rough idea.
+data/moves.ts: this is where ALL moves go. You can code out custom moves like any other pre-existing move, check https://github.com/TheAnimemer/pokemon-showdown/blob/master/data/moves.ts#L22077 for inspiration. The most important thing to remember is to use negative numbers! the num string for each entry should be -1000, -1001, and so on. 
 
-data/mods/moodmons/pokedex.ts: this is arguably the most important file. Every CUSTOM mon needs to have an entry here to exist. There's examples of how to write it out left in the file, so use those for reference. 
+data/pokedex.ts: this is arguably the most important file. Every Pokemon needs to have an entry here to exist. There's examples of how to write it out in the file, so use those for reference. ALWAYS double check that you have strings in the correct order by looking at previous entries. 
 
-data/mods/moodmons/scripts.ts: Don't touch.
+### Sprite Modification
+==============================================
 
-###Format config.
+All editing will be done in https://github.com/lokopabio/pokemon-sprites/tree/main/sprites
 
-config/formats.ts: https://github.com/TheAnimemer/pokemon-showdown/blob/37cd94fcd9c49651df47b3ed48f60364c017047e/config/formats.ts#L991
+Every sprite needs to be 96x96. They can be slightly larger if you need it to be, but it will be centered weirdly, so try to avoid anything larger. 
+When playing, you'll need to check the setting for using BW sprites. If you don't, you won't see custom sprites in the teambuilder. 
 
-It's this file that determines what is allowed in the actual playable format. All of your custom mons need to be put in the unbanlist here to be legal. this is also where clauses are determined for the tier. you can rename the format to whatever you like here as well.
+Front sprites go in sprites/gen5; Shiny front sprites go in sprites/gen5-shiny
+Back sprites go in sprites/gen5-back; Shiny back sprites go in sprites/gen5-back-shiny
+
+Added sprites will appear in Showdown immediately without any restart needed.
