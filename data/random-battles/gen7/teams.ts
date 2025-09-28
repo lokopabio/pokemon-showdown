@@ -856,8 +856,18 @@ export class RandomGen7Teams extends RandomGen8Teams {
 			ability === 'Harvest' || ability === 'Cheek Pouch' || (ability === 'Emergency Exit' && !!counter.get('Status'))
 		) return 'Sitrus Berry';
 		if (species.name === 'Ditto') return 'Choice Scarf';
+		if (species.name === 'Fonsomate') return 'Choice Scarf';
+		if (species.name === 'Albeerto') return 'Eviolite';
+        if (species.name === 'Nanote') return 'Berry Juice';
+        if (species.name === 'Tiopep') return 'Toxic Orb';
+        if (species.name === 'Fatnando') return ' Eviolite';
+		if (species.name === 'Carletto') return ' Eviolite';
+		if (species.name === 'Daabitolle') return ' Eviolite';
+		if (species.name === 'Ketxupero') return ' Eviolite';
+		if (species.name === 'Ignagarruta') return ' Eviolite';
+		if (species.name === 'Hitmondad') return 'White Herb';
 		if (ability === 'Poison Heal') return 'Toxic Orb';
-		if (ability === 'Speed Boost') return 'Life Orb';
+		if (ability === 'Speed Boost') return 'Focus Sash';
 		if (species.nfe) return (species.name === 'Scyther' && role === 'Fast Attacker') ? 'Choice Band' : 'Eviolite';
 		if (['healingwish', 'memento', 'switcheroo', 'trick'].some(m => moves.has(m))) {
 			if (species.baseStats.spe >= 60 && species.baseStats.spe <= 108 && role !== 'Wallbreaker') {
