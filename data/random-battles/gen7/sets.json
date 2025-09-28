@@ -89,7 +89,7 @@
             },
             {
                 "role": "Fast Attacker",
-                "movepool": ["liquidation", "superpower", "facade", "armthrust"],
+                "movepool": ["liquidation", "focuspunch", "substitute", "armthrust"],
                 "abilities": ["Big Pecks"]
             },
             {
@@ -234,7 +234,7 @@
             },  
             {
                 "role": "Fast Attacker",
-                "movepool": ["closecombat", "psychocut", "phantomforce", "knockoff"],
+                "movepool": ["closecombat", "psychocut", "phantomforce", "originpulse"],
                 "abilities": ["Beast Boost"]
             }, 
             {
@@ -629,7 +629,7 @@
         "sets": [
             {
                 "role": "Setup Sweeper",
-                "movepool": ["dragondance", "extremespeed", "dragonrush", "facade", "lowsweep", "dragonascent"],
+                "movepool": ["dragondance", "extremespeed", "dragonrush", "lowsweep", "dragonascent"],
                 "abilities": ["Adaptability"]
             },
             {
@@ -644,7 +644,7 @@
             },
             {
                 "role": "Fast Attacker",
-                "movepool": ["dracometeor", "extremespeed", "heatwave", "dragonpulse", "dazzlinggleam", "powergem", "facade", "lowsweep", "dragonascent"],
+                "movepool": ["dracometeor", "extremespeed", "heatwave", "dragonpulse", "dazzlinggleam", "powergem", "lowsweep", "dragonascent"],
                 "abilities": ["Adaptability"]
             }
         ]

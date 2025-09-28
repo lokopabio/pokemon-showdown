@@ -3667,7 +3667,7 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		name: "[Gen 7] OU",
 		mod: 'gen7',
 		ruleset: ['Standard'],
-		banlist: ['Uber', 'Arena Trap', 'Power Construct', 'Shadow Tag', 'Baton Pass'],
+		banlist: ['Uber'],
 	},
 	{
 		name: "[Gen 6] OU",
@@ -3988,9 +3988,8 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 	{
 		name: "[Gen 7] UU",
 		mod: 'gen7',
-		searchShow: false,
-		ruleset: ['[Gen 7] OU'],
-		banlist: ['OU', 'UUBL', 'Drizzle', 'Drought', 'Kommonium Z', 'Mewnium Z'],
+		ruleset: ['Standard', 'Team Preview'],
+		banlist: ['Uber'],
 	},
 	{
 		name: "[Gen 7] NU",

@@ -969,46 +969,41 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 	},
 	disguise: {
 		onDamagePriority: 1,
-		onDamage(dmg, target, source, effect) {
-			const bases = new Set(['mimikyu', 'mimikyutotem', 'fidbueluna']);
-			if (effect?.effectType === 'Move' && bases.has(target.species.id)) {
-			this.add('-activate', target, 'ability: Disguise');
-			this.effectState.busted = true;
-			return 0; // first hit does 0?
+		onDamage(damage, target, source, effect) {
+			if (effect?.effectType === 'Move' && ['fidbueluna'].includes(target.species.id)) {
+				this.add('-activate', target, 'ability: Disguise');
+				this.effectState.busted = true;
+				return 0;
 			}
 		},
 		onCriticalHit(target, source, move) {
 			if (!target) return;
-			const bases = new Set(['mimikyu', 'mimikyutotem', 'fidbueluna']);
-			if (!bases.has(target.species.id)) return;
-
+			if (!['fidbueluna'].includes(target.species.id)) {
+				return;
+			}
 			const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
 			if (hitSub) return;
+
 			if (!target.runImmunity(move)) return;
-			return false; // first hit can't crit
+			return false;
 		},
 		onEffectiveness(typeMod, target, type, move) {
 			if (!target || move.category === 'Status') return;
-			const bases = new Set(['mimikyu', 'mimikyutotem', 'fidbueluna']);
-			if (!bases.has(target.species.id)) return;
+			if (!['fidbueluna'].includes(target.species.id)) {
+				return;
+			}
 
 			const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
 			if (hitSub) return;
+
 			if (!target.runImmunity(move)) return;
-			return 0; // neutral effectiveness on hit that breaks Disguise?
+			return 0;
 		},
 		onUpdate(pokemon) {
-			const bases = new Set(['mimikyu', 'mimikyutotem', 'fidbueluna']);
-			const bustedMap: Record<string, string> = {
-			mimikyu: 'Mimikyu-Busted',
-			mimikyutotem: 'Mimikyu-Busted-Totem',
-			fidbueluna: 'Fidbueluna-Busted',
-			};
-
-			if (bases.has(pokemon.species.id) && this.effectState.busted) {
-			const speciesid = bustedMap[pokemon.species.id];
-			pokemon.formeChange(speciesid, this.effect, true);
-			this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon, this.dex.species.get(speciesid));
+			if (['fidbueluna'].includes(pokemon.species.id) && this.effectState.busted) {
+				const speciesid = 'Fidbueluna-Busted';
+				pokemon.formeChange(speciesid, this.effect, true);
+				this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon, this.dex.species.get(speciesid));
 			}
 		},
 		flags: {
