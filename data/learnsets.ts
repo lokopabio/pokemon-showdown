@@ -1,3 +1,5 @@
+import { roomSettings } from '../server/chat-plugins/mafia';
+
 export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 	missingno: {
 		learnset: {
@@ -2401,7 +2403,7 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
             magnitude: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
             megadrain: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
             megapunch: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
-            mirrormove: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
+            rest: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
             mudbomb: ["9M", "8M", "7M", "6M", "5M", "4M"],
             mudshot: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
             mudsport: ["9M", "8M", "7M", "6M", "5M", "4M", "3M"],
