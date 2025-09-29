@@ -21039,7 +21039,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
         name: "Matebelo", 
         types: ["Poison", "Ground"],
         baseStats: { hp: 102, atk: 82, def: 78, spa: 82, spd: 78, spe: 47 },
-        abilities: { 0: "Glutonny", 1: "Damp" , H: "Sticky Hold" },
+        abilities: { 0: "Gluttony", 1: "Damp" , H: "Sticky Hold" },
         heightm: 1.2,
         weightkg: 211,
         color: "Purple",
