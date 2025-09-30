@@ -1798,19 +1798,11 @@ export class RandomGen8Teams {
 		// not undefined — we want "no item" not "go find a different item"
 		if (moves.has('acrobatics') && ability !== 'Ripen') return ability === 'Grassy Surge' ? 'Grassy Seed' : '';
 		if (moves.has('geomancy') || moves.has('meteorbeam')) return 'Power Herb';
-		if (moves.has('shellsmash')) {
-			if (ability === 'Sturdy' && !isLead && !isDoubles) return 'Heavy-Duty Boots';
-			// Shell Smash + Solid Rock is intended for Carracosta, but I think
-			// any Pokémon which can take a SE hit via Solid Rock deserves to have
-			// its Shell Smash considered a good enough speed setup move for WP.
-			if (ability === 'Solid Rock') return 'Weakness Policy';
-			return 'White Herb';
-		}
 		// Techno Blast should always be Water-type
 		if (moves.has('technoblast')) return 'Douse Drive';
 		// Species-specific logic
 		if (
-			['Corsola', 'Garchomp', 'Tangrowth'].includes(species.name) &&
+			['Himnassio', 'Marianoids', 'Tangrowth'].includes(species.name) &&
 			counter.get('Status') &&
 			!counter.setupType &&
 			!isDoubles
@@ -1818,31 +1810,22 @@ export class RandomGen8Teams {
 
 		if (species.name === 'Eternatus' && counter.get('Status') < 2) return 'Metronome';
 		if (species.name === 'Farfetch\u2019d') return 'Leek';
+		if (species.name === 'Hitmondad') return 'White Herb';
 		if (species.name === 'Froslass' && !isDoubles) return 'Wide Lens';
 		if (species.name === 'Latios' && counter.get('Special') === 2 && !isDoubles) return 'Soul Dew';
 		if (species.name === 'Lopunny') return isDoubles ? 'Iron Ball' : 'Toxic Orb';
 		if (species.baseSpecies === 'Marowak') return 'Thick Club';
 		if (species.baseSpecies === 'Pikachu') return 'Light Ball';
 		if (species.name === 'Regieleki' && !isDoubles) return 'Magnet';
-		if (species.name === 'Shedinja') {
-			const noSash = !teamDetails.defog && !teamDetails.rapidSpin && !isDoubles;
-			return noSash ? 'Heavy-Duty Boots' : 'Focus Sash';
-		}
 		if (species.name === 'Shuckle' && moves.has('stickyweb')) return 'Mental Herb';
 		if (species.name === 'Unfezant' || moves.has('focusenergy')) return 'Scope Lens';
-		if (species.name === 'Pincurchin') return 'Shuca Berry';
+		if (species.name === 'Pikayala') return 'Air Balloon';
 		if (species.name === 'Wobbuffet' && moves.has('destinybond')) return 'Custap Berry';
 		if (species.name === 'Scyther' && counter.damagingMoves.size > 3) return 'Choice Band';
 		if (species.name === 'Cinccino' && !moves.has('uturn')) return 'Life Orb';
 		if (moves.has('bellydrum') && moves.has('substitute')) return 'Salac Berry';
 
 		// Misc item generation logic
-		const HDBBetterThanEviolite = (
-			!isDoubles &&
-			(!isLead || moves.has('uturn')) &&
-			this.dex.getEffectiveness('Rock', species) >= 2
-		);
-		if (species.nfe) return HDBBetterThanEviolite ? 'Heavy-Duty Boots' : 'Eviolite';
 
 		// Ability based logic and miscellaneous logic
 		if (species.name === 'Wobbuffet' || ['Cheek Pouch', 'Harvest', 'Ripen'].includes(ability)) return 'Sitrus Berry';
@@ -1875,9 +1858,6 @@ export class RandomGen8Teams {
 		if (moves.has('hypnosis') && ability === 'Beast Boost') return 'Blunder Policy';
 		if (moves.has('bellydrum')) return 'Sitrus Berry';
 
-		if (this.dex.getEffectiveness('Rock', species) >= 2 && !isDoubles) {
-			return 'Heavy-Duty Boots';
-		}
 	}
 
 	/** Item generation specific to Random Doubles */
@@ -1897,7 +1877,6 @@ export class RandomGen8Teams {
 			counter.damagingMoves.size >= 4
 		) return 'Choice Scarf';
 		if (moves.has('blizzard') && ability !== 'Snow Warning' && !teamDetails.hail) return 'Blunder Policy';
-		if (this.dex.getEffectiveness('Rock', species) >= 2 && !types.has('Flying')) return 'Heavy-Duty Boots';
 		if (counter.get('Physical') >= 4 && ['fakeout', 'feint', 'rapidspin', 'suckerpunch'].every(m => !moves.has(m)) && (
 			types.has('Dragon') || types.has('Fighting') || types.has('Rock') ||
 			moves.has('flipturn') || moves.has('uturn')
@@ -1991,13 +1970,6 @@ export class RandomGen8Teams {
 			(ability === 'Speed Boost' && !counter.get('hazards')) ||
 			(ability === 'Stance Change' && counter.damagingMoves.size >= 3)
 		) return 'Life Orb';
-		if (
-			!isDoubles &&
-			this.dex.getEffectiveness('Rock', species) >= 1 && (
-				['Defeatist', 'Emergency Exit', 'Multiscale'].includes(ability) ||
-				['courtchange', 'defog', 'rapidspin'].some(m => moves.has(m))
-			)
-		) return 'Heavy-Duty Boots';
 		if (species.name === 'Necrozma-Dusk-Mane' || (
 			this.dex.getEffectiveness('Ground', species) < 2 &&
 			counter.get('speedsetup') &&
@@ -2044,7 +2016,6 @@ export class RandomGen8Teams {
 			(!teamDetails.defog || ability === 'Intimidate' || moves.has('uturn') || moves.has('voltswitch'))
 		);
 		const spinnerCase = (moves.has('rapidspin') && (ability === 'Regenerator' || !!counter.get('recovery')));
-		if (!isDoubles && (rockWeaknessCase || spinnerCase)) return 'Heavy-Duty Boots';
 
 		if (
 			!isDoubles && this.dex.getEffectiveness('Ground', species) >= 2 && !types.has('Poison') &&
@@ -2379,7 +2350,6 @@ export class RandomGen8Teams {
 		const level: number = this.getLevel(species, isDoubles, isNoDynamax);
 
 		// Prepare optimal HP
-		const srImmunity = ability === 'Magic Guard' || item === 'Heavy-Duty Boots';
 		const srWeakness = srImmunity ? 0 : this.dex.getEffectiveness('Rock', species);
 		while (evs.hp > 1) {
 			const hp = Math.floor(Math.floor(2 * species.baseStats.hp + ivs.hp + Math.floor(evs.hp / 4) + 100) * level / 100 + 10);
