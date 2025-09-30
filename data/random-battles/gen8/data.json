@@ -33,7 +33,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 84,
-        "doublesMoves": ["flamecharge", "spikyshield", "rapidspin", "boltstrike", "playrough", "suckerpunch"]
+        "doublesMoves": ["flamecharge", "spikyshield", "boltstrike", "playrough", "suckerpunch"]
     },
     "balongus": {
         "level": 84,
@@ -51,7 +51,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 88,
-        "doublesMoves": ["shiftgear", "rockclimb", "rapidspin", "geargrind", "quickattack"]
+        "doublesMoves": ["shiftgear", "rockclimb", "geargrind", "quickattack"]
     },
     "carlis": {
         "level": 84,
@@ -68,14 +68,14 @@
     "chemous": {
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
-        "doublesLevel": 85,
+        "doublesLevel": 86,
         "doublesMoves": ["spikes", "encore", "drainpunch", "bulkup", "megahorn", "horndrill"]
     },
     "dijeypepe": {
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 84,
-        "doublesMoves": ["protect", "volttackle", "flareblitz","buldoze", "uturn", "finalgambit", "healingwish", "willowisp", "stealthrock", "rest", "sleeptalk"]
+        "doublesMoves": ["protect", "volttackle", "flareblitz","buldoze", "uturn", "finalgambit", "healingwish", "willowisp", "stealthrock"]
     },
     "ferninfarto": {
         "level": 84,
@@ -87,7 +87,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 85,
-        "doublesMoves": ["protect", "facade", "drainpunch", "woodhammer", "icepunch", "defog", "leechseed"]
+        "doublesMoves": ["protect", "facade", "drainpunch", "woodhammer", "icepunch"]
     },
     "fidbueluna": {
         "level": 84,
@@ -141,7 +141,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 84,
-        "doublesMoves": ["crabhammer", "switcheroo", "dracometeor", "playrough", "outrage", "drainingkiss", "taunt"]
+        "doublesMoves": ["crabhammer", "fakeout", "firepledge","switcheroo", "dracometeor", "playrough", "outrage", "coreenforcer", "drainingkiss", "taunt"]
     },
     "ladesaurio": {
         "level": 84,
@@ -177,7 +177,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 85,
-        "doublesMoves": ["toxicspikes", "protect", "spikes", "milkdrink", "gunkshot", "flamethrower", "muddywater"]
+        "doublesMoves": ["toxicspikes", "protect", "spikes", "milkdrink", "gunkshot", "flamethrower", "muddywater", "recycle"]
     },
     "mermela": {
         "level": 84,
@@ -357,7 +357,7 @@
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
         "doublesLevel": 90,
-        "doublesMoves": ["lightscreen", "reflect", "fakeout", "protect", "toxic", "teeterdance"]
+        "doublesMoves": ["lightscreen", "reflect", "fakeout", "toxic", "teeterdance", "protect"]
     },
     "fatnando": {
         "level": 84,
@@ -368,7 +368,7 @@
     "pitfazu": {
         "level": 84,
         "moves": ["kingsshield", "milkdrink", "thunderwave", "bodyslam", "earthquake"],
-        "doublesLevel": 97,
+        "doublesLevel": 95,
         "doublesMoves": ["dragonclaw", "honeclaws", "playrough", "liquidation", "protect", "suckerpunch"]
     },
     "ketxupero": {

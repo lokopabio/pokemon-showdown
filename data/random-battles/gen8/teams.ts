@@ -1802,15 +1802,70 @@ export class RandomGen8Teams {
 		if (moves.has('technoblast')) return 'Douse Drive';
 		// Species-specific logic
 		if (
-			['Himnassio', 'Marianoids', 'Tangrowth'].includes(species.name) &&
+			['Marianoids', 'Tangrowth'].includes(species.name) &&
 			counter.get('Status') &&
 			!counter.setupType &&
 			!isDoubles
 		) return 'Rocky Helmet';
 
 		if (species.name === 'Eternatus' && counter.get('Status') < 2) return 'Metronome';
+		if (species.name === 'Airrivas' && counter.get('Status') >= 2) return 'Wacan Berry';
+		if (species.name === 'Airrivas' && counter.get('Status') < 2) return 'Life Orb';
+		if (species.name === 'Balongus') return counter.get('Status') >= 1 ? 'Leftovers' : 'Choice Scarf';
+		if (species.name === 'Waynero') return counter.get('Status') >= 1 ? 'Leftovers' : 'Choice Band';
+		if (species.name === 'Teketeki') return counter.get('Status') >= 1 ? 'Leftovers' : 'Assault Vest';
+		if (species.name === 'Alepato' && (ability || species.abilities['0']) === 'Rock Head') return 'Choice Band';
+		if (species.name === 'Alepato' && (ability || species.abilities['0']) === 'Skill Link') return "King's Rock";
+		if (species.name === 'Dijeypepe') {
+		  const pool = new Set(['volttackle','flareblitz','uturn','finalgambit','healingwish']);
+		  const allFromPool = moves.size === 4 && [...moves].every(m => pool.has(m));
+		  return allFromPool ? 'Choice Scarf' : 'Leftovers';
+		}
 		if (species.name === 'Farfetch\u2019d') return 'Leek';
+		if (species.name === 'Jamadelpa') return 'Life Orb';
+		if (species.name === 'Ferninfarto') return 'Life Orb';
+		if (species.name === 'Titogallar') return 'Life Orb';
+		if (species.name === 'Ladesaurio') return 'Life Orb';
+		if (species.name === 'Rafalu') return 'Roseli Berry';
+		if (species.name === 'Mermela') return 'Life Orb';
+		if (species.name === 'Rickymartin') return 'Life Orb';
+		if (species.name === 'Migslender') return moves.has('detect') ? 'Life Orb' : 'Choice Scarf';
+		if (species.name === 'Vtroll') return moves.has('detect') ? 'Power Herb' : 'Leftovers';
+		if (species.name === 'Tiopep') return 'Toxic Orb';
+		if (species.name === 'Moreirao') return 'Life Orb';
+		if (species.name === 'Germeneko') return 'Black Sludge';
+		if (species.name === 'Oruguille\u0301') return 'Black Sludge';
+		if (species.name === 'Habiemigo') return 'Black Sludge';
+		if (species.name === 'Supersteban') return 'Choice Specs';
+		if (species.name === 'Tallarin') return 'Liechi Berry';
+		if (species.name === 'Carlis') return 'Leftovers';
 		if (species.name === 'Hitmondad') return 'White Herb';
+		if (species.name === 'Herindro') return 'Leftovers';
+		if (species.name === 'Calvivas') return 'Leftovers';
+		if (species.name === 'Abicort') return 'Choice Band';
+		if (species.name === 'Pedrerol') {
+		  const abil = ability || species.abilities['0'];
+		  if (abil === 'Quick Feet') return 'Toxic Orb';
+		}
+		if (species.name === 'Fidalsana') {
+		  const abil = ability || species.abilities['0'];
+		  if (abil === 'Guts') return 'Flame Orb';
+		}
+		if (species.name === 'Himnassio') {
+		  if (moves.has('shellsmash')) return 'White Herb';
+		  if (counter.get('Status') === 0) return this.sample(['Assault Vest', 'Weakness Policy']); // 4 attacks
+		  return 'Rocky Helmet';
+		}
+		if (species.name === 'Khangrena') {
+		  // Priority: Switcheroo > Taunt > 4 attacks
+          if (moves.has('switcheroo')) return 'Choice Scarf';
+          if (moves.has('taunt')) return 'Leftovers';
+          if (counter.get('Status') === 0) return 'Assault Vest'; // 4 attacks = no Status moves
+		}
+		if (species.name === 'Pavoaero' && moves.has('batonpass')) return 'Weakness Policy';
+		if (species.name === 'Albeerto') return 'Eviolite';
+		if (species.name === 'Momasket') return 'Eviolite';
+		if (species.name === 'Fatnando') return 'Eviolite';
 		if (species.name === 'Froslass' && !isDoubles) return 'Wide Lens';
 		if (species.name === 'Latios' && counter.get('Special') === 2 && !isDoubles) return 'Soul Dew';
 		if (species.name === 'Lopunny') return isDoubles ? 'Iron Ball' : 'Toxic Orb';
@@ -1834,6 +1889,7 @@ export class RandomGen8Teams {
 			ability === 'Imposter' ||
 			(ability === 'Magnet Pull' && moves.has('bodypress') && !isDoubles)
 		) return 'Choice Scarf';
+
 		if (
 			ability === 'Guts' &&
 			(counter.get('Physical') > 2 || isDoubles)
