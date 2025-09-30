@@ -2350,6 +2350,7 @@ export class RandomGen8Teams {
 		const level: number = this.getLevel(species, isDoubles, isNoDynamax);
 
 		// Prepare optimal HP
+		const srImmunity = (ability === 'Magic Guard');
 		const srWeakness = srImmunity ? 0 : this.dex.getEffectiveness('Rock', species);
 		while (evs.hp > 1) {
 			const hp = Math.floor(Math.floor(2 * species.baseStats.hp + ivs.hp + Math.floor(evs.hp / 4) + 100) * level / 100 + 10);
