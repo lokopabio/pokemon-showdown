@@ -1865,6 +1865,7 @@ export class RandomGen8Teams {
 		if (species.name === 'Pavoaero' && moves.has('batonpass')) return 'Weakness Policy';
 		if (species.name === 'Albeerto') return 'Eviolite';
 		if (species.name === 'Momasket') return 'Eviolite';
+		if (species.name === 'Calcubasar') return 'Life Orb';
 		if (species.name === 'Fatnando') return 'Eviolite';
 		if (species.name === 'Froslass' && !isDoubles) return 'Wide Lens';
 		if (species.name === 'Latios' && counter.get('Special') === 2 && !isDoubles) return 'Soul Dew';
@@ -2816,6 +2817,17 @@ export class RandomGen8Teams {
 
 		const item = setData.item || this.sampleIfArray(setData.set.item);
 		const ability = setData.ability || this.sampleIfArray(setData.set.ability);
+			let forcedAbility = ability || species.abilities['0'];
+			if (species.name === 'Jamadelpa') forcedAbility = 'Sheer Force';
+			if (species.name === 'Dijeypepe') forcedAbility = 'Reckless';
+			if (species.name === 'Ludevtention') forcedAbility = 'Contrary';
+			if (species.name === 'Balongus') forcedAbility = 'Defiant';
+			if (species.name === 'Oruguille\u0301') forcedAbility = 'Intimidate';
+			if (species.name === 'Ketxupero') forcedAbility = 'Intimidate';
+			if (species.name === 'Pitfazu') forcedAbility = 'Tough Claws';
+			if (species.name === 'Carlis') forcedAbility = 'Gooey';
+			if (species.name === 'Mermela') forcedAbility = 'Intimidate';			
+			if (species.name === 'Moreirao') forcedAbility = 'Intimidate';
 		const nature = this.sampleIfArray(setData.set.nature);
 		const level = this.adjustLevel || setData.set.level || (tier === "LC" ? 5 : 100);
 
@@ -2824,7 +2836,7 @@ export class RandomGen8Teams {
 			species: setData.set.species,
 			gender: setData.set.gender || species.gender || (this.randomChance(1, 2) ? 'M' : 'F'),
 			item: item || '',
-			ability: ability || species.abilities['0'],
+			ability: forcedAbility,
 			shiny: typeof setData.set.shiny === 'undefined' ? this.randomChance(1, 1024) : setData.set.shiny,
 			level,
 			happiness: typeof setData.set.happiness === 'undefined' ? 255 : setData.set.happiness,
