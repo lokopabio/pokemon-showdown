@@ -20978,7 +20978,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
         name: "Luppitto", 
         types: ["Grass", "Fire"],
         baseStats: { hp: 75, atk: 85, def: 80, spa: 85, spd: 80, spe: 75 },
-        abilities: { 0: "Chlorophyl", 1: "Flower Gift" , H: "Poison Heal" },
+        abilities: { 0: "Chlorophyll", 1: "Flower Gift" , H: "Poison Heal" },
         heightm: 1.3,
         weightkg: 42,
         color: "Green",
