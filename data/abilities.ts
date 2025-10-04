@@ -4526,11 +4526,15 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 	},
 	stickyhold: {
 	onTakeItem(item, pokemon, source) {
-		// If the move ignores abilities (Mold Breaker / Teravolt / Turboblaze), don't block it
-		if (this.activeMove?.ignoreAbility) return;
-
 		if (!this.activeMove) throw new Error("Battle.activeMove is null");
+
+		// Bypass Sticky Hold if the attacker ignores abilities (Mold Breaker / Teravolt / Turboblaze)
+		if (this.activeMove.ignoreAbility || source?.hasAbility?.(['moldbreaker', 'teravolt', 'turboblaze'])) {
+		return; // allow the take/swap to proceed
+		}
+
 		if (!pokemon.hp || pokemon.item === 'stickybarb') return;
+
 		if ((source && source !== pokemon) || this.activeMove.id === 'knockoff') {
 		this.add('-activate', pokemon, 'ability: Sticky Hold');
 		return false;
