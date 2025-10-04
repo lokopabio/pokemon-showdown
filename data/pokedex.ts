@@ -20801,7 +20801,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
         num: -5055, 
         name: "Alepato", 
         types: ["Rock"],
-        baseStats: { hp: 87, atk: 107, def: 79, spa: 37, spd: 42, spe: 106 },
+        baseStats: { hp: 87, atk: 107, def: 79, spa: 37, spd: 42, spe: 99 },
         abilities: { 0: "Rock Head", 1: "Skill Link" , H: "Tangling Hair" },
         heightm: 2.2,
         weightkg: 100.7,
