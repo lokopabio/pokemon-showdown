@@ -605,7 +605,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 		},
 		// Item activation located in scripts.js
 		num: 1121,
-		gen: 8,
+		gen: 7,
 	},
 	boosterenergy: {
 		name: "Booster Energy",
@@ -1041,7 +1041,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			}
 		},
 		num: 1882,
-		gen: 9,
+		gen: 7,
 	},
 	cloversweet: {
 		name: "Clover Sweet",
@@ -1155,7 +1155,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			return secondaries.filter(effect => !!effect.self);
 		},
 		num: 1885,
-		gen: 9,
+		gen: 7,
 	},
 	crackedpot: {
 		name: "Cracked Pot",
@@ -1614,7 +1614,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			delete this.effectState.eject;
 		},
 		num: 1119,
-		gen: 8,
+		gen: 7,
 	},
 	electirizer: {
 		name: "Electirizer",
@@ -3187,7 +3187,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			}
 		},
 		num: 1886,
-		gen: 9,
+		gen: 7,
 	},
 	lopunnite: {
 		name: "Lopunnite",
@@ -3866,7 +3866,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			delete this.effectState.ready;
 		},
 		num: 1883,
-		gen: 9,
+		gen: 7,
 	},
 	mistyseed: {
 		name: "Misty Seed",
@@ -4619,7 +4619,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			if (move.flags['punch']) delete move.flags['contact'];
 		},
 		num: 1884,
-		gen: 9,
+		gen: 7,
 	},
 	qualotberry: {
 		name: "Qualot Berry",
@@ -4959,7 +4959,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			spe: -1,
 		},
 		num: 1122,
-		gen: 8,
+		gen: 7,
 	},
 	rootfossil: {
 		name: "Root Fossil",
@@ -5878,7 +5878,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 			spa: 1,
 		},
 		num: 1118,
-		gen: 8,
+		gen: 7,
 	},
 	thunderstone: {
 		name: "Thunder Stone",
