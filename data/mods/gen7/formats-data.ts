@@ -7,8 +7,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	carlis: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	peponcio: {
 		tier: "LC",
@@ -18,8 +17,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	dijeypepe: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	migel: {
 		tier: "LC",
@@ -29,8 +27,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	mijue: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	nanote: {
 		tier: "LC",
@@ -40,8 +37,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	angelote: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	feolleruga: {
 		tier: "LC",
@@ -51,8 +47,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	oruguille: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	nachoward: {
 		tier: "LC",
@@ -62,24 +57,21 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	momontanho: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pabiito: {
 		tier: "LC",
 	},
 	pabio: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	feriamon: {
 		tier: "LC",
 	},
 	papalvo: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	balongo: {
 		tier: "LC",
@@ -89,8 +81,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	balongus: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	calcubasar: {
 		tier: "LC",
@@ -100,8 +91,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	habiemigo: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ignagarruta: {
 		tier: "LC",
@@ -111,32 +101,28 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	himnassio: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ruperto: {
 		tier: "LC",
 	},
 	albeerto: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	vitolf: {
 		tier: "LC",
 	},
 	vtroll: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pahns: {
 		tier: "LC",
 	},
 	ponshead: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	gristian: {
 		tier: "LC",
@@ -146,8 +132,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	xristian: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	rafriki: {
 		tier: "LC",
@@ -157,183 +142,156 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	rafalu: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	roblero: {
 		tier: "LC",
 	},
 	pedrerol: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	chemie: {
 		tier: "LC",
 	},
 	chemous: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	chemfalse: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	salonbert: {
 		tier: "LC",
 	},
 	supersteban: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	curricky: {
 		tier: "LC",
 	},
 	rickymartin: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	cabesandro: {
 		tier: "LC",
 	},
 	alepato: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	wisroo: {
 		tier: "LC",
 	},
 	waynero: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	jonysurf: {
 		tier: "LC",
 	},
 	titogallar: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	puertanzana: {
 		tier: "LC",
 	},
 	fidalsana: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	crusmayero: {
 		tier: "LC",
 	},
 	pajillero: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	manuyrrike: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	fidbueluna: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ladesaurio: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ferdditto: {
 		tier: "LC",
 	},
 	luppitto: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ketxupero: {
 		tier: "LC",
 	},
 	oscobain: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	svax: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	mayochema: {
 		tier: "LC",
 	},
 	matebelo: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	moreirao: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	qileschin: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	melkart: {
 		tier: "LC",
 	},
 	arturacer: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	tholmas: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	virodcan: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	gemeluno: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	gemelotro: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	redondolop: {
 		tier: "LC",
 	},
 	jamadelpa: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pinnierod: {
 		tier: "LC",
 	},
 	migslender: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ferrivero: {
 		tier: "LC",
@@ -343,116 +301,97 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	ferninfarto: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	blassaman: {
 		tier: "LC",
 	},
 	germeneko: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	cansadani: {
 		tier: "LC",
 	},
 	mermela: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	miguapaa: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	mochi: {
 		tier: "LC",
 	},
 	morich: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pikayala: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	quenguti: {
 		tier: "LC",
 	},
 	teketeki: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	tallarin: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pavoaero: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	hitmondad: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	ludevtention: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	pabrown: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	calvivas: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	abicort: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	marcobarco: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	herindro: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	botondsk: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	marianervios: {
 		tier: "LC",
 	},
 	marianoids: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	adangreho: {
 		tier: "LC",
 	},
 	khangrena: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	rivpetidor: {
 		tier: "LC",
@@ -462,13 +401,11 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	airrivas: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	lugamon: {
 		tier: "OU",
-		doublesTier: "DOU",
-		
+
 	},
 	// End Suaj
 	bulbasaur: {	
