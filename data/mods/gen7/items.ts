@@ -647,4 +647,40 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 		inherit: true,
 		isNonstandard: null,
 	},
+	blunderpolicy: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	punchingglove: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	throatspray: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	roomservice: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	ejectpack: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	covertcloak: {
+		inherit: true,
+		isNonstandard: null,
+	},	
+	mirrorherb: {
+		inherit: true,
+		isNonstandard: null,
+	},	
+	loadeddice: {
+		inherit: true,
+		isNonstandard: null,
+	},	
+	clearamulet: {
+		inherit: true,
+		isNonstandard: null,
+	},	
 };
