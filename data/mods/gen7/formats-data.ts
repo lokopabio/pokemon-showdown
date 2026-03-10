@@ -8,7 +8,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	carlis: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	peponcio: {
 		tier: "LC",
@@ -19,7 +19,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dijeypepe: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	migel: {
 		tier: "LC",
@@ -30,7 +30,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mijue: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	nanote: {
 		tier: "LC",
@@ -41,7 +41,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	angelote: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	feolleruga: {
 		tier: "LC",
@@ -52,7 +52,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	oruguille: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	nachoward: {
 		tier: "LC",
@@ -63,7 +63,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	momontanho: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pabiito: {
 		tier: "LC",
@@ -71,7 +71,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pabio: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	feriamon: {
 		tier: "LC",
@@ -79,7 +79,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	papalvo: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	balongo: {
 		tier: "LC",
@@ -90,7 +90,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	balongus: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	calcubasar: {
 		tier: "LC",
@@ -101,7 +101,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	habiemigo: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ignagarruta: {
 		tier: "LC",
@@ -112,7 +112,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	himnassio: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ruperto: {
 		tier: "LC",
@@ -120,7 +120,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	albeerto: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	vitolf: {
 		tier: "LC",
@@ -128,7 +128,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vtroll: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pahns: {
 		tier: "LC",
@@ -136,7 +136,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ponshead: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	gristian: {
 		tier: "LC",
@@ -147,7 +147,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	xristian: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	rafriki: {
 		tier: "LC",
@@ -158,7 +158,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rafalu: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	roblero: {
 		tier: "LC",
@@ -166,7 +166,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pedrerol: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	chemie: {
 		tier: "LC",
@@ -174,12 +174,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chemous: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	chemfalse: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	salonbert: {
 		tier: "LC",
@@ -187,7 +187,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	supersteban: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	curricky: {
 		tier: "LC",
@@ -195,7 +195,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rickymartin: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	cabesandro: {
 		tier: "LC",
@@ -203,7 +203,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	alepato: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	wisroo: {
 		tier: "LC",
@@ -211,7 +211,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	waynero: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	jonysurf: {
 		tier: "LC",
@@ -219,7 +219,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	titogallar: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	puertanzana: {
 		tier: "LC",
@@ -227,7 +227,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	fidalsana: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	crusmayero: {
 		tier: "LC",
@@ -235,22 +235,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pajillero: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	manuyrrike: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	fidbueluna: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ladesaurio: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ferdditto: {
 		tier: "LC",
@@ -258,7 +258,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	luppitto: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ketxupero: {
 		tier: "LC",
@@ -266,12 +266,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	oscobain: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	svax: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	mayochema: {
 		tier: "LC",
@@ -279,17 +279,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	matebelo: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	moreirao: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	qileschin: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	melkart: {
 		tier: "LC",
@@ -297,27 +297,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	arturacer: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	tholmas: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	virodcan: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	gemeluno: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	gemelotro: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	redondolop: {
 		tier: "LC",
@@ -325,7 +325,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	jamadelpa: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pinnierod: {
 		tier: "LC",
@@ -333,7 +333,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	migslender: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ferrivero: {
 		tier: "LC",
@@ -344,7 +344,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ferninfarto: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	blassaman: {
 		tier: "LC",
@@ -352,7 +352,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	germeneko: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	cansadani: {
 		tier: "LC",
@@ -360,12 +360,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mermela: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	miguapaa: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	mochi: {
 		tier: "LC",
@@ -373,12 +373,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	morich: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pikayala: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	quenguti: {
 		tier: "LC",
@@ -386,57 +386,57 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	teketeki: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	tallarin: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pavoaero: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	hitmondad: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	ludevtention: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	pabrown: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	calvivas: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	abicort: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	marcobarco: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	herindro: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	botondsk: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	marianervios: {
 		tier: "LC",
@@ -444,7 +444,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	marianoids: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	adangreho: {
 		tier: "LC",
@@ -452,7 +452,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	khangrena: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	rivpetidor: {
 		tier: "LC",
@@ -463,12 +463,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	airrivas: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	lugamon: {
 		tier: "OU",
 		doublesTier: "DOU",
-		natDexTier: "OU",
+		
 	},
 	// End Suaj
 	bulbasaur: {	
@@ -480,12 +480,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	venusaur: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	venusaurmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	venusaurgmax: {	
 		isNonstandard: "Past",
@@ -500,17 +500,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	charizard: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	charizardmegax: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	charizardmegay: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	charizardgmax: {	
 		isNonstandard: "Past",
@@ -525,12 +525,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	blastoise: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blastoisemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blastoisegmax: {	
 		isNonstandard: "Past",
@@ -539,17 +539,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	caterpie: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	metapod: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	butterfree: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	butterfreegmax: {	
 		isNonstandard: "Past",
@@ -558,62 +558,62 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	weedle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kakuna: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	beedrill: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	beedrillmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pidgey: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pidgeotto: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pidgeot: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pidgeotmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rattata: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rattataalola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raticate: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raticatealola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raticatealolatotem: {	
 		isNonstandard: "Past",
@@ -622,12 +622,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	spearow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fearow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ekans: {	
 		tier: "Illegal",
@@ -635,7 +635,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	arbok: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pichu: {	
 		tier: "Illegal",
@@ -647,7 +647,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pikachu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachucosplay: {	
 		isNonstandard: "Past",
@@ -676,37 +676,37 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pikachuoriginal: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachuhoenn: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachusinnoh: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachuunova: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachukalos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachualola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachupartner: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikachustarter: {	
 		isNonstandard: "LGPE",
@@ -719,17 +719,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pikachuworld: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raichu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raichualola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandshrew: {	
 		tier: "Illegal",
@@ -740,42 +740,42 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sandslash: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandslashalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidoranf: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidorina: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidoqueen: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidoranm: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidorino: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nidoking: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cleffa: {	
 		tier: "Illegal",
@@ -783,17 +783,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	clefairy: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	clefable: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vulpix: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vulpixalola: {	
 		tier: "Illegal",
@@ -801,12 +801,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ninetales: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ninetalesalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	igglybuff: {	
 		tier: "Illegal",
@@ -817,22 +817,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	wigglytuff: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zubat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	golbat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	crobat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oddish: {	
 		tier: "Illegal",
@@ -843,22 +843,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vileplume: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bellossom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	paras: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	parasect: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	venonat: {	
 		tier: "Illegal",
@@ -866,7 +866,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	venomoth: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	diglett: {	
 		tier: "Illegal",
@@ -877,12 +877,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dugtrio: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dugtrioalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	meowth: {	
 		tier: "Illegal",
@@ -900,17 +900,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	persian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	persianalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	perrserker: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	psyduck: {	
 		tier: "Illegal",
@@ -918,7 +918,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	golduck: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mankey: {	
 		tier: "Illegal",
@@ -926,7 +926,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	primeape: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	growlithe: {	
 		tier: "Illegal",
@@ -937,12 +937,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	arcanine: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	arcaninehisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	poliwag: {	
 		tier: "Illegal",
@@ -953,47 +953,47 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	poliwrath: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	politoed: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	abra: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kadabra: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	alakazam: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	alakazammega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	machop: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	machoke: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	machamp: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	machampgmax: {	
 		isNonstandard: "Past",
@@ -1008,7 +1008,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	victreebel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tentacool: {	
 		tier: "Illegal",
@@ -1016,7 +1016,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	tentacruel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	geodude: {	
 		tier: "Illegal",
@@ -1033,32 +1033,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	golem: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	golemalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ponyta: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ponytagalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rapidash: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rapidashgalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slowpoke: {	
 		tier: "Illegal",
@@ -1069,27 +1069,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	slowbro: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slowbromega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slowbrogalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slowking: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slowkinggalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	magnemite: {	
 		tier: "Illegal",
@@ -1097,27 +1097,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	magneton: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	magnezone: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	farfetchd: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	farfetchdgalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sirfetchd: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	doduo: {	
 		tier: "Illegal",
@@ -1125,7 +1125,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dodrio: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	seel: {	
 		tier: "Illegal",
@@ -1133,7 +1133,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dewgong: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	grimer: {	
 		tier: "Illegal",
@@ -1144,12 +1144,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	muk: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mukalola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shellder: {	
 		tier: "Illegal",
@@ -1157,7 +1157,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cloyster: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gastly: {	
 		tier: "Illegal",
@@ -1168,12 +1168,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gengar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gengarmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gengargmax: {	
 		isNonstandard: "Past",
@@ -1182,17 +1182,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	onix: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	steelix: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	steelixmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drowzee: {	
 		tier: "Illegal",
@@ -1200,17 +1200,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hypno: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	krabby: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kingler: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kinglergmax: {	
 		isNonstandard: "Past",
@@ -1222,17 +1222,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	voltorbhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	electrode: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	electrodehisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	exeggcute: {	
 		tier: "Illegal",
@@ -1240,27 +1240,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	exeggutor: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	exeggutoralola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cubone: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	marowak: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	marowakalola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	marowakalolatotem: {	
 		isNonstandard: "Past",
@@ -1272,27 +1272,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hitmonlee: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hitmonchan: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hitmontop: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lickitung: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lickilicky: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	koffing: {	
 		tier: "Illegal",
@@ -1300,12 +1300,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	weezing: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	weezinggalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rhyhorn: {	
 		tier: "Illegal",
@@ -1313,12 +1313,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rhydon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rhyperior: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	happiny: {	
 		tier: "Illegal",
@@ -1326,32 +1326,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chansey: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blissey: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tangela: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tangrowth: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kangaskhan: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kangaskhanmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	horsea: {	
 		tier: "Illegal",
@@ -1362,77 +1362,77 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	kingdra: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	goldeen: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	seaking: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	staryu: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	starmie: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mimejr: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mrmime: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mrmimegalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mrrime: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scyther: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scizor: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scizormega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kleavor: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	smoochum: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	jynx: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	elekid: {	
 		tier: "Illegal",
@@ -1443,7 +1443,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	electivire: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	magby: {	
 		tier: "Illegal",
@@ -1454,37 +1454,37 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	magmortar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pinsir: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pinsirmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tauros: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	taurospaldeacombat: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	taurospaldeablaze: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	taurospaldeaaqua: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	magikarp: {	
 		tier: "Illegal",
@@ -1492,17 +1492,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gyarados: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gyaradosmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lapras: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	laprasgmax: {	
 		isNonstandard: "Past",
@@ -1511,7 +1511,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ditto: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	eevee: {	
 		tier: "Illegal",
@@ -1527,42 +1527,42 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vaporeon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	jolteon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	flareon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	espeon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	umbreon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	leafeon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	glaceon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sylveon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	porygon: {	
 		tier: "Illegal",
@@ -1570,42 +1570,42 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	porygon2: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	porygonz: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	omanyte: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	omastar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kabuto: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kabutops: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aerodactyl: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aerodactylmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	munchlax: {	
 		tier: "Illegal",
@@ -1613,7 +1613,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	snorlax: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snorlaxgmax: {	
 		isNonstandard: "Past",
@@ -1622,32 +1622,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	articuno: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	articunogalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zapdos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zapdosgalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	moltres: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	moltresgalar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dratini: {	
 		tier: "Illegal",
@@ -1658,27 +1658,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dragonite: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mewtwo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mewtwomegax: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mewtwomegay: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mew: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chikorita: {	
 		tier: "Illegal",
@@ -1689,7 +1689,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	meganium: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cyndaquil: {	
 		tier: "Illegal",
@@ -1700,12 +1700,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	typhlosion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	typhlosionhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	totodile: {	
 		tier: "Illegal",
@@ -1716,7 +1716,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	feraligatr: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sentret: {	
 		tier: "Illegal",
@@ -1724,7 +1724,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	furret: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hoothoot: {	
 		tier: "Illegal",
@@ -1732,17 +1732,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	noctowl: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ledyba: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ledian: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spinarak: {	
 		tier: "Illegal",
@@ -1750,7 +1750,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ariados: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chinchou: {	
 		tier: "Illegal",
@@ -1758,32 +1758,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lanturn: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	togepi: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	togetic: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	togekiss: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	natu: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	xatu: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mareep: {	
 		tier: "Illegal",
@@ -1794,12 +1794,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ampharos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ampharosmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	azurill: {	
 		tier: "Illegal",
@@ -1810,7 +1810,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	azumarill: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bonsly: {	
 		tier: "Illegal",
@@ -1818,7 +1818,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sudowoodo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hoppip: {	
 		tier: "Illegal",
@@ -1829,7 +1829,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	jumpluff: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aipom: {	
 		tier: "Illegal",
@@ -1837,7 +1837,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ambipom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sunkern: {	
 		tier: "Illegal",
@@ -1845,7 +1845,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sunflora: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	yanma: {	
 		tier: "Illegal",
@@ -1853,7 +1853,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	yanmega: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wooper: {	
 		tier: "Illegal",
@@ -1864,7 +1864,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	quagsire: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	murkrow: {	
 		tier: "Illegal",
@@ -1873,7 +1873,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	honchkrow: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	misdreavus: {	
 		tier: "Illegal",
@@ -1881,22 +1881,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mismagius: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	unown: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wynaut: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wobbuffet: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	girafarig: {	
 		tier: "Illegal",
@@ -1904,7 +1904,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	farigiraf: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pineco: {	
 		tier: "Illegal",
@@ -1912,7 +1912,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	forretress: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dunsparce: {	
 		tier: "Illegal",
@@ -1920,17 +1920,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dudunsparce: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gligar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gliscor: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snubbull: {	
 		tier: "Illegal",
@@ -1938,37 +1938,37 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	granbull: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	qwilfish: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	qwilfishhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	overqwil: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shuckle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	heracross: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	heracrossmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sneasel: {	
 		tier: "Illegal",
@@ -1976,17 +1976,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sneaselhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	weavile: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sneasler: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	teddiursa: {	
 		tier: "Illegal",
@@ -1997,12 +1997,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ursaluna: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ursalunabloodmoon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slugma: {	
 		tier: "Illegal",
@@ -2010,7 +2010,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	magcargo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swinub: {	
 		tier: "Illegal",
@@ -2021,52 +2021,52 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mamoswine: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	corsola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	corsolagalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cursola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	remoraid: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	octillery: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	delibird: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mantyke: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mantine: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	skarmory: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	houndour: {	
 		tier: "Illegal",
@@ -2074,12 +2074,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	houndoom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	houndoommega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	phanpy: {	
 		tier: "Illegal",
@@ -2087,7 +2087,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	donphan: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stantler: {	
 		tier: "Illegal",
@@ -2095,32 +2095,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	wyrdeer: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	smeargle: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	miltank: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	raikou: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	entei: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	suicune: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	larvitar: {	
 		tier: "Illegal",
@@ -2131,27 +2131,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	tyranitar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tyranitarmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lugia: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hooh: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	celebi: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	treecko: {	
 		tier: "Illegal",
@@ -2162,12 +2162,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sceptile: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sceptilemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	torchic: {	
 		tier: "Illegal",
@@ -2178,12 +2178,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	blaziken: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blazikenmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mudkip: {	
 		tier: "Illegal",
@@ -2194,12 +2194,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	swampert: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swampertmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	poochyena: {	
 		tier: "Illegal",
@@ -2207,57 +2207,57 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mightyena: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zigzagoon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zigzagoongalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	linoone: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	linoonegalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	obstagoon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wurmple: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silcoon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	beautifly: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cascoon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dustox: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lotad: {	
 		tier: "Illegal",
@@ -2268,7 +2268,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ludicolo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	seedot: {	
 		tier: "Illegal",
@@ -2279,17 +2279,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	shiftry: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	taillow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swellow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wingull: {	
 		tier: "Illegal",
@@ -2297,7 +2297,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pelipper: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ralts: {	
 		tier: "Illegal",
@@ -2308,22 +2308,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gardevoir: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gardevoirmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gallade: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gallademega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	surskit: {	
 		tier: "Illegal",
@@ -2331,7 +2331,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	masquerain: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shroomish: {	
 		tier: "Illegal",
@@ -2339,7 +2339,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	breloom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slakoth: {	
 		tier: "Illegal",
@@ -2350,37 +2350,37 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	slaking: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nincada: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ninjask: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shedinja: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	whismur: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	loudred: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	exploud: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	makuhita: {	
 		tier: "Illegal",
@@ -2388,7 +2388,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hariyama: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nosepass: {	
 		tier: "Illegal",
@@ -2396,57 +2396,57 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	probopass: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	skitty: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	delcatty: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sableye: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sableyemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mawile: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mawilemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aron: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lairon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aggron: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aggronmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	meditite: {	
 		tier: "Illegal",
@@ -2454,62 +2454,62 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	medicham: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	medichammega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	electrike: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	manectric: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	manectricmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	plusle: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	minun: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	volbeat: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	illumise: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	budew: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	roselia: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	roserade: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gulpin: {	
 		tier: "Illegal",
@@ -2517,32 +2517,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	swalot: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	carvanha: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sharpedo: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sharpedomega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wailmer: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wailord: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	numel: {	
 		tier: "Illegal",
@@ -2550,17 +2550,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	camerupt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cameruptmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	torkoal: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spoink: {	
 		tier: "Illegal",
@@ -2568,12 +2568,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	grumpig: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spinda: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	trapinch: {	
 		tier: "Illegal",
@@ -2584,7 +2584,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	flygon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cacnea: {	
 		tier: "Illegal",
@@ -2592,7 +2592,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cacturne: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swablu: {	
 		tier: "Illegal",
@@ -2600,32 +2600,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	altaria: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	altariamega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zangoose: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	seviper: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lunatone: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	solrock: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	barboach: {	
 		tier: "Illegal",
@@ -2633,7 +2633,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	whiscash: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	corphish: {	
 		tier: "Illegal",
@@ -2641,37 +2641,37 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	crawdaunt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	baltoy: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	claydol: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lileep: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cradily: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	anorith: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	armaldo: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	feebas: {	
 		tier: "Illegal",
@@ -2679,12 +2679,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	milotic: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	castform: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	castformsunny: {	
 		isNonstandard: "Past",
@@ -2698,7 +2698,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	kecleon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shuppet: {	
 		tier: "Illegal",
@@ -2706,12 +2706,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	banette: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	banettemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	duskull: {	
 		tier: "Illegal",
@@ -2722,12 +2722,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dusknoir: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tropius: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chingling: {	
 		tier: "Illegal",
@@ -2735,17 +2735,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chimecho: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	absol: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	absolmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snorunt: {	
 		tier: "Illegal",
@@ -2753,57 +2753,57 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	glalie: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	glaliemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	froslass: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spheal: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sealeo: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	walrein: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	clamperl: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	huntail: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gorebyss: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	relicanth: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	luvdisc: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bagon: {	
 		tier: "Illegal",
@@ -2814,12 +2814,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	salamence: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	salamencemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	beldum: {	
 		tier: "Illegal",
@@ -2830,102 +2830,102 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	metagross: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	metagrossmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	regirock: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	regice: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	registeel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	latias: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	latiasmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	latios: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	latiosmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kyogre: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kyogreprimal: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	groudon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	groudonprimal: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rayquaza: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rayquazamega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	jirachi: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deoxys: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deoxysattack: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deoxysdefense: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deoxysspeed: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	turtwig: {	
 		tier: "Illegal",
@@ -2936,7 +2936,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	torterra: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chimchar: {	
 		tier: "Illegal",
@@ -2947,7 +2947,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	infernape: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	piplup: {	
 		tier: "Illegal",
@@ -2958,7 +2958,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	empoleon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	starly: {	
 		tier: "Illegal",
@@ -2969,17 +2969,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	staraptor: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bidoof: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bibarel: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kricketot: {	
 		tier: "Illegal",
@@ -2987,7 +2987,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	kricketune: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shinx: {	
 		tier: "Illegal",
@@ -2998,7 +2998,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	luxray: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cranidos: {	
 		tier: "Illegal",
@@ -3006,7 +3006,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rampardos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shieldon: {	
 		tier: "Illegal",
@@ -3014,32 +3014,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bastiodon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	burmy: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wormadam: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wormadamsandy: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wormadamtrash: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mothim: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	combee: {	
 		tier: "Illegal",
@@ -3047,12 +3047,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vespiquen: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pachirisu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	buizel: {	
 		tier: "Illegal",
@@ -3060,17 +3060,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	floatzel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cherubi: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cherrim: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cherrimsunshine: {	
 		isNonstandard: "Past",
@@ -3081,41 +3081,41 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gastrodon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drifloon: {	
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drifblim: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	buneary: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lopunny: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lopunnymega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	glameow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	purugly: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stunky: {	
 		tier: "Illegal",
@@ -3123,7 +3123,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	skuntank: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bronzor: {	
 		tier: "Illegal",
@@ -3131,17 +3131,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bronzong: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chatot: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spiritomb: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gible: {	
 		tier: "Illegal",
@@ -3152,12 +3152,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	garchomp: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	garchompmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	riolu: {	
 		tier: "Illegal",
@@ -3165,12 +3165,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lucario: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lucariomega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hippopotas: {	
 		tier: "Illegal",
@@ -3178,17 +3178,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hippowdon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	skorupi: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drapion: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	croagunk: {	
 		tier: "Illegal",
@@ -3196,12 +3196,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	toxicroak: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	carnivine: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	finneon: {	
 		tier: "Illegal",
@@ -3209,7 +3209,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lumineon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snover: {	
 		tier: "Illegal",
@@ -3217,137 +3217,137 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	abomasnow: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	abomasnowmega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotomheat: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotomwash: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotomfrost: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotomfan: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rotommow: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	uxie: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mesprit: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	azelf: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dialga: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dialgaorigin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	palkia: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	palkiaorigin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	heatran: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	regigigas: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	giratina: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	giratinaorigin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cresselia: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	phione: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	manaphy: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darkrai: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shaymin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shayminsky: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	arceus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	victini: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snivy: {	
 		tier: "Illegal",
@@ -3358,7 +3358,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	serperior: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tepig: {	
 		tier: "Illegal",
@@ -3369,7 +3369,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	emboar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oshawott: {	
 		tier: "Illegal",
@@ -3380,102 +3380,102 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	samurott: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	samurotthisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	patrat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	watchog: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lillipup: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	herdier: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stoutland: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	purrloin: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	liepard: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pansage: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	simisage: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pansear: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	simisear: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	panpour: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	simipour: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	munna: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	musharna: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pidove: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tranquill: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	unfezant: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blitzle: {	
 		tier: "Illegal",
@@ -3483,32 +3483,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	zebstrika: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	roggenrola: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	boldore: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gigalith: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	woobat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swoobat: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drilbur: {	
 		tier: "Illegal",
@@ -3516,17 +3516,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	excadrill: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	audino: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	audinomega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	timburr: {	
 		tier: "Illegal",
@@ -3537,32 +3537,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	conkeldurr: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tympole: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	palpitoad: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	seismitoad: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	throh: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sawk: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sewaddle: {	
 		tier: "Illegal",
@@ -3573,22 +3573,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	leavanny: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	venipede: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	whirlipede: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scolipede: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cottonee: {	
 		tier: "Illegal",
@@ -3596,7 +3596,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	whimsicott: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	petilil: {	
 		tier: "Illegal",
@@ -3604,27 +3604,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lilligant: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lilliganthisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	basculin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	basculegion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	basculegionf: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandile: {	
 		tier: "Illegal",
@@ -3635,22 +3635,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	krookodile: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darumaka: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darumakagalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darmanitan: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darmanitanzen: {	
 		isNonstandard: "Past",
@@ -3658,7 +3658,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	darmanitangalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	darmanitangalarzen: {	
 		isNonstandard: "Past",
@@ -3666,17 +3666,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	maractus: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dwebble: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	crustle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scraggy: {	
 		tier: "Illegal",
@@ -3684,62 +3684,62 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	scrafty: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sigilyph: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	yamask: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	yamaskgalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cofagrigus: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	runerigus: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tirtouga: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	carracosta: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	archen: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	archeops: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	trubbish: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	garbodor: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	garbodorgmax: {	
 		isNonstandard: "Past",
@@ -3754,12 +3754,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	zoroark: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zoroarkhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	minccino: {	
 		tier: "Illegal",
@@ -3767,7 +3767,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cinccino: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gothita: {	
 		tier: "Illegal",
@@ -3778,7 +3778,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gothitelle: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	solosis: {	
 		tier: "Illegal",
@@ -3789,7 +3789,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	reuniclus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ducklett: {	
 		tier: "Illegal",
@@ -3797,22 +3797,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	swanna: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vanillite: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vanillish: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vanilluxe: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deerling: {	
 		tier: "Illegal",
@@ -3820,22 +3820,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sawsbuck: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	emolga: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	karrablast: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	escavalier: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	foongus: {	
 		tier: "Illegal",
@@ -3843,22 +3843,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	amoonguss: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	frillish: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	jellicent: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	alomomola: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	joltik: {	
 		tier: "Illegal",
@@ -3866,32 +3866,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	galvantula: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ferroseed: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ferrothorn: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	klink: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	klang: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	klinklang: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tynamo: {	
 		tier: "Illegal",
@@ -3902,17 +3902,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	eelektross: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	elgyem: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	beheeyem: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	litwick: {	
 		tier: "Illegal",
@@ -3923,7 +3923,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chandelure: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	axew: {	
 		tier: "Illegal",
@@ -3934,7 +3934,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	haxorus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cubchoo: {	
 		tier: "Illegal",
@@ -3942,32 +3942,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	beartic: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cryogonal: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shelmet: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	accelgor: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stunfisk: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stunfiskgalar: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mienfoo: {	
 		tier: "Illegal",
@@ -3975,12 +3975,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mienshao: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	druddigon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	golett: {	
 		tier: "Illegal",
@@ -3988,7 +3988,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	golurk: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pawniard: {	
 		tier: "Illegal",
@@ -3996,12 +3996,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bisharp: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bouffalant: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rufflet: {	
 		tier: "Illegal",
@@ -4009,12 +4009,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	braviary: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	braviaryhisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vullaby: {	
 		tier: "Illegal",
@@ -4022,17 +4022,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mandibuzz: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	heatmor: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	durant: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	deino: {	
 		tier: "Illegal",
@@ -4043,7 +4043,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hydreigon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	larvesta: {	
 		tier: "Illegal",
@@ -4051,112 +4051,112 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	volcarona: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cobalion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	terrakion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	virizion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tornadus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tornadustherian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	thundurus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	thundurustherian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	reshiram: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zekrom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	landorus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	landorustherian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kyurem: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kyuremblack: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kyuremwhite: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	keldeo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	meloetta: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	genesect: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	genesectburn: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	genesectchill: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	genesectdouse: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	genesectshock: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chespin: {	
 		tier: "Illegal",
@@ -4167,7 +4167,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chesnaught: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fennekin: {	
 		tier: "Illegal",
@@ -4178,7 +4178,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	delphox: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	froakie: {	
 		tier: "Illegal",
@@ -4189,7 +4189,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	greninja: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	greninjaash: {	
 		isNonstandard: "Past",
@@ -4198,12 +4198,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bunnelby: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	diggersby: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fletchling: {	
 		tier: "Illegal",
@@ -4214,7 +4214,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	talonflame: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	scatterbug: {	
 		tier: "Illegal",
@@ -4225,7 +4225,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vivillon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	litleo: {	
 		tier: "Illegal",
@@ -4233,7 +4233,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pyroar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	flabebe: {	
 		tier: "Illegal",
@@ -4248,7 +4248,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	florges: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	skiddo: {	
 		tier: "Illegal",
@@ -4256,22 +4256,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gogoat: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pancham: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pangoro: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	furfrou: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	espurr: {	
 		tier: "Illegal",
@@ -4279,22 +4279,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	meowstic: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	honedge: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	doublade: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aegislash: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aegislashblade: {	
 		isNonstandard: "Past",
@@ -4302,22 +4302,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	spritzee: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aromatisse: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	swirlix: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slurpuff: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	inkay: {	
 		tier: "Illegal",
@@ -4325,17 +4325,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	malamar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	binacle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	barbaracle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	skrelp: {	
 		tier: "Illegal",
@@ -4343,7 +4343,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dragalge: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	clauncher: {	
 		tier: "Illegal",
@@ -4351,52 +4351,52 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	clawitzer: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	helioptile: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	heliolisk: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tyrunt: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tyrantrum: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	amaura: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	aurorus: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hawlucha: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dedenne: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	carbink: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	goomy: {	
 		tier: "Illegal",
@@ -4410,17 +4410,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	goodra: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	goodrahisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	klefki: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	phantump: {	
 		tier: "Illegal",
@@ -4428,12 +4428,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	trevenant: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pumpkaboo: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pumpkaboosmall: {	
 		isNonstandard: "Past",
@@ -4447,7 +4447,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gourgeist: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gourgeistsmall: {	
 		isNonstandard: "Past",
@@ -4464,12 +4464,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	avalugg: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	avalugghisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	noibat: {	
 		tier: "Illegal",
@@ -4477,12 +4477,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	noivern: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	xerneas: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	xerneasneutral: {	
 		isNonstandard: "Custom", // can't be used in battle
@@ -4491,47 +4491,47 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	yveltal: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zygarde: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zygarde10: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zygardecomplete: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	diancie: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dianciemega: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hoopa: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hoopaunbound: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	volcanion: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rowlet: {	
 		tier: "Illegal",
@@ -4542,12 +4542,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	decidueye: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	decidueyehisui: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	litten: {	
 		tier: "Illegal",
@@ -4558,7 +4558,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	incineroar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	popplio: {	
 		tier: "Illegal",
@@ -4569,7 +4569,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	primarina: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pikipek: {	
 		tier: "Illegal",
@@ -4580,7 +4580,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	toucannon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	yungoos: {	
 		tier: "Illegal",
@@ -4588,7 +4588,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gumshoos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gumshoostotem: {	
 		isNonstandard: "Past",
@@ -4603,7 +4603,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	vikavolt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	vikavolttotem: {	
 		isNonstandard: "Past",
@@ -4615,27 +4615,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	crabominable: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oricorio: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oricoriopompom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oricoriopau: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oricoriosensu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cutiefly: {	
 		tier: "Illegal",
@@ -4643,7 +4643,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	ribombee: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ribombeetotem: {	
 		isNonstandard: "Past",
@@ -4658,22 +4658,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lycanroc: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lycanrocmidnight: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lycanrocdusk: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wishiwashi: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wishiwashischool: {	
 		isNonstandard: "Past",
@@ -4684,7 +4684,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	toxapex: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mudbray: {	
 		tier: "Illegal",
@@ -4692,7 +4692,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mudsdale: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dewpider: {	
 		tier: "Illegal",
@@ -4700,7 +4700,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	araquanid: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	araquanidtotem: {	
 		isNonstandard: "Past",
@@ -4712,7 +4712,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lurantis: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lurantistotem: {	
 		isNonstandard: "Past",
@@ -4721,12 +4721,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	morelull: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shiinotic: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	salandit: {	
 		tier: "Illegal",
@@ -4734,7 +4734,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	salazzle: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	salazzletotem: {	
 		isNonstandard: "Past",
@@ -4743,12 +4743,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	stufful: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bewear: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bounsweet: {	
 		tier: "Illegal",
@@ -4759,32 +4759,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	tsareena: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	comfey: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oranguru: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	passimian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wimpod: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	golisopod: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandygast: {	
 		tier: "Illegal",
@@ -4792,127 +4792,127 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	palossand: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pyukumuku: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	typenull: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvally: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallybug: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallydark: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallydragon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyelectric: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyfairy: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyfighting: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyfire: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyflying: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyghost: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallygrass: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyground: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyice: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallypoison: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallypsychic: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallyrock: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallysteel: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silvallywater: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	minior: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	komala: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	turtonator: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	togedemaru: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	togedemarutotem: {	
 		isNonstandard: "Past",
@@ -4921,7 +4921,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mimikyu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	mimikyutotem: {	
 		isNonstandard: "Past",
@@ -4934,17 +4934,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bruxish: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drampa: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dhelmise: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	jangmoo: {	
 		tier: "Illegal",
@@ -4955,7 +4955,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	kommoo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kommoototem: {	
 		isNonstandard: "Past",
@@ -4964,22 +4964,22 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	tapukoko: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tapulele: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tapubulu: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tapufini: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cosmog: {	
 		tier: "Illegal",
@@ -4990,112 +4990,112 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	solgaleo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lunala: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nihilego: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	buzzwole: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pheromosa: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	xurkitree: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	celesteela: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kartana: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	guzzlord: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	necrozma: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	necrozmaduskmane: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	necrozmadawnwings: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	necrozmaultra: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	magearna: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	marshadow: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	poipole: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	naganadel: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stakataka: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	blacephalon: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zeraora: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	meltan: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	melmetal: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	melmetalgmax: {	
 		isNonstandard: "Past",
@@ -5110,7 +5110,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rillaboom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rillaboomgmax: {	
 		isNonstandard: "Past",
@@ -5125,7 +5125,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cinderace: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cinderacegmax: {	
 		isNonstandard: "Past",
@@ -5140,7 +5140,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	inteleon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	inteleongmax: {	
 		isNonstandard: "Past",
@@ -5152,7 +5152,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	greedent: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rookidee: {	
 		tier: "Illegal",
@@ -5163,7 +5163,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	corviknight: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	corviknightgmax: {	
 		isNonstandard: "Past",
@@ -5172,17 +5172,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	blipbug: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dottler: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	orbeetle: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	orbeetlegmax: {	
 		isNonstandard: "Past",
@@ -5191,32 +5191,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	nickit: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	thievul: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gossifleur: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	eldegoss: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wooloo: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dubwool: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chewtle: {	
 		tier: "Illegal",
@@ -5224,7 +5224,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	drednaw: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	drednawgmax: {	
 		isNonstandard: "Past",
@@ -5233,12 +5233,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	yamper: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	boltund: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rolycoly: {	
 		tier: "Illegal",
@@ -5249,7 +5249,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	coalossal: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	coalossalgmax: {	
 		isNonstandard: "Past",
@@ -5261,7 +5261,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	flapple: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	flapplegmax: {	
 		isNonstandard: "Past",
@@ -5270,7 +5270,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	appletun: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	appletungmax: {	
 		isNonstandard: "Past",
@@ -5279,7 +5279,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dipplin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	silicobra: {	
 		tier: "Illegal",
@@ -5287,7 +5287,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sandaconda: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandacondagmax: {	
 		isNonstandard: "Past",
@@ -5296,7 +5296,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cramorant: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	arrokuda: {	
 		tier: "Illegal",
@@ -5304,7 +5304,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	barraskewda: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	toxel: {	
 		tier: "Illegal",
@@ -5312,7 +5312,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	toxtricity: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	toxtricitygmax: {	
 		isNonstandard: "Past",
@@ -5325,12 +5325,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sizzlipede: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	centiskorch: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	centiskorchgmax: {	
 		isNonstandard: "Past",
@@ -5339,12 +5339,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	clobbopus: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	grapploct: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sinistea: {	
 		tier: "Illegal",
@@ -5352,7 +5352,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	polteageist: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hatenna: {	
 		tier: "Illegal",
@@ -5360,12 +5360,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	hattrem: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hatterene: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hatterenegmax: {	
 		isNonstandard: "Past",
@@ -5380,7 +5380,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	grimmsnarl: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	grimmsnarlgmax: {	
 		isNonstandard: "Past",
@@ -5392,7 +5392,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	alcremie: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	alcremiegmax: {	
 		isNonstandard: "Past",
@@ -5401,12 +5401,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	falinks: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pincurchin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	snom: {	
 		tier: "Illegal",
@@ -5414,32 +5414,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	frosmoth: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	stonjourner: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	eiscue: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	indeedee: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	indeedeef: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	morpeko: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cufant: {	
 		tier: "Illegal",
@@ -5447,7 +5447,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	copperajah: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	copperajahgmax: {	
 		isNonstandard: "Past",
@@ -5456,27 +5456,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dracozolt: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	arctozolt: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dracovish: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	arctovish: {	
 		isNonstandard: "Past",
 		tier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	duraludon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	duraludongmax: {	
 		isNonstandard: "Past",
@@ -5491,32 +5491,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dragapult: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zacian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zaciancrowned: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zamazenta: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	zamazentacrowned: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	eternatus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	eternatuseternamax: {	
 		isNonstandard: "Past",
@@ -5528,12 +5528,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	urshifu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	urshifurapidstrike: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	urshifugmax: {	
 		isNonstandard: "Past",
@@ -5546,52 +5546,52 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	zarude: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	regieleki: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	regidrago: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	glastrier: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	spectrier: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	calyrex: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	calyrexice: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	calyrexshadow: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	enamorus: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	enamorustherian: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sprigatito: {	
 		tier: "Illegal",
@@ -5602,7 +5602,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	meowscarada: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fuecoco: {	
 		tier: "Illegal",
@@ -5613,7 +5613,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	skeledirge: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	quaxly: {	
 		tier: "Illegal",
@@ -5624,7 +5624,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	quaquaval: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	lechonk: {	
 		tier: "Illegal",
@@ -5632,12 +5632,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	oinkologne: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	oinkolognef: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tarountula: {	
 		tier: "Illegal",
@@ -5645,7 +5645,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	spidops: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nymble: {	
 		tier: "Illegal",
@@ -5653,7 +5653,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	lokix: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	rellor: {	
 		tier: "Illegal",
@@ -5661,7 +5661,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	rabsca: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	greavard: {	
 		tier: "Illegal",
@@ -5669,7 +5669,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	houndstone: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	flittle: {	
 		tier: "Illegal",
@@ -5677,7 +5677,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	espathra: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wiglett: {	
 		tier: "Illegal",
@@ -5685,17 +5685,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	wugtrio: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	dondozo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	veluza: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	finizen: {	
 		tier: "Illegal",
@@ -5703,7 +5703,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	palafin: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	smoliv: {	
 		tier: "Illegal",
@@ -5714,7 +5714,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	arboliva: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	capsakid: {	
 		tier: "Illegal",
@@ -5722,7 +5722,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	scovillain: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tadbulb: {	
 		tier: "Illegal",
@@ -5730,7 +5730,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	bellibolt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	varoom: {	
 		tier: "Illegal",
@@ -5738,12 +5738,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	revavroom: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	orthworm: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tandemaus: {	
 		tier: "Illegal",
@@ -5751,7 +5751,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	maushold: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cetoddle: {	
 		tier: "Illegal",
@@ -5759,7 +5759,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	cetitan: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	frigibax: {	
 		tier: "Illegal",
@@ -5770,17 +5770,17 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	baxcalibur: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tatsugiri: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	cyclizar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pawmi: {	
 		tier: "Illegal",
@@ -5791,7 +5791,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	pawmot: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wattrel: {	
 		tier: "Illegal",
@@ -5799,27 +5799,27 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	kilowattrel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bombirdier: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	squawkabilly: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	flamigo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	klawf: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	nacli: {	
 		tier: "Illegal",
@@ -5830,7 +5830,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	garganacl: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	glimmet: {	
 		tier: "Illegal",
@@ -5838,7 +5838,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	glimmora: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	shroodle: {	
 		tier: "Illegal",
@@ -5846,7 +5846,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	grafaiai: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fidough: {	
 		tier: "Illegal",
@@ -5854,7 +5854,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	dachsbun: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	maschiff: {	
 		tier: "Illegal",
@@ -5862,7 +5862,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	mabosstiff: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	bramblin: {	
 		tier: "Illegal",
@@ -5870,7 +5870,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	brambleghast: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gimmighoul: {	
 		tier: "Illegal",
@@ -5881,107 +5881,107 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	gholdengo: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	greattusk: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	brutebonnet: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	sandyshocks: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	screamtail: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fluttermane: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	slitherwing: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	roaringmoon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	irontreads: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironmoth: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironhands: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironjugulis: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironthorns: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironbundle: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironvaliant: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tinglu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chienpao: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	wochien: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	chiyu: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	koraidon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	miraidon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	tinkatink: {	
 		tier: "Illegal",
@@ -5992,7 +5992,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	tinkaton: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	charcadet: {	
 		tier: "Illegal",
@@ -6000,12 +6000,12 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	armarouge: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ceruledge: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	toedscool: {	
 		tier: "Illegal",
@@ -6013,32 +6013,32 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	toedscruel: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	kingambit: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	clodsire: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	annihilape: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	walkingwake: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironleaves: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	poltchageist: {	
 		tier: "Illegal",
@@ -6046,87 +6046,87 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	sinistcha: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	okidogi: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	munkidori: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	fezandipiti: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ogerpon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ogerponwellspring: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ogerponhearthflame: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ogerponcornerstone: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	archaludon: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	hydrapple: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	gougingfire: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ragingbolt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironboulder: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	ironcrown: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	terapagos: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	terapagosstellar: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	pecharunt: {	
 		tier: "Illegal",
 		doublesTier: "Illegal",
-		natDexTier: "Illegal",
+		
 	},	
 	missingno: {	
 		isNonstandard: "Custom",
