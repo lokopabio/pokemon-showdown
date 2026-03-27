@@ -5,7 +5,7 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 	},
 	standarddoubles: {
 		inherit: true,
-		ruleset: ['Obtainable', 'Team Preview', 'Species Clause', 'Nickname Clause', 'Evasion Abilities Clause', 'Evasion Moves Clause', 'Gravity Sleep Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod'],
+		ruleset: ['Obtainable', 'Species Clause', 'Nickname Clause', 'Evasion Abilities Clause', 'Evasion Moves Clause', 'Gravity Sleep Clause', 'Endless Battle Clause', 'HP Percentage Mod', 'Cancel Mod'],
 	},
 	obtainablemoves: {
 		inherit: true,
