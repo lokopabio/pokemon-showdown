@@ -1,4 +1,90 @@
 export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
+	
+	carlisite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	dijeyepite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	mijuejite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	oruguillitex: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	momontanhite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	papalvite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	habiemiguitex: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	habiemiguitey: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	albeertite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	vtrollite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	ponsheadite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	chemousite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	superstebanite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	fidalsanite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	fidbuelunite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	oscobainite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	mermelite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
 	abomasite: {
 		inherit: true,
 		isNonstandard: null,
@@ -683,4 +769,5 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 		inherit: true,
 		isNonstandard: null,
 	},	
+	
 };

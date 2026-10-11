@@ -1,4 +1,20 @@
 export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
+	
+	mindseye: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	punkrock: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	supremeoverlord: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
 	darkaura: {
 		inherit: true,
 		flags: { breakable: 1 },
