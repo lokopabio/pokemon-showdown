@@ -1,4 +1,58 @@
 export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable = {
+	carlismega: {
+		tier: "OU",
+	},
+	dijeypepemega: {
+		tier: "OU",
+	},
+	mijuemega: {
+		tier: "OU",
+	},
+	oruguillemegax: {
+		tier: "OU",
+	},
+	momontanhomega: {
+		tier: "OU",
+	},
+	papalvomega: {
+		tier: "OU",
+	},
+	habiemigomegax: {
+		tier: "OU",
+	},
+	habiemigomegay: {
+		tier: "OU",
+	},
+	albeertomega: {
+		tier: "OU",
+	},
+	vtrollmega: {
+		tier: "OU",
+	},
+	ponsheadmega: {
+		tier: "OU",
+	},
+	chemousmega: {
+		tier: "OU",
+	},
+	superstebanmegastagei: {
+		tier: "OU",
+	},
+	superstebanmegastageii: {
+		tier: "OU",
+	},
+	fidalsanamega: {
+		tier: "OU",
+	},
+	fidbuelunamega: {
+		tier: "OU",
+	},
+	oscobainmega: {
+		tier: "OU",
+	},
+	mermelamega: {
+		tier: "OU",
+	},
 	carletto: {
 		tier: "LC",
 	},
