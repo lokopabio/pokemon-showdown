@@ -19794,8 +19794,19 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		name: "Techno Blast",
 		pp: 5,
 		priority: 0,
-		flags: { protect: 1, mirror: 1 },
+		flags: { protect: 1, mirror: 1, sound: 1 },
 		onModifyType(move, pokemon) {
+			if (pokemon.species.id === 'oscobainmega') {
+				const slot = pokemon.moveSlots.findIndex(
+					moveSlot => moveSlot.id === 'technoblast'
+				);
+				const types = ['Fire', 'Ice', 'Water', 'Electric'] as const;
+				if (slot !== -1) {
+					move.type = types[slot];
+					return;
+				}
+			}
+
 			if (pokemon.ignoringItem()) return;
 			move.type = this.runEvent('Drive', pokemon, null, move, 'Normal');
 		},

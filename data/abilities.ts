@@ -40,6 +40,143 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		rating: 0.1,
 		num: 0,
 	},
+	waterweight: {
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Water') {
+				return this.chainModify(0.5);
+			}
+		},
+		onDamagingHit(damage, target, source, move) {
+			if (move.type === 'Water') {
+				this.boost({ def: 1, spd: 1 }, target, target);
+			}
+		},
+		flags: { breakable: 1 },
+		name: "Water Weight",
+		rating: 4,
+		num: -4,
+	},
+	papalveil: {
+		onStart(pokemon) {
+			pokemon.side.addSideCondition('safeguard', pokemon);
+		},
+		flags: {},
+		name: "Papal Veil",
+		rating: 3,
+		num: -5,
+	},
+	avenger: {
+		onBasePowerPriority: 21,
+		onBasePower(basePower, attacker, defender, move) {
+			if (attacker.side.faintedLastTurn) {
+				this.debug('Avenger: Ally fainted last turn');
+				return this.chainModify(2);
+			}
+		},
+		flags: {},
+		name: "Avenger",
+		rating: 4,
+		num: -6,
+	},
+	grandmothermoon: {
+		onStart(pokemon) {
+			this.field.addPseudoWeather('gravity', pokemon);
+		},
+		onDragOutPriority: 1,
+		onDragOut(pokemon) {
+			this.add('-activate', pokemon, 'ability: Grand Mother Moon');
+			return null;
+		},
+		onTryHit(target, source, move) {
+			if (['lowkick', 'grassknot', 'heavyslam', 'heatcrash'].includes(move.id)) {
+				this.add('-immune', target, '[from] ability: Grand Mother Moon');
+				return null;
+			}
+		},
+		flags: { breakable: 1 },
+		name: "Grand Mother Moon",
+		rating: 4,
+		num: -7,
+	},
+	toughhorns: {
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.id === 'hornattack') {
+				return this.chainModify(2);
+			}
+			if (['megahorn', 'hornleech', 'smartstrike'].includes(move.id)) {
+				return this.chainModify(1.3);
+			}
+		},
+		flags: {},
+		name: "Tough Horns",
+		rating: 3.5,
+		num: -8,
+	},
+	supersallon: {
+		onStart(pokemon) {
+			if (!pokemon.m.superSallonTransforming) {
+				this.boost({ accuracy: 1 }, pokemon);
+			}
+		},
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect?.effectType !== 'Move') return;
+			if (!source.hp || source.transformed) return;
+			if (source.species.id !== 'superstebanmegastagei') return;
+
+			source.m.superSallonTransforming = true;
+			source.formeChange('Supersteban-Mega-Stage-II', this.effect, true);
+			delete source.m.superSallonTransforming;
+		},
+		flags: {},
+		name: "Super Sallon",
+		rating: 4,
+		num: -9,
+	},
+	finalverdict: {
+		onModifyMove(move) {
+			if (move.id !== 'judgment') return;
+
+			move.type = 'Electric';
+			move.ignoreImmunity = { Electric: true };
+
+			move.onEffectiveness = function(typeMod, target, type) {
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			};
+		},
+		flags: {},
+		name: "Final Verdict",
+		rating: 4,
+		num: -10,
+	},
+	armedtotheteeth: {
+		onSourceDamagingHit(damage, target, source, move) {
+			if (!damage || !target.hp || source === target) return;
+			target.addVolatile('armedtotheteeth', source);
+		},
+		condition: {
+			noCopy: true,
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Bleeding', '[from] ability: Armed to the Teeth');
+			},
+			onResidualOrder: 13,
+			onResidual(pokemon) {
+				this.damage(
+					pokemon.baseMaxhp / 16,
+					pokemon,
+					this.effectState.source,
+					this.dex.abilities.get('armedtotheteeth')
+				);
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Bleeding');
+			},
+		},
+		flags: {},
+		name: "Armed to the Teeth",
+		rating: 4,
+		num: -11,
+	},
 	adaptability: {
 		onModifySTAB(stab, source, target, move) {
 			if (move.forceSTAB || source.hasType(move.type)) {
@@ -434,7 +571,7 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 			if (!lastAttackedBy) return;
 			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
 			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
-				this.boost({ spa: 1 }, target, target);
+				this.boost({ atk: 1 }, target, target);
 			}
 		},
 		flags: {},
@@ -2548,6 +2685,9 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: 250,
 	},
 	mindseye: {
+		onStart(pokemon) {
+			this.boost({ accuracy: 1 }, pokemon);
+		},
 		onTryBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			if (boost.accuracy && boost.accuracy < 0) {
@@ -3317,6 +3457,14 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: 211,
 	},
 	powerofalchemy: {
+		onStart(pokemon) {
+			if (this.gameType !== 'doubles') return;
+			const ally = pokemon.side.faintedThisTurn || pokemon.side.faintedLastTurn;
+			if (!ally || ally === pokemon || !ally.fainted) return;
+			const ability = ally.getAbility();
+			if (ability.flags['noreceiver'] || ability.id === 'noability') return;
+			pokemon.setAbility(ability, ally);
+		},
 		onAllyFaint(target) {
 			if (!this.effectState.target.hp) return;
 			const ability = target.getAbility();
@@ -3704,6 +3852,14 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: 155,
 	},
 	receiver: {
+		onStart(pokemon) {
+			if (this.gameType !== 'doubles') return;
+			const ally = pokemon.side.faintedThisTurn || pokemon.side.faintedLastTurn;
+			if (!ally || ally === pokemon || !ally.fainted) return;
+			const ability = ally.getAbility();
+			if (ability.flags['noreceiver'] || ability.id === 'noability') return;
+			pokemon.setAbility(ability, ally);
+		},
 		onAllyFaint(target) {
 			if (!this.effectState.target.hp) return;
 			const ability = target.getAbility();
