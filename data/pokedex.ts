@@ -20949,7 +20949,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
         prevo: "Salonbert",
         evoLevel: 30,
         eggGroups: ["Human-Like"],
-		otherFormes: ["Supersteban-Mega", "Supersteban-Mega-Stage-II"],
+		otherFormes: ["Supersteban-Mega", "Supersteban-Ash"],
 		formeOrder: ["Supersteban", "Supersteban-Mega", "Supersteban-Ash"],
     },
 	superstebanmega: {
@@ -21195,7 +21195,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		baseSpecies: "Fidbueluna",
 		forme: "Mega",
 		types: ["Rock", "Fairy"],
-		baseStats: { hp: 29, atk: 5, def: 169, spa: 69, spd: 169, spe: 9 },
+		baseStats: { hp: 29, atk: 53, def: 169, spa: 80, spd: 169, spe: 20 },
 		abilities: { 0: "Grand Mother Moon" },
 		heightm: 6.9,
 		weightkg: 999,
