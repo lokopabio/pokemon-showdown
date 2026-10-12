@@ -2098,11 +2098,12 @@ export class GameRoom extends BasicRoom {
 		const cleanReplayName = (name: string) => name.replace(/\W+/g, '').replace(/_/g, '');
 		const p1 = cleanReplayName(battle.players[0].name);
 		const p2 = cleanReplayName(battle.players[1].name);
-		const url = `https://play.suajserver.xyz/replays/${format.id}/${replayNumber}_${p1}_vs_${p2}.html`;
+		const replayPath = `/replays/${format.id}/${replayNumber}_${p1}_vs_${p2}.html`;
+		const url = `https://play.suajserver.xyz${replayPath}`;
 
 		connection?.popup(
 			`|html|<p>Your replay has been saved! It's available at:</p><p> ` +
-			`<a class="no-panel-intercept" href="${url}" target="_blank">${url}</a> ` +
+			`<a class="no-panel-intercept" href="${replayPath}" target="_blank">${url}</a> ` +
 			`<copytext value="${url}">Copy</copytext>`
 		);
 	}
