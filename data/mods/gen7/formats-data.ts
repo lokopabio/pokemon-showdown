@@ -443,10 +443,10 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	chemousmega: {
 		tier: "OU",
 	},
-	superstebanmegastagei: {
+	superstebanmega: {
 		tier: "OU",
 	},
-	superstebanmegastageii: {
+	superstebanash: {
 		tier: "OU",
 	},
 	fidalsanamega: {

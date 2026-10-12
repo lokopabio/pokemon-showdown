@@ -193,7 +193,7 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 	superstebanite: {
 		name: "Superstebanite",
 		spritenum: 0,
-		megaStone: "Supersteban-Mega-Stage-I",
+		megaStone: "Supersteban-Mega",
 		megaEvolves: "Supersteban",
 		itemUser: ["Supersteban"],
 		onTakeItem(item, source) {

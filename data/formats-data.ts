@@ -35,10 +35,10 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 	chemousmega: {
 		tier: "OU",
 	},
-	superstebanmegastagei: {
+	superstebanmega: {
 		tier: "OU",
 	},
-	superstebanmegastageii: {
+	superstebanash: {
 		tier: "OU",
 	},
 	fidalsanamega: {

@@ -122,10 +122,12 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		onSourceAfterFaint(length, target, source, effect) {
 			if (effect?.effectType !== 'Move') return;
 			if (!source.hp || source.transformed) return;
-			if (source.species.id !== 'superstebanmegastagei') return;
+			if (source.species.id !== 'superstebanmega') return;
+
+			this.add('-activate', source, 'ability: Super Sallon');
 
 			source.m.superSallonTransforming = true;
-			source.formeChange('Supersteban-Mega-Stage-II', this.effect, true);
+			source.formeChange('Supersteban-Ash', this.effect, true);
 			delete source.m.superSallonTransforming;
 		},
 		flags: {},
@@ -138,7 +140,6 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 			if (move.id !== 'judgment') return;
 
 			move.type = 'Electric';
-			move.ignoreImmunity = { Electric: true };
 
 			move.onEffectiveness = function(typeMod, target, type) {
 				return typeMod + this.dex.getEffectiveness('Ice', type);
