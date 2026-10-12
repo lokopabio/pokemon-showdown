@@ -163,7 +163,7 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 			onResidualOrder: 13,
 			onResidual(pokemon) {
 				this.damage(
-					pokemon.baseMaxhp / 16,
+					pokemon.baseMaxhp / 8,
 					pokemon,
 					this.effectState.source,
 					this.dex.abilities.get('armedtotheteeth')
