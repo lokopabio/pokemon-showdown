@@ -3982,6 +3982,7 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		name: "[Gen 7] Ubers",
 		mod: 'gen7',
 		searchShow: false,
+		challengeShow: true,
 		ruleset: ['Standard', 'Mega Rayquaza Clause'],
 		banlist: ['Baton Pass'],
 	},
