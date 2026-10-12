@@ -2093,27 +2093,15 @@ export class GameRoom extends BasicRoom {
 			return;
 		}
 
-		// Otherwise, (we're probably a side server), upload the replay through LoginServer
+		// Sú-ajá uses its own replay generator instead of the official PS replay server.
+		const replayNumber = id.split('-').pop();
+		const cleanReplayName = (name: string) => name.replace(/\W+/g, '').replace(/_/g, '');
+		const p1 = cleanReplayName(battle.players[0].name);
+		const p2 = cleanReplayName(battle.players[1].name);
+		const url = `https://play.suajserver.xyz/replays/${format.id}/${replayNumber}_${p1}_vs_${p2}.html`;
 
-		const [result] = await LoginServer.request('addreplay', {
-			id,
-			log,
-			players: battle.players.map(p => p.name).join(','),
-			format: format.name,
-			rating, // will probably do nothing
-			hidden: hidden === 0 ? '' : hidden,
-			inputlog: battle.inputLog?.join('\n') || undefined,
-			password,
-		});
-		if (result?.errorip) {
-			connection?.popup(`This server's request IP ${result.errorip} is not a registered server.`);
-			return;
-		}
-
-		const fullid = result?.replayid;
-		const url = `https://${Config.routes.replays}/${fullid}`;
 		connection?.popup(
-			`|html|<p>Your replay has been uploaded! It's available at:</p><p> ` +
+			`|html|<p>Your replay has been saved! It's available at:</p><p> ` +
 			`<a class="no-panel-intercept" href="${url}" target="_blank">${url}</a> ` +
 			`<copytext value="${url}">Copy</copytext>`
 		);
