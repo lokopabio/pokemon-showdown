@@ -114,10 +114,10 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: -8,
 	},
 	supersallon: {
-		onStart(pokemon) {
-			if (!pokemon.m.superSallonTransforming) {
-				this.boost({ accuracy: 1 }, pokemon);
-			}
+		onSourceModifyAccuracyPriority: -1,
+		onSourceModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			return this.chainModify([4915, 4096]);
 		},
 		onSourceAfterFaint(length, target, source, effect) {
 			if (effect?.effectType !== 'Move') return;
@@ -2686,8 +2686,10 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: 250,
 	},
 	mindseye: {
-		onStart(pokemon) {
-			this.boost({ accuracy: 1 }, pokemon);
+		onSourceModifyAccuracyPriority: -1,
+		onSourceModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			return this.chainModify([4915, 4096]);
 		},
 		onTryBoost(boost, target, source, effect) {
 			if (source && target === source) return;
@@ -3459,11 +3461,11 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 	},
 	powerofalchemy: {
 		onStart(pokemon) {
-			if (this.gameType !== 'doubles') return;
 			const ally = pokemon.side.faintedThisTurn || pokemon.side.faintedLastTurn;
 			if (!ally || ally === pokemon || !ally.fainted) return;
 			const ability = ally.getAbility();
 			if (ability.flags['noreceiver'] || ability.id === 'noability') return;
+			this.add('-activate', pokemon, 'ability: Power of Alchemy');
 			pokemon.setAbility(ability, ally);
 		},
 		onAllyFaint(target) {
@@ -3854,11 +3856,11 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 	},
 	receiver: {
 		onStart(pokemon) {
-			if (this.gameType !== 'doubles') return;
 			const ally = pokemon.side.faintedThisTurn || pokemon.side.faintedLastTurn;
 			if (!ally || ally === pokemon || !ally.fainted) return;
 			const ability = ally.getAbility();
 			if (ability.flags['noreceiver'] || ability.id === 'noability') return;
+			this.add('-activate', pokemon, 'ability: Receiver');
 			pokemon.setAbility(ability, ally);
 		},
 		onAllyFaint(target) {
