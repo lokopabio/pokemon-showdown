@@ -30,30 +30,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	moody: {
 		inherit: true,
-		onResidual(pokemon) {
-			let stats: BoostID[] = [];
-			const boost: SparseBoostsTable = {};
-			let statPlus: BoostID;
-			for (statPlus in pokemon.boosts) {
-				if (pokemon.boosts[statPlus] < 6) {
-					stats.push(statPlus);
-				}
-			}
-			let randomStat = stats.length ? this.sample(stats) : undefined;
-			if (randomStat) boost[randomStat] = 2;
-
-			stats = [];
-			let statMinus: BoostID;
-			for (statMinus in pokemon.boosts) {
-				if (pokemon.boosts[statMinus] > -6 && statMinus !== randomStat) {
-					stats.push(statMinus);
-				}
-			}
-			randomStat = stats.length ? this.sample(stats) : undefined;
-			if (randomStat) boost[randomStat] = -1;
-
-			this.boost(boost, pokemon, pokemon);
-		},
 	},
 	oblivious: {
 		inherit: true,

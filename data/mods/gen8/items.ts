@@ -1,4 +1,229 @@
 export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
+	carlisite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	dijeyepite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	mijuejite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	oruguillitex: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	momontanhite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	papalvite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	habiemiguitex: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	habiemiguitey: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	albeertite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	vtrollite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	ponsheadite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	chemousite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	superstebanite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	fidalsanite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	fidbuelunite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	oscobainite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	mermelite: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	aloraichiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	buginiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	darkiniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	decidiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	dragoniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	eeviumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	electriumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	fairiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	fightiniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	firiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	flyiniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	ghostiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	grassiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	groundiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	iciumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	inciniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	kommoniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	lunaliumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	lycaniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	marshadiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	mewniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	mimikiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	normaliumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	pikaniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	pikashuniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	poisoniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	primariumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	psychiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	rockiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	snorliumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	solganiumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	steeliumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	tapuniumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	ultranecroziumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	wateriumz: {
+		inherit: true,
+		isNonstandard: null,
+	},
 	adamantcrystal: {
 		inherit: true,
 		isNonstandard: "Future",

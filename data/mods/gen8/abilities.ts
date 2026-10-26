@@ -33,6 +33,16 @@ Ratings and how they work:
 */
 
 export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
+	mindseye: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
+	supremeoverlord: {
+		inherit: true,
+		gen: 7,
+		isNonstandard: null,
+	},
 	noability: {
 		inherit: true,
 		rating: 0.1,

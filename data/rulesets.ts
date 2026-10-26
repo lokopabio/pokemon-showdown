@@ -220,6 +220,17 @@ export const Rulesets: import('../sim/dex-formats').FormatDataTable = {
 		effectType: 'ValidatorRule',
 		name: 'Obtainable Moves',
 		desc: "Makes sure moves are learnable by the species.",
+		banlist: [
+			'Dijeypepe + Reckless + Happy Hour',
+			'Dijeypepe + Water Compaction + Happy Hour',
+			'Mijue\u0301 + Big Pecks + Hold Hands',
+			'Ludevtention + Contrary + V-Create',
+			'Jamadelpa + Magnet Pull + Fusion Flare',
+			'Jamadelpa + Sheer Force + Fusion Flare',
+			'Pabio + Fur Coat + Happy Hour',
+			'Arturacer + Huge Power + Shift Gear',
+			'Waynero + Flash Fire + Steam Eruption',
+		],
 		// Hardcoded in team-validator.ts
 	},
 	obtainableabilities: {

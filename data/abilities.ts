@@ -136,14 +136,15 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		num: -9,
 	},
 	finalverdict: {
-		onModifyMove(move) {
+		onModifyMove(move, pokemon) {
 			if (move.id !== 'judgment') return;
 
-			move.type = 'Electric';
+			const slot = pokemon.moveSlots.findIndex(
+				moveSlot => moveSlot.id === 'judgment'
+			);
+			if (slot < 0) return;
 
-			move.onEffectiveness = function(typeMod, target, type) {
-				return typeMod + this.dex.getEffectiveness('Ice', type);
-			};
+			move.type = slot < 2 ? 'Electric' : 'Ice';
 		},
 		flags: {},
 		name: "Final Verdict",
@@ -2781,7 +2782,7 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 				}
 			}
 			let randomStat: BoostID | undefined = stats.length ? this.sample(stats) : undefined;
-			if (randomStat) boost[randomStat] = 2;
+			if (randomStat) boost[randomStat] = 1;
 
 			stats = [];
 			let statMinus: BoostID;

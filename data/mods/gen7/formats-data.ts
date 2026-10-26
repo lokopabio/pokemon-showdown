@@ -409,57 +409,75 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 	},
 	carlismega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	dijeypepemega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	mijuemega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	oruguillemegax: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	momontanhomega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	papalvomega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	habiemigomegax: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	habiemigomegay: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	albeertomega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	vtrollmega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	ponsheadmega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	chemousmega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	superstebanmega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	superstebanash: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	fidalsanamega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	fidbuelunamega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	oscobainmega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	mermelamega: {
 		tier: "Uber",
+		doublesTier: "DOU",
 	},
 	// End Suaj
 	bulbasaur: {	

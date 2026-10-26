@@ -15227,7 +15227,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 	rapidspin: {
 		num: 229,
 		accuracy: 100,
-		basePower: 50,
+		basePower: 20,
 		category: "Physical",
 		name: "Rapid Spin",
 		pp: 40,
@@ -15265,14 +15265,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 				}
 			}
 		},
-		secondary: {
-			chance: 100,
-			self: {
-				boosts: {
-					spe: 1,
-				},
-			},
-		},
+		secondary: null,
 		target: "normal",
 		type: "Normal",
 		contestType: "Cool",

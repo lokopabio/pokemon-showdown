@@ -8,6 +8,46 @@ export const AbilitiesText: { [id: IDEntry]: AbilityText } = {
 		desc: "This Pokemon's moves that match one of its types have a same-type attack bonus (STAB) of 2 instead of 1.5.",
 		shortDesc: "This Pokemon's same-type attack bonus (STAB) is 2 instead of 1.5.",
 	},
+	waterweight: {
+		name: "Water Weight",
+		desc: "This Pokemon takes half damage from Water-type moves. When hit by a damaging Water-type move, its Defense and Special Defense rise by 1 stage each.",
+		shortDesc: "Halves Water damage; damaging Water hits raise Defense and Sp. Def by 1.",
+	},
+	papalveil: {
+		name: "Papal Veil",
+		desc: "On activation, this Pokemon sets Safeguard on its side for 5 turns, protecting its team from status conditions. Does not refresh an existing Safeguard.",
+		shortDesc: "On activation, sets Safeguard on its side for 5 turns.",
+	},
+	avenger: {
+		name: "Avenger",
+		desc: "This Pokemon's moves have their power doubled if a Pokemon on its side fainted during the previous turn.",
+		shortDesc: "Double move power if a Pokemon on its side fainted last turn.",
+	},
+	grandmothermoon: {
+		name: "Grand Mother Moon",
+		desc: "On activation, this Pokemon sets Gravity for 5 turns. It cannot be forced out by moves such as Roar or Dragon Tail, and is immune to Low Kick, Grass Knot, Heavy Slam, and Heat Crash.",
+		shortDesc: "Sets Gravity; blocks forced switching and four weight-based attacks.",
+	},
+	toughhorns: {
+		name: "Tough Horns",
+		desc: "This Pokemon's Horn Attack has its power doubled. Its Megahorn, Horn Leech, and Smart Strike have their power multiplied by 1.3.",
+		shortDesc: "Horn Attack: 2x power. Megahorn, Horn Leech, Smart Strike: 1.3x.",
+	},
+	supersallon: {
+		name: "Super Sallon",
+		desc: "This Pokemon's moves have their accuracy multiplied by approximately 1.2. If Supersteban-Mega knocks out a Pokemon with a move, it transforms into Supersteban-Ash, provided it is still conscious and is not transformed.",
+		shortDesc: "1.2x move accuracy; Supersteban-Mega becomes Ash after a move KO.",
+	},
+	finalverdict: {
+		name: "Final Verdict",
+		desc: "This Pokemon's Judgment becomes Electric-type in move slot 1 or 2, or Ice-type in move slot 3 or 4. This overrides its Plate-based typing.",
+		shortDesc: "Judgment: Electric in slots 1-2; Ice in slots 3-4.",
+	},
+	armedtotheteeth: {
+		name: "Armed to the Teeth",
+		desc: "When this Pokemon damages another Pokemon with a move and the target survives, it inflicts Bleeding. A bleeding Pokemon loses 1/8 of its maximum HP at the end of each turn. Bleeding ends when the target switches out and does not stack.",
+		shortDesc: "Damaging hits inflict Bleeding: 1/8 max HP per turn until switching.",
+	},
 	aerilate: {
 		name: "Aerilate",
 		desc: "This Pokemon's Normal-type moves become Flying-type moves and have their power multiplied by 1.2. This effect comes after other effects that change a move's type, but before Ion Deluge and Electrify's effects.",
@@ -1042,12 +1082,8 @@ export const AbilitiesText: { [id: IDEntry]: AbilityText } = {
 	},
 	moody: {
 		name: "Moody",
-		desc: "This Pokemon has a random stat, other than accuracy or evasiveness, raised by 2 stages and another stat lowered by 1 stage at the end of each turn.",
-		shortDesc: "Boosts a random stat (except accuracy/evasion) +2 and another stat -1 every turn.",
-		gen7: {
-			desc: "This Pokemon has a random stat raised by 2 stages and another stat lowered by 1 stage at the end of each turn.",
-			shortDesc: "Raises a random stat by 2 and lowers another stat by 1 at the end of each turn.",
-		},
+		desc: "At the end of each turn, this Pokemon raises one random stat other than accuracy or evasiveness by 1 stage and lowers a different random stat other than accuracy or evasiveness by 1 stage.",
+		shortDesc: "Each turn: +1 to one random stat and -1 to another; excludes accuracy/evasion.",
 	},
 	motordrive: {
 		name: "Motor Drive",

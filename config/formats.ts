@@ -74,13 +74,13 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		name: "[Gen 9] OU",
 		mod: 'gen9',
 		ruleset: ['Standard', 'Evasion Abilities Clause', 'Sleep Moves Clause', '!Sleep Clause Mod'],
-		banlist: ['Uber', 'AG', 'Arena Trap', 'Moody', 'Shadow Tag', 'King\'s Rock', 'Razor Fang', 'Baton Pass', 'Last Respects', 'Shed Tail'],
+		banlist: ['Uber', 'AG'],
 	},
 	{
 		name: "[Gen 9] Ubers",
 		mod: 'gen9',
 		ruleset: ['Standard'],
-		banlist: ['AG', 'Moody', 'King\'s Rock', 'Razor Fang', 'Baton Pass', 'Last Respects'],
+		banlist: ['AG', 'Moody'],
 	},
 	{
 		name: "[Gen 9] UU",
@@ -3661,7 +3661,7 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		name: "[Gen 8] OU",
 		mod: 'gen8',
 		ruleset: ['Standard', 'Dynamax Clause'],
-		banlist: ['Uber', 'AG', 'Arena Trap', 'Moody', 'Power Construct', 'Sand Veil', 'Shadow Tag', 'Snow Cloak', 'King\'s Rock', 'Baton Pass'],
+		banlist: ['Uber', 'AG', 'Heavy-Duty Boots'],
 	},
 	{
 		name: "[Gen 7] OU",
@@ -3773,7 +3773,7 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		mod: 'gen8',
 		searchShow: false,
 		ruleset: ['Standard', 'Dynamax Clause'],
-		banlist: ['AG', 'Shadow Tag', 'Baton Pass'],
+		banlist: ['AG'],
 	},
 	{
 		name: "[Gen 8] UU",
@@ -3984,7 +3984,6 @@ export const Formats: import('../sim/dex-formats').FormatList = [
 		searchShow: false,
 		challengeShow: true,
 		ruleset: ['Standard', 'Mega Rayquaza Clause'],
-		banlist: ['Baton Pass'],
 	},
 	{
 		name: "[Gen 7] UU",

@@ -5125,12 +5125,8 @@ export const MovesText: { [id: IDEntry]: MoveText } = {
 	},
 	rapidspin: {
 		name: "Rapid Spin",
-		desc: "If this move is successful and the user has not fainted, the effects of Leech Seed and binding moves end for the user, and all hazards are removed from the user's side of the field. Has a 100% chance to raise the user's Speed by 1 stage.",
-		shortDesc: "Free user from hazards/bind/Leech Seed; +1 Spe.",
-		gen7: {
-			desc: "If this move is successful and the user has not fainted, the effects of Leech Seed and binding moves end for the user, and all hazards are removed from the user's side of the field.",
-			shortDesc: "Frees user from hazards, binding, Leech Seed.",
-		},
+		desc: "If this move is successful and the user has not fainted, the effects of Leech Seed and binding moves end for the user, and all hazards are removed from the user's side of the field.",
+		shortDesc: "Frees user from hazards, binding, and Leech Seed.",
 		gen4: {
 			desc: "If this move is successful, the effects of Leech Seed and binding moves end against the user, and all hazards are removed from the user's side of the field.",
 		},
