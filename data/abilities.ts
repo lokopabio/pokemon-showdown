@@ -2703,11 +2703,6 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		onModifyMovePriority: -5,
 		onModifyMove(move) {
 			move.ignoreEvasion = true;
-			if (!move.ignoreImmunity) move.ignoreImmunity = {};
-			if (move.ignoreImmunity !== true) {
-				move.ignoreImmunity['Fighting'] = true;
-				move.ignoreImmunity['Normal'] = true;
-			}
 		},
 		flags: { breakable: 1 },
 		name: "Mind's Eye",
