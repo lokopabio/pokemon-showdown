@@ -7,6 +7,8 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ['fp/battle/protocol.py', '    item = normalize_name(split_msg[3].strip())\n\n    if (',
+      '    item = normalize_name(split_msg[3].strip())\n    if any("[from] move: " + move in extra for move in ("Trick", "Switcheroo") for extra in split_msg[4:]):\n        side.active.roman_item_changed = True\n\n    if ('],
     ['fp/modes/standard_battle.py', '        self.team_datasets = TeamDatasets()\n        self.smogon_sets = SmogonSets()',
       '        from fp.data.sets.roman_bank import BankTeams, BankPriors\n        self.team_datasets = BankTeams()\n        self.smogon_sets = BankPriors()'],
     ['fp/search/standard_battles.py', 'def sample_pokemon(pkmn: Pokemon, mode):\n',

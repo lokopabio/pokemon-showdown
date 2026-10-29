@@ -220,7 +220,16 @@ test('roster exports all six names with measured ordering and loadable models', 
     const output = path.join(dir, 'output');
     const report = await roster(path.join(dir, 'input'), {output, pairs: 1, maxTurns: 20});
     assert.deepEqual(report.ranking.map(r => r.name), NAMES);
-    assert.equal(report.games, 30);
+    assert.equal(report.games, 60);
+    // Each checkpoint receives each team once in each player position.
+    const firstPair = fs.readdirSync(path.join(output,'battles')).filter(f=>f.startsWith('0-1-0-')&&f.endsWith('.log.json'));
+    assert.equal(firstPair.length,4);
+    const assignments = firstPair.map(f=>JSON.parse(fs.readFileSync(path.join(output,'battles',f),'utf8')));
+    for(const id of ['Policy-0','Policy-1']) {
+      const owned=assignments.map(r=>({side:r.names.indexOf(id),team:JSON.stringify(r.teams[r.names.indexOf(id)])}));
+      assert.equal(new Set(owned.map(r=>r.team)).size,2);
+      assert.equal(new Set(owned.map(r=>`${r.side}:${r.team}`)).size,4);
+    }
     assert.ok(report.ranking.every((r, i, arr) => i === 0 || r.points >= arr[i - 1].points));
     const config = JSON.parse(fs.readFileSync(path.join(output, 'bots.json'), 'utf8'));
     assert.deepEqual(config.map(c => c.username), NAMES);

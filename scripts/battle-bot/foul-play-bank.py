@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import random
-from copy import deepcopy
+from copy import deepcopy, copy
 from functools import lru_cache
 
 from fp.battle.helpers import normalize_name
@@ -79,9 +79,42 @@ class BankPriors(SmogonSets):
         return [s.pkmn_set for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(pkmn)]
 
 def sample_bank_pokemon(pkmn):
-    remaining = [s for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(pkmn)]
+    probe = copy(pkmn)
+    # Trace/Skill Swap changes the current ability, not the set's original ability.
+    if pkmn.original_ability:
+        probe.ability = pkmn.original_ability
+    # Upstream deductions from missing activations assume standard mechanics.
+    # Keep explicit reveals hard, but don't eliminate a custom set on these
+    # unverified negative inferences (for example, a missed recovery message).
+    probe.impossible_items = set()
+    probe.impossible_abilities = set()
+    changed_item = getattr(pkmn, 'roman_item_changed', False)
+    match_item = not changed_item or pkmn.removed_item is not None
+    if changed_item and pkmn.removed_item is not None:
+        probe.item = pkmn.removed_item
+        probe.removed_item = None
+    # Custom mechanic speed inference has not been validated; don't treat inferred
+    # bounds as hard observations. Revealed moves, items and abilities remain hard.
+    remaining = [s for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
+    if not remaining and probe.ability in (None, 'illusion'):
+        # A move incompatible with the apparent species can be an Illusion clue.
+        # This changes only a sampled battle copy, never the observed battle.
+        hypotheses = [(name, s) for name, sets in bank_sets().items() for s in sets
+                      if s.pkmn_set.ability == 'illusion'
+                      and s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
+        if hypotheses:
+            name, chosen = random.choice(hypotheses)
+            apparent = pkmn.name
+            pkmn.forme_change(name)
+            pkmn.zoroark_disguised_as = apparent
+            logger.info('Custom Illusion hypothesis: apparent=%s possible=%s', apparent, name)
+            remaining = [chosen]
     if not remaining:
         # Never replace revealed information with a contradictory bank guess.
-        raise ValueError(f'No compatible custom set hypothesis for {pkmn.name}; add sets to the bank')
+        details = {'ability': pkmn.ability, 'original_ability': pkmn.original_ability,
+                   'item': pkmn.item, 'removed_item': pkmn.removed_item,
+                   'moves': [m.name for m in pkmn.moves], 'impossible_items': sorted(pkmn.impossible_items),
+                   'impossible_abilities': sorted(pkmn.impossible_abilities), 'choice_possible': pkmn.can_have_choice_item}
+        raise ValueError(f'No compatible custom set hypothesis for {pkmn.name}: {details}')
     populate_pkmn_from_set(pkmn, deepcopy(random.choice(remaining)), source='custom-bank-hypothesis')
 

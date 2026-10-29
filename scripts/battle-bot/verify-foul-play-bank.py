@@ -48,5 +48,71 @@ class BankTests(unittest.TestCase):
             sample_bank_pokemon(pokemon)
         self.assertEqual(pokemon.ability, 'notarealability')
 
+    def test_copied_ability_does_not_erase_original_set_or_current_ability(self):
+        name = next(iter(bank_sets()))
+        candidate = bank_sets()[name][0]
+        pokemon = Pokemon(name, 100)
+        pokemon.original_ability = candidate.pkmn_set.ability
+        pokemon.ability = 'levitate'
+        pokemon.item = candidate.pkmn_set.item
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(pokemon.ability, 'levitate')
+        self.assertEqual(pokemon.original_ability, candidate.pkmn_set.ability)
+
+    def test_custom_illusion_is_only_a_sampled_hypothesis(self):
+        from copy import deepcopy
+        observed = Pokemon('waynero', 100)
+        observed.add_move('triattack')
+        sampled = deepcopy(observed)
+        sample_bank_pokemon(sampled)
+        self.assertEqual(observed.name, 'waynero')
+        self.assertEqual(sampled.ability, 'illusion')
+        self.assertEqual(sampled.zoroark_disguised_as, 'waynero')
+        self.assertIsNotNone(sampled.get_move('triattack'))
+
+    def test_unverified_negative_inferences_do_not_empty_the_bank(self):
+        name = next(iter(bank_sets()))
+        pokemon = Pokemon(name, 100)
+        pokemon.impossible_items = {s.pkmn_set.item for s in bank_sets()[name]}
+        pokemon.impossible_abilities = {s.pkmn_set.ability for s in bank_sets()[name]}
+        old_items = set(pokemon.impossible_items)
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(pokemon.impossible_items, old_items)
+        self.assertIsNotNone(pokemon.ability)
+
+    def test_switcheroo_item_is_current_state_not_original_set(self):
+        from fp.battle.state import Battle
+        from fp.battle.protocol import set_item
+        battle = Battle('item-test')
+        battle.user.name = 'p1'
+        battle.opponent.name = 'p2'
+        battle.opponent.active = Pokemon('carlis', 100)
+        battle.user.active = Pokemon('carletto', 100)
+        pokemon = battle.opponent.active
+        pokemon.add_move('scald')
+        pokemon.add_move('playrough')
+        pokemon.can_have_choice_item = False
+        set_item(battle, ['', '-item', 'p2a: Carlis', 'Choice Scarf', '[from] move: Switcheroo'])
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(pokemon.item, 'choicescarf')
+        self.assertIsNotNone(pokemon.get_move('scald'))
+
+    def test_own_illusion_keeps_untouched_boosts_at_zero(self):
+        import importlib.util
+        from fp.battle.state import Battle
+        with patch.dict('os.environ', {'ROMAN_FOUL_PLAY': str(Path.cwd())}):
+            spec = importlib.util.spec_from_file_location('roman_bridge', Path(__file__).with_name('foul-play-bridge.py'))
+            bridge = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(bridge)
+        battle = Battle('illusion-test')
+        battle.user.active = Pokemon('pajillero', 100)
+        battle.user.active.boosts['speed'] = 2
+        battle.user.reserve = [Pokemon('chemfalse', 100)]
+        bridge.reconcile_own_illusion(battle, {'details': 'Chemfalse, L100', 'ability': 'illusion'})
+        self.assertEqual(battle.user.active.name, 'chemfalse')
+        self.assertEqual(battle.user.active.boosts['attack'], 0)
+        self.assertEqual(battle.user.active.boosts['speed'], 2)
+        self.assertEqual(battle.user.reserve[0].boosts['speed'], 0)
+
 if __name__ == '__main__':
     unittest.main()

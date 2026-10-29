@@ -111,7 +111,7 @@ To create a six-bot roster from at least six distinct trained checkpoints:
 node scripts/battle-bot/roster.cjs scripts/battle-bot/results/roman-learning-002 --pairs 8 --output scripts/battle-bot/results/roman-roster-002
 ```
 
-The roster tests all 15 policy pairs with swapped sides and common team matchups, then assigns names in ascending measured score:
+The roster tests all 15 policy pairs with both team assignments and both player positions (four games per team pair), then assigns names in ascending measured score:
 
 1. Roman-0009
 2. Roman-003
@@ -121,6 +121,12 @@ The roster tests all 15 policy pairs with swapped sides and common team matchups
 6. Roman-162
 
 This is a provisional ranking, not a guarantee of strictly separated skill or head-to-head victories. Mirrored seeded games are correlated; the reported counts should not be interpreted as independent samples for significance testing. More training time does not guarantee better policies. Rerun evaluation on different seeds and more teams before making strong strength claims.
+
+Evaluation version 2 fixes a confound in earlier roster reports: those swapped
+player positions but kept each checkpoint's team ownership fixed within a
+matchup. Earlier differences may reflect team assignment and cannot establish
+training regression. New reports include `evaluationVersion: 2` and run
+`60 * pairs` battles, twice the old total.
 
 ### Put all six online
 

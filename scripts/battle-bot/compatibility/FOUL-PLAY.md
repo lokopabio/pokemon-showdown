@@ -105,3 +105,33 @@ the built server and will expose future differences rather than silently
 overriding either engine.
 
 No training checkpoints or live bot configuration are modified by preparation.
+
+## Matched learned-policy benchmark
+
+```bash
+node scripts/battle-bot/foul-play-benchmark.cjs --python python --foul ../roman-foul-play --bank metagame/metagame-bank.json --model scripts/battle-bot/results/pc-benchmark-001/best.json --output scripts/battle-bot/results/foul-play-vs-baseline-001 --pairs 12 --seed 404
+```
+
+Uses a validated saved model; fingerprint mismatches fail rather than silently
+loading an incompatible checkpoint. Four games per pair cross team ownership
+and player positions independently. The output manifest records model hash,
+training episode, bank hash, simulator fingerprint, complete team schedule,
+seed, search budget and turn limit. JSONL records and a running summary retain
+crashes, capped games, and decision timing. An incomplete run is not a valid
+win-rate comparison; errors are never silently counted as wins or discarded.
+The default opponent uses the learned policy without calculator support.
+Models requiring a calculator need the matching `calculator` option through
+the JavaScript API; the CLI does not yet expose that configuration.
+
+The adapter applies public events during wait requests. Own Illusion switches
+use the true species visible in the bot's own request. A possible opposing
+custom Illusion user can be hypothesized from incompatible revealed moves,
+only in sampled battle copies. Trace's current ability is kept distinct from
+the original set ability. Inferred speed bounds and negative item/ability
+deductions from missing activations are not used to exclude bank sets until
+those custom-mechanic deductions are verified. Explicitly revealed moves,
+items and abilities still constrain hypotheses.
+
+Earlier checkpoint tournaments had a team-assignment confound; the corrected
+roster runs both teams for each checkpoint, independently of player side.
+Old tournament results alone do not prove that further training caused decline.

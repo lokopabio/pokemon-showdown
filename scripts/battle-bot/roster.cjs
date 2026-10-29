@@ -29,14 +29,15 @@ async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/r
   for (let i = 0; i < 6; i++) {
     for (let j = i + 1; j < 6; j++) {
       for (let k = 0; k < pairs; k++) {
-        for (const reverse of [false, true]) {
+        // Cross team ownership independently of player position: four games.
+        for (const [reverse, swapTeams] of [[false,false],[true,false],[false,true],[true,true]]) {
           const a = candidates[reverse ? j : i];
           const b = candidates[reverse ? i : j];
-          const pair = reverse ? [...teams[k]].reverse() : teams[k];
+          const pair = reverse !== swapTeams ? [...teams[k]].reverse() : teams[k];
           const winner = await play('gen7ou', ...pair, [seed, k + 1, 53, 61], {
             baseline: false, maxTurns, names: [a.id, b.id],
             policyFactory: id => new LearnedPolicy('gen7ou', id === 'p1' ? a.model : b.model, {calculator}),
-            logFile: path.join(output, 'battles', `${i}-${j}-${k}-${reverse ? 'reverse' : 'forward'}.log`),
+            logFile: path.join(output, 'battles', `${i}-${j}-${k}-${reverse ? 'reverse' : 'forward'}-${swapTeams ? 'swapped' : 'original'}.log`),
             onResult: r => fs.appendFileSync(path.join(output, 'battles.jsonl'), JSON.stringify(r) + '\n'),
           });
           a.games++; b.games++;
@@ -54,8 +55,8 @@ async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/r
   candidates.sort((a, b) => a.points - b.points || a.model.episodes - b.model.episodes);
   const ranking = candidates.map((c, i) => ({name: NAMES[i], source: c.id, episodes: c.model.episodes, points: c.points, games: c.games, wins: c.wins, losses: c.losses, ties: c.ties, scoreRate: c.points / c.games}));
   const report = {createdAt: new Date().toISOString(), format: 'gen7ou', seed, pairs, maxTurns,
-    games: 15 * pairs * 2, ranking, provisional: true,
-    limitation: 'Ordered by measured round-robin score on fixed generated teams. Ties use training age. Small differences are not proven strength differences or guaranteed head-to-head wins.'};
+    games: 15 * pairs * 4, ranking, provisional: true, evaluationVersion: 2,
+    limitation: 'Each checkpoint pair uses both teams in both player positions. Ties use training age. Small differences are not proven strength differences or guaranteed head-to-head wins.'};
   const config = [];
   for (let i = 0; i < 6; i++) {
     fs.copyFileSync(candidates[i].file, path.join(output, `${NAMES[i]}.json`));

@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+from copy import deepcopy
 
 sys.path.insert(0, os.environ['ROMAN_FOUL_PLAY'])
 from fp.config import FoulPlayConfig
@@ -15,12 +16,31 @@ from fp.search.standard_battles import prepare_battles
 from fp.search.poke_engine_helpers import battle_to_poke_engine_state
 from poke_engine import monte_carlo_tree_search
 
+def reconcile_own_illusion(battle, own_active):
+    true_name = own_active['details'].split(',')[0].lower().replace('-', '').replace(' ', '')
+    if own_active.get('ability') != 'illusion' or battle.user.active.name == true_name:
+        return
+    real = next(p for p in battle.user.reserve if p.name == true_name)
+    disguise = battle.user.active
+    # Boosts is a defaultdict: preserve its default zero for untouched stats.
+    real.boosts = deepcopy(disguise.boosts)
+    real.volatile_statuses = list(disguise.volatile_statuses)
+    for key in disguise.boosts:
+        disguise.boosts[key] = 0
+    disguise.volatile_statuses = []
+    battle.user.reserve.remove(real)
+    battle.user.reserve.append(disguise)
+    battle.user.active = real
+
 def main():
     battle = None
     for line in sys.stdin:
         message = json.loads(line)
         request = message['request']
         if request.get('wait'):
+            if battle is not None:
+                battle.msg_list = message['events']
+                process_battle_updates(battle)
             print(json.dumps({'choice': None}), flush=True)
             continue
         first = battle is None
@@ -35,8 +55,21 @@ def main():
             battle.user.initialize_first_turn_user_from_json(request)
             battle.mode.team_datasets.initialize(battle.format_spec, set())
             battle.mode.smogon_sets.initialize(battle.format_spec, set())
-        battle.msg_list = [event for event in message['events'] if not (first and event.startswith('|switch|' + battle.user.name))]
+        own_active = next(p for p in request['side']['pokemon'] if p['active'])
+        events = []
+        for event in message['events']:
+            if first and event.startswith('|switch|' + battle.user.name):
+                continue
+            # Own requests reveal our true Illusion user. Upstream special-cases
+            # Zoroark and otherwise mistakes a custom user's disguise for itself.
+            if event.startswith(('|switch|' + battle.user.name, '|drag|' + battle.user.name)) and own_active.get('ability') == 'illusion':
+                parts = event.split('|')
+                parts[3] = own_active['details']
+                event = '|'.join(parts)
+            events.append(event)
+        battle.msg_list = events
         process_battle_updates(battle)
+        reconcile_own_illusion(battle, own_active)
         battle.user.update_from_request_json(request)
         battle.request_json = request
         battle.rqid = request.get('rqid', 0)
