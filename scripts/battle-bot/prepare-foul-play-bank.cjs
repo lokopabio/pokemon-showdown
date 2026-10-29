@@ -1,0 +1,33 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const {execFileSync} = require('node:child_process');
+const {FOUL} = require('./prepare-foul-play.cjs');
+function prepareBank(directory) {
+  directory = path.resolve(directory);
+  if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
+  const patches = [
+    ['fp/modes/standard_battle.py', '        self.team_datasets = TeamDatasets()\n        self.smogon_sets = SmogonSets()',
+      '        from fp.data.sets.roman_bank import BankTeams, BankPriors\n        self.team_datasets = BankTeams()\n        self.smogon_sets = BankPriors()'],
+    ['fp/search/standard_battles.py', 'def sample_pokemon(pkmn: Pokemon, mode):\n',
+      'def sample_pokemon(pkmn: Pokemon, mode):\n    from fp.data.sets.roman_bank import sample_bank_pokemon\n    sample_bank_pokemon(pkmn)\n    return\n'],
+    ['fp/generations.py', '    return GENERATIONS[generation]',
+      '    if generation == "gen7":\n        return replace(GENERATIONS[generation], has_team_preview=False, megas_exist=False)\n    return GENERATIONS[generation]'],
+  ];
+  const writes = [];
+  for (const [file, before, after] of patches) {
+    const target = path.join(directory,file); let source = fs.readFileSync(target,'utf8');
+    if (!source.includes(after)) {
+      if (!source.includes(before)) throw new Error('Patch target changed: ' + file);
+      source = source.replace(before,after);
+    }
+    writes.push([target,source]);
+  }
+  writes.push([path.join(directory,'fp/data/sets/roman_bank.py'), fs.readFileSync(path.join(__dirname,'foul-play-bank.py'),'utf8')]);
+  for (const [file,source] of writes) fs.writeFileSync(file,source);
+}
+if(require.main===module) {
+  if(!process.argv[2]) throw new Error('Usage: node scripts/battle-bot/prepare-foul-play-bank.cjs FOUL_PLAY_DIR');
+  prepareBank(process.argv[2]);console.log('Custom bank inference installed. Set ROMAN_METAGAME_BANK to an absolute bank path.');
+}
+module.exports = {prepareBank};
