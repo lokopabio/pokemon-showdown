@@ -147,3 +147,22 @@ With `--baselineFile`, each new set attempts a calculator-derived proposal 75% o
 Holdout opponents must not contain exact target sets from the loaded baseline. The loader checks legality data and the optional active calculator hash. Updating either requires rebuilding the baseline. Battle results still select teams and apply admission checks; calculator scores cannot automatically promote a team into live play.
 
 Potential future bot usernames noted: `BalongaAlso` and `MonsieurBonVoyage`. Neither is configured or launched by this change. Credentials must be supplied outside the repository.
+
+## Preparing the mechanics and baseline stages together
+
+`prepare-research.cjs` performs the two preparation stages sequentially. It does **not** run a discovery tournament, log into an account or change a live roster. Start it from `roman-training` after pulling:
+
+```powershell
+node scripts/battle-bot/prepare-research.cjs --hours 8
+```
+
+Defaults read `calc-baseline-001/baseline.json`, the existing calculator engine, the Windows Python environment, the metagame bank, and prior `benito-discovery-002` results. Output is `results/research-prep-001`:
+
+1. `mechanics/scenarios.jsonl`: three-turn local Showdown reference scenarios, native search-engine predictions, public events and categorical differences. The suite covers baseline combinations plus representatives of native-supported legal moves and abilities. Opponents take passive, physical and special actions. A synthetic durable fixture prevents target KOs from prematurely ending most cost tests.
+2. `mechanics/mechanics.json`: comparison summary, coverage and unresolved cases. Observed failures, lost actions, self stat changes, conditional activation and native errors are distinguished. Tests re-anchor the native engine to each actual reference state. Exact damage rolls/rounding, all field states, volatile timing and full team interactions are not certified. A zero-disagreement result means only no disagreement observed in these scenarios.
+3. `baseline/baseline.json`: rebuilt role/move/EV proposals. Direct-damage rankings use moves with no disagreement or dependency observed in the tested nonnegative-ability contexts. Other moves are explicitly deferred. Negative-rated cost-sensitive abilities are deferred from cheap static ranking pending longer evaluation. This is conservative uncertainty handling, not proof those strategies are bad. Support remains unmeasured and preserved for exploration.
+4. `summary.json`: current stage and final output paths or error.
+
+The audit has an eight-hour limit by default and stops between scenarios. If it does not complete, the baseline rebuild is withheld. The baseline itself is a finite calculator pass without a separate hard wall-clock timeout. Completion may take minutes or longer depending on the machine. Keep the PC awake and terminal open; no power settings are changed. A new run needs a fresh output folder. Intermediate audit detail is saved as it runs, but this preparation command does not promise exact resume after interruption.
+
+This prepares a mechanic-aware **bounded** baseline; it does not complete a universal mechanics evaluator or establish native parity for every possible battle. Inspect disagreements and deferred coverage before authorizing a large self-play experiment. Native-engine fixes require separate reviewed changes and rebuilding the native wheel when necessary.
