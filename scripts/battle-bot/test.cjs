@@ -67,6 +67,7 @@ test('WebSocket learned checkpoint login, challenge, choice and live logs', {tim
         conn.write('|challstr|1|test');
         conn.on('data', text => {
           try {
+            if (text.startsWith('|/trn')) {assert.match(text, /,0,signed,test-token$/);} 
             if (text.startsWith('|/trn')) conn.write('|updatechallenges|{"challengesFrom":{"Tester":"gen7ou"}}');
             if (text === '|/accept Tester') {
               conn.write('>battle-gen7ou-1\n|tier|[Gen 7] OU\n|switch|p2a: Blastoise|Blastoise|100/100');
@@ -81,7 +82,7 @@ test('WebSocket learned checkpoint login, challenge, choice and live logs', {tim
         });
       });
     });
-    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'Roman-016', model: 'model.json', logDirectory: 'live', teams: {gen7ou: 'team.txt'}}, directory);
+    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'Roman-016', model: 'model.json', logDirectory: 'live', teams: {gen7ou: 'team.txt'}}, directory, {fetchImpl: async () => ({ok: true, text: async () => 'signed,test-token'})});
     await completed;
     const matches = fs.readFileSync(path.join(directory, 'live', 'matches.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
     assert.equal(matches[0].result, 'win');
@@ -225,4 +226,30 @@ test('roster exports all six names with measured ordering and loadable models', 
     assert.deepEqual(config.map(c => c.username), NAMES);
     for (const bot of config) assert.ok(Model.load(path.join(output, bot.model)));
   } finally {fs.rmSync(dir, {recursive: true});}
+});
+
+test('guest authentication requests a signed assertion and handles registered names', async () => {
+  const {getAssertion} = require('./auth.cjs');
+  let request;
+  const fake = async (url, options) => {request = {url: String(url), body: options.body}; return {ok: true, text: async () => 'userid,token,signature'};};
+  assert.equal(await getAssertion({username: 'Roman-016'}, '1|challenge', fake), 'userid,token,signature');
+  assert.equal(request.body.get('act'), 'getassertion');
+  assert.equal(request.body.get('userid'), 'roman016');
+  assert.equal(request.body.get('challstr'), '1|challenge');
+  assert.equal(request.body.has('pass'), false);
+  await assert.rejects(getAssertion({username: 'Roman-016'}, 'test', async () => ({ok: true, text: async () => ';'})), /password/);
+  await assert.rejects(getAssertion({username: 'Roman-016'}, 'test', async () => ({ok: true, text: async () => '<html>error</html>'})), /Invalid assertion/);
+  await assert.rejects(getAssertion({username: 'Roman-016'}, 'test', async () => ({ok: false, status: 503})), /503/);
+});
+test('registered authentication parses standard Showdown login responses', async () => {
+  const {getAssertion} = require('./auth.cjs');
+  process.env.ROMAN_TEST_PASSWORD = 'test-only';
+  try {
+    const assertion = await getAssertion({username: 'Roman-016', passwordEnv: 'ROMAN_TEST_PASSWORD'}, '1|challenge', async (_url, options) => {
+      assert.equal(options.body.get('act'), 'login');
+      assert.equal(options.body.get('pass'), 'test-only');
+      return {ok: true, text: async () => ']'+JSON.stringify({curuser: {loggedin: true}, assertion: 'userid,token,signature'})};
+    });
+    assert.equal(assertion, 'userid,token,signature');
+  } finally {delete process.env.ROMAN_TEST_PASSWORD;}
 });

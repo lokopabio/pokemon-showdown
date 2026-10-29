@@ -13,7 +13,7 @@ Requires Node.js 22 or later. Run from the pokemon-showdown repository root.
 
 Team paths are relative to the configuration file. The bot validates teams before connecting. Use actual format IDs as keys in `teams`. This fork's Gen 7 OU ID is `gen7ou`. Only singles are supported. An empty `allowedUsers` list allows challenges from anyone; supply usernames to restrict opponents.
 
-For registered accounts, add `"passwordEnv": "UAJ_BOT_PASSWORD"` and set that environment variable before starting. Passwords are never stored in the configuration. The default login endpoint is https://play.pokemonshowdown.com/action.php. Set `loginServer` if your server uses another HTTPS login service. Guest login works only where the server permits it.
+For registered accounts, add `"passwordEnv": "UAJ_BOT_PASSWORD"` and set that environment variable before starting. Passwords are never stored in the configuration. The default login endpoint is https://play.pokemonshowdown.com/action.php. Set `loginServer` if your server uses another HTTPS login service. Unregistered names request signed assertions from the login service; registered names require passwordEnv. The live server security settings remain enabled.
 
 For multiple bots, use a JSON array of configurations with distinct usernames. One process opens a separate connection for each account. Keep `maxBattles` at 1 for initial use. The limit counts observed battle rooms, so simultaneous incoming challenges can briefly exceed it.
 

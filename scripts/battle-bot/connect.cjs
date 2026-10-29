@@ -3,8 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {Teams, TeamValidator, Dex, toID} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
+const {getAssertion} = require('./auth.cjs');
 const {Model, LearnedPolicy} = require('./learned.cjs');
-function connect(config, base = process.cwd()) {
+function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   const url = new URL(config.server);
   if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
   const formats = Object.keys(config.teams || {});
@@ -36,19 +37,7 @@ function connect(config, base = process.cwd()) {
   const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
   const log = message => console.log(`[${config.username}] ${message}`);
   async function login(challenge) {
-    let assertion = '';
-    const password = config.passwordEnv && process.env[config.passwordEnv];
-    if (config.passwordEnv && !password) throw new Error(`Missing environment variable ${config.passwordEnv}`);
-    if (password) {
-      const loginUrl = new URL(config.loginServer || 'https://play.pokemonshowdown.com/action.php');
-      if (loginUrl.protocol !== 'https:') throw new Error('Password login requires HTTPS.');
-      const response = await fetch(loginUrl, {method: 'POST', body: new URLSearchParams({act: 'login', name: config.username, pass: password, challstr: challenge}), signal: AbortSignal.timeout(15000)});
-      if (!response.ok) throw new Error(`Login HTTP ${response.status}`);
-      const body = await response.text();
-      const result = JSON.parse(body.startsWith(']') ? body.slice(1) : body);
-      if (!result.actionsuccess || !result.assertion) throw new Error('Login rejected. Check bot credentials and loginServer.');
-      assertion = result.assertion;
-    }
+    const assertion = await getAssertion(config, challenge, fetchImpl);
     send('', `/trn ${config.username},0,${assertion}`);
   }
   function receive(message) {
@@ -61,7 +50,12 @@ function connect(config, base = process.cwd()) {
         if (fields[3] === '1') {
           log(`Online as ${fields[2]}${model ? ' with learned checkpoint' : ' with heuristic policy'}`);
           send('', '/join lobby');
-        } else log('Login is not complete; registered names may require passwordEnv.');
+        }
+      }
+      if (line.startsWith('|nametaken|')) {
+        log(`Login rejected: ${line.split('|').slice(3).join('|')}`);
+        stopped = true;
+        socket.close();
       }
       if (line.startsWith('|updatechallenges|')) {
         const incoming = JSON.parse(line.slice(18)).challengesFrom || {};
