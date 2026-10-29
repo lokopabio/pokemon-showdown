@@ -7,6 +7,14 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ['fp/search/standard_battles.py', '    revealed_set = set(revealed_pokemon)',
+      '    from fp.data.sets.roman_bank import bank_species_name\n    revealed_set = {bank_species_name(name) for name in revealed_pokemon}'],
+    ['fp/search/standard_battles.py', '    existing_pokemon_names = {pkmn.name for pkmn in existing_pokemon}',
+      '    from fp.data.sets.roman_bank import bank_species_name\n    existing_pokemon_names = {bank_species_name(pkmn.name) for pkmn in existing_pokemon}'],
+    ['fp/search/standard_battles.py', '        for revealed in revealed_set:\n            try:',
+      '        for revealed in revealed_set:\n            if revealed not in all_pkmn_counts or all_pkmn_counts[revealed].get(RAW_COUNT, 0) <= 0:\n                continue\n            try:'],
+    ['fp/search/standard_battles.py', '        likelihoods[pkmn] = sum(joint_probs) / len(joint_probs)',
+      '        likelihoods[pkmn] = sum(joint_probs) / len(joint_probs) if joint_probs else 1.0'],
     ['fp/battle/state.py', '        pokedex_name = normalize_name(pokedex[self.active.name][constants.NAME])',
       '        pokedex_name = normalize_name(pokedex[self.active.name][constants.NAME])\n        # Own active slot is authoritative across custom battle-only form changes.\n        active_rows = [p for p in request_json["side"]["pokemon"] if p.get("active")]\n        if len(active_rows) == 1:\n            active_name = normalize_name(active_rows[0][constants.DETAILS].split(",")[0])\n            if active_name == self.active.name or normalize_name(pokedex.get(active_name, {}).get("baseSpecies", "")) == self.active.base_name:\n                pokedex_name = active_name'],
     ['fp/battle/protocol.py', '    item = normalize_name(split_msg[3].strip())\n\n    if (',
@@ -18,16 +26,16 @@ function prepareBank(directory) {
     ['fp/generations.py', '    return GENERATIONS[generation]',
       '    if generation == "gen7":\n        return replace(GENERATIONS[generation], has_team_preview=False, megas_exist=False)\n    return GENERATIONS[generation]'],
   ];
-  const writes = [];
+  const writes = new Map();
   for (const [file, before, after] of patches) {
-    const target = path.join(directory,file); let source = fs.readFileSync(target,'utf8').replace(/\r\n/g,'\n');
+    const target = path.join(directory,file); let source = writes.get(target) ?? fs.readFileSync(target,'utf8').replace(/\r\n/g,'\n');
     if (!source.includes(after)) {
       if (!source.includes(before)) throw new Error('Patch target changed: ' + file);
       source = source.replace(before,after);
     }
-    writes.push([target,source]);
+    writes.set(target,source);
   }
-  writes.push([path.join(directory,'fp/data/sets/roman_bank.py'), fs.readFileSync(path.join(__dirname,'foul-play-bank.py'),'utf8')]);
+  writes.set(path.join(directory,'fp/data/sets/roman_bank.py'), fs.readFileSync(path.join(__dirname,'foul-play-bank.py'),'utf8'));
   for (const [file,source] of writes) fs.writeFileSync(file,source);
 }
 if(require.main===module) {

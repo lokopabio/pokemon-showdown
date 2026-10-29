@@ -26,6 +26,10 @@ for(const newline of ['\n','\r\n'])test(`preparation accepts ${newline==='\n'?'L
     assert(JSON.parse(fs.readFileSync(path.join(foul,'fp/data/pokedex.json'),'utf8')).fidbuelunabusted);
     assert(fs.readFileSync(path.join(engine,'src/pokemon.rs'),'utf8').includes('CARLETTO,'));
     assert(fs.readFileSync(path.join(foul,'fp/battle/protocol.py'),'utf8').includes('roman_item_changed'));
+    const sampler=fs.readFileSync(path.join(foul,'fp/search/standard_battles.py'),'utf8');
+    assert(sampler.includes('revealed_set = {bank_species_name(name) for name in revealed_pokemon}'));
+    assert(sampler.includes('existing_pokemon_names = {bank_species_name(pkmn.name) for pkmn in existing_pokemon}'));
+    assert(sampler.includes('sample_bank_pokemon(pkmn)'));
     const before=files.map(p=>fs.readFileSync(p,'utf8'));
     prepare(engine,foul);prepareBank(foul);
     assert.deepEqual(files.map(p=>fs.readFileSync(p,'utf8')),before);

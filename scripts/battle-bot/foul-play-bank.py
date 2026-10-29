@@ -16,6 +16,9 @@ from fp.teams.roman_guard import validate_custom_team
 
 logger = logging.getLogger(__name__)
 
+def bank_species_name(name):
+    return normalize_name(pokedex.get(name, {}).get('baseSpecies', name))
+
 @lru_cache(maxsize=1)
 def bank_sets():
     with open(os.environ['ROMAN_METAGAME_BANK'], encoding='utf-8') as stream:
@@ -80,7 +83,7 @@ class BankPriors(SmogonSets):
         return [s.pkmn_set for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(pkmn)]
 
 def sample_bank_pokemon(pkmn):
-    bank_name = normalize_name(pokedex.get(pkmn.name, {}).get('baseSpecies', pkmn.name))
+    bank_name = bank_species_name(pkmn.name)
     probe = copy(pkmn)
     # Trace/Skill Swap changes the current ability, not the set's original ability.
     if pkmn.original_ability:

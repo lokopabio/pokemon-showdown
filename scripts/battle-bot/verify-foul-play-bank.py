@@ -140,5 +140,32 @@ class BankTests(unittest.TestCase):
         self.assertEqual(battle.user.active.name, 'fidbuelunabusted')
         self.assertEqual(battle.user.active.hp, 175)
 
+    def test_busted_form_and_hidden_teammates_share_one_species_slot(self):
+        from fp.battle.state import Battle
+        from fp.modes.standard_battle import StandardBattleMode
+        from fp.search.standard_battles import predict_team_likelihood, populate_standardbattle_unrevealed_pkmn
+        from fp.data.sets.roman_bank import bank_species_name
+        battle = Battle('busted-hidden-team-test')
+        battle.pokemon_format = 'gen7ou'
+        battle.generation = 'gen7'
+        battle.mode = StandardBattleMode()
+        battle.mode.smogon_sets.initialize(battle.format_spec, set())
+        battle.mode.team_datasets.initialize(battle.format_spec, set())
+        battle.opponent.active = Pokemon('fidbuelunabusted', 100)
+        weights = predict_team_likelihood({'fidbuelunabusted'}, battle.mode.smogon_sets.all_pkmn_counts)
+        self.assertNotIn('fidbueluna', weights)
+        self.assertTrue(all(value > 0 for value in weights.values()))
+        populate_standardbattle_unrevealed_pkmn(battle)
+        species = [bank_species_name(p.name) for p in [battle.opponent.active] + battle.opponent.reserve]
+        self.assertEqual(len(species), 6)
+        self.assertEqual(len(set(species)), 6)
+        self.assertEqual(species.count('fidbueluna'), 1)
+        self.assertEqual(battle.opponent.active.name, 'fidbuelunabusted')
+
+    def test_missing_cooccurrence_data_has_uniform_prior(self):
+        from fp.search.standard_battles import predict_team_likelihood
+        priors = {'carlis': {'raw_count': 1, 'teammates': {}}, 'carletto': {'raw_count': 1, 'teammates': {}}}
+        self.assertEqual(predict_team_likelihood({'unknownspecies'}, priors), {'carlis': 1.0, 'carletto': 1.0})
+
 if __name__ == '__main__':
     unittest.main()
