@@ -17,7 +17,7 @@ function rng(seed) {
   };
 }
 class Breeder {
-  constructor(seed = 1) {
+  constructor(seed = 1, {bankFile} = {}) {
     this.random = rng(seed);
     this.dex = Dex.forFormat(FORMAT);
     this.validator = TeamValidator.get(FORMAT);
@@ -28,6 +28,7 @@ class Breeder {
     this.pool = all.slice(start).filter(s => s.num < 0 && !s.battleOnly && !s.isMega && !s.requiredItem && s.exists);
     this.allowed = new Set(this.pool.map(s => s.id));
     this.sets = new Map();
+    this.bank = require('./metagame.cjs').loadMetagame(bankFile, this.dex, this.validator, this.allowed);
   }
   sample(values) { return values[Math.floor(this.random() * values.length)]; }
   shuffle(values) { return values.map(value => ({value, key: this.random()})).sort((a, b) => a.key - b.key).map(x => x.value); }
@@ -48,7 +49,9 @@ class Breeder {
     }
     return [...ids].map(id => this.dex.moves.get(id)).filter(m => m.exists && !m.isZ && !m.isMax);
   }
-  makeSet(species) {
+  makeSet(species, useBank = true) {
+    const curated = this.bank.sets.get(species.id);
+    if (useBank && curated?.length && this.random() < 0.5) return clone(this.sample(curated));
     const physical = species.baseStats.atk > species.baseStats.spa;
     const attack = physical ? 'atk' : 'spa';
     const fast = species.baseStats.spe >= 70;
@@ -88,9 +91,10 @@ class Breeder {
       for (const species of this.pool) {
         const sets = [];
         for (let i = 0; i < 3; i++) {
-          const set = this.makeSet(species);
+          const set = this.makeSet(species, false);
           if (set) sets.push(set);
         }
+        sets.push(...(this.bank.sets.get(species.id) || []).map(clone));
         if (sets.length) this.sets.set(species.id, sets);
       }
       if (this.sets.size < 6) throw new Error(`Only ${this.sets.size} species produced legal sets.`);
@@ -98,6 +102,7 @@ class Breeder {
     return [...this.sets.keys()];
   }
   team() {
+    if (this.bank.teams.length && this.random() < 0.5) return clone(this.sample(this.bank.teams));
     const ids = this.candidates();
     for (let attempt = 0; attempt < 1000; attempt++) {
       // Bias initial population toward evolved species while keeping lower stages eligible.
@@ -152,7 +157,7 @@ async function score(team, opponents, seed, maxTurns = 200, logging = {}) {
   }
   return {points, games: opponents.length * 2, ...results};
 }
-async function evolve({seed = 1, population = 8, generations = 3, opponents = 3, maxTurns = 200, output = 'scripts/battle-bot/results', name = 'Roman-016'} = {}) {
+async function evolve({seed = 1, population = 8, generations = 3, opponents = 3, maxTurns = 200, output = 'scripts/battle-bot/results', name = 'Roman-016', bankFile} = {}) {
   for (const [key, value, min] of [['seed', seed, 0], ['population', population, 4], ['generations', generations, 1], ['opponents', opponents, 1], ['maxTurns', maxTurns, 1]]) {
     if (!Number.isSafeInteger(value) || value < min || value > 65535) throw new Error(`Invalid ${key}`);
   }
@@ -162,7 +167,7 @@ async function evolve({seed = 1, population = 8, generations = 3, opponents = 3,
   const startedAt = new Date().toISOString();
   fs.writeFileSync(path.join(output, 'run.json'), JSON.stringify({name, format: FORMAT, seed, population, generations, opponents, maxTurns, startedAt, node: process.version}, null, 2));
   fs.writeFileSync(path.join(output, 'battles.csv'), 'phase,generation,candidate,opponent,candidateSide,winner,turns,capped,durationMs\n');
-  const builder = new Breeder(seed);
+  const builder = new Breeder(seed, {bankFile});
   const training = Array.from({length: opponents}, () => builder.team());
   const holdout = Array.from({length: opponents}, () => builder.team());
   let teams = Array.from({length: population}, () => builder.team());
@@ -196,11 +201,11 @@ async function evolve({seed = 1, population = 8, generations = 3, opponents = 3,
 if (require.main === module) {
   const args = process.argv.slice(2);
   const options = {};
-  const keys = {seed: 'seed', population: 'population', generations: 'generations', opponents: 'opponents', 'max-turns': 'maxTurns', output: 'output', name: 'name'};
+  const keys = {seed: 'seed', population: 'population', generations: 'generations', opponents: 'opponents', 'max-turns': 'maxTurns', output: 'output', name: 'name', 'metagame-bank': 'bankFile'};
   for (let i = 0; i < args.length; i += 2) {
     const key = keys[args[i].replace(/^--/, '')];
     if (!key || args[i + 1] === undefined) throw new Error('Usage: node scripts/battle-bot/breed.cjs [--seed 1 --population 8 --generations 3 --opponents 3 --max-turns 200 --output PATH]');
-    options[key] = ['output', 'name'].includes(key) ? args[i + 1] : Number(args[i + 1]);
+    options[key] = ['output', 'name', 'bankFile'].includes(key) ? args[i + 1] : Number(args[i + 1]);
   }
   evolve(options).catch(error => {console.error(error); process.exitCode = 1;});
 }

@@ -9,7 +9,7 @@ const {play} = require('./evaluate.cjs');
 const {rollout} = require('./rollout.cjs');
 const {RolloutPool} = require('./workers.cjs');
 async function train({episodes = 200, seed = 1, evalEvery = 20, evalPairs = 4, maxTurns = 150, rate = 0.03, workers = 1, teamPool = 64, refreshEvery = 100, logEvery = 25,
-  output = 'scripts/battle-bot/results/roman-learning-001', resume, server = 'ws://localhost:8000/showdown/websocket', name = 'Roman-016'} = {}) {
+  output = 'scripts/battle-bot/results/roman-learning-001', resume, server = 'ws://localhost:8000/showdown/websocket', name = 'Roman-016', bankFile} = {}) {
   for (const [key, value] of Object.entries({episodes, seed, evalEvery, evalPairs, maxTurns, workers, teamPool, refreshEvery, logEvery})) {
     if (!Number.isSafeInteger(value) || value < (key === 'seed' ? 0 : 1) || value > 10000000) throw new Error(`Invalid ${key}`);
   }
@@ -20,8 +20,14 @@ async function train({episodes = 200, seed = 1, evalEvery = 20, evalPairs = 4, m
   if (Dex.formats.getRuleTable(Dex.formats.get('gen7ou')).has('teampreview')) throw new Error('This trainer requires Gen 7 OU without Team Preview.');
   const model = resume ? Model.load(resume) : new Model();
   const startEpisode = model.episodes;
-  const builder = new Breeder(seed);
-  const evalBuilder = new Breeder(seed + 1001);
+  const builder = new Breeder(seed, {bankFile});
+  const evalBuilder = new Breeder(seed + 1001, {bankFile});
+  if (builder.bank.teams.length > 1) {
+    const split = Math.max(1, Math.floor(builder.bank.teams.length * 2 / 3));
+    const seeds = builder.bank.teams;
+    builder.bank.teams = seeds.slice(0, split);
+    evalBuilder.bank.teams = seeds.slice(split);
+  } else if (builder.bank.teams.length === 1) evalBuilder.bank.teams = [];
   const teams = Array.from({length: teamPool}, () => builder.mutate(builder.team()));
   let teamPoolVersion = 0;
   const initial = new Model(model.weights);
@@ -29,7 +35,7 @@ async function train({episodes = 200, seed = 1, evalEvery = 20, evalPairs = 4, m
   const validation = Array.from({length: evalPairs}, () => [evalBuilder.team(), evalBuilder.team()]);
   const deployedTeam = validation[0][0];
   const archive = [new Model(model.weights)];
-  const report = {name, kind: 'linear-softmax-reinforce', format: 'gen7ou', seed, startEpisode, episodesRequested: episodes, rate, maxTurns, workers, teamPool, refreshEvery, logEvery, featureCount: FEATURES.length, leadSelection: 'team-slot-1', teamPreview: false, teamRefreshes: 0, opponentMix: ['heuristic', 'uniform', 'initial', 'archive'],
+  const report = {name, kind: 'linear-softmax-reinforce', format: 'gen7ou', seed, startEpisode, episodesRequested: episodes, rate, maxTurns, workers, teamPool, refreshEvery, logEvery, featureCount: FEATURES.length, humanSuggestedSets: builder.bank.setCount, humanTrainingTeams: builder.bank.teams.length, humanValidationTeams: evalBuilder.bank.teams.length, leadSelection: 'team-slot-1', teamPreview: false, teamRefreshes: 0, opponentMix: ['heuristic', 'uniform', 'initial', 'archive'],
     startedAt: new Date().toISOString(), validation: [], training: {wins: 0, losses: 0, ties: 0},
     limitation: 'Small feature-based policy trained from terminal results. No pretrained Metamon weights, search, or claim of competitive strength. Validation is reused for checkpoint selection.'};
   fs.mkdirSync(path.join(output, 'battles'), {recursive: true});
@@ -118,12 +124,12 @@ async function train({episodes = 200, seed = 1, evalEvery = 20, evalPairs = 4, m
 }
 if (require.main === module) {
   const options = {};
-  const keys = {episodes: 'episodes', seed: 'seed', 'eval-every': 'evalEvery', 'eval-pairs': 'evalPairs', 'max-turns': 'maxTurns', rate: 'rate', output: 'output', resume: 'resume', server: 'server', name: 'name', workers: 'workers', 'team-pool': 'teamPool', 'refresh-every': 'refreshEvery', 'log-every': 'logEvery'};
+  const keys = {episodes: 'episodes', seed: 'seed', 'eval-every': 'evalEvery', 'eval-pairs': 'evalPairs', 'max-turns': 'maxTurns', rate: 'rate', output: 'output', resume: 'resume', server: 'server', name: 'name', workers: 'workers', 'team-pool': 'teamPool', 'refresh-every': 'refreshEvery', 'log-every': 'logEvery', 'metagame-bank': 'bankFile'};
   const args = process.argv.slice(2);
   for (let i = 0; i < args.length; i += 2) {
     const key = keys[args[i].replace(/^--/, '')];
     if (!key || args[i + 1] === undefined) throw new Error('Unknown argument or missing value');
-    options[key] = ['output', 'resume', 'server', 'name'].includes(key) ? args[i + 1] : Number(args[i + 1]);
+    options[key] = ['output', 'resume', 'server', 'name', 'bankFile'].includes(key) ? args[i + 1] : Number(args[i + 1]);
   }
   train(options).catch(error => {console.error(error); process.exitCode = 1;});
 }

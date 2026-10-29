@@ -387,3 +387,65 @@ test('canonical simulator fingerprint ignores Windows CRLF line endings', () => 
     assert.equal(fingerprint(), expected);
   } finally {fs.readFileSync = original;}
 });
+test('human metagame bank preserves complete lead order and excludes invalid candidates', () => {
+  const fs = require('node:fs');const os = require('node:os');const path = require('node:path');
+  const {Breeder} = require('./breed.cjs');
+  const b = new Breeder(5);const team = b.team();
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-bank-'));
+  try {
+    const file = path.join(dir, 'bank.json');
+    fs.writeFileSync(file, JSON.stringify({schema: 1, format: 'gen7ou', sets: [{set: team[0]}], teams: [{team}]}));
+    const bank = new Breeder(5, {bankFile: file});
+    assert.equal(bank.bank.teams[0][0].species, team[0].species);
+    assert.deepEqual(bank.bank.teams[0][0].evs, team[0].evs);
+    assert.ok(bank.bank.sets.get(b.dex.species.get(team[0].species).id));
+    for (let i = 0; i < 10; i++) assert.ok(bank.legal(bank.team()));
+    const broken = structuredClone(team);broken[0].item = 'Normalium Z';
+    fs.writeFileSync(file, JSON.stringify({schema: 1, format: 'gen7ou', sets: [{set: broken[0]}], teams: []}));
+    assert.throws(() => new Breeder(5, {bankFile: file}), /Z-Crystals/);
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('live team pool varies teams, learns outcomes, persists and avoids duplicate result counts', () => {
+  const fs = require('node:fs');const os = require('node:os');const path = require('node:path');
+  const {Breeder} = require('./breed.cjs');const {Model} = require('./learned.cjs');const {TeamPool} = require('./team-pool.cjs');
+  const b = new Breeder(13);const model = new Model();const team = b.team();
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-pool-'));
+  try {
+    const options = {file: path.join(dir, 'pool.json'), owner: 'Roman-016', model, seedTeam: team, size: 3, mutateEvery: 0, exploration: 0, random: () => 0.5};
+    const pool = new TeamPool(options);
+    const a = pool.choose();const before = pool.mean(pool.state.records.find(r => r.id === a.id));
+    const c = pool.choose();assert.notEqual(a.id, c.id);
+    pool.record(a.id, 'win', 'battle-1');
+    assert.ok(pool.mean(pool.state.records.find(r => r.id === a.id)) > before);
+    assert.equal(pool.record(a.id, 'win', 'battle-1'), false);
+    const reload = new TeamPool(options);
+    assert.equal(reload.state.games, 1);
+    assert.equal(reload.state.lastTeamId, c.id);
+    assert.notEqual(reload.choose().id, c.id);
+    assert.throws(() => new TeamPool({...options, owner: 'Roman-003'}), /different account/);
+    assert.ok(pool.state.records.every(r => b.legal(r.team)));
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('adaptive challenge results update the exact selected team only once', {timeout: 10000}, async () => {
+  const http = require('node:http');const fs = require('node:fs');const os = require('node:os');const path = require('node:path');
+  const sockjs = require('sockjs');const {Teams} = require('../../dist/sim');const {Model} = require('./learned.cjs');const {Breeder} = require('./breed.cjs');const {connect} = require('./connect.cjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-live-pool-'));const team = new Breeder(6).team();
+  fs.writeFileSync(path.join(dir, 'team.txt'), Teams.export(team));new Model().save(path.join(dir, 'model.json'));
+  const server = http.createServer();const transport = sockjs.createServer({log() {}});transport.installHandlers(server, {prefix: '/showdown'});
+  let stop;let conn;
+  try {
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    const done = new Promise((resolve, reject) => transport.on('connection', c => {
+      conn = c;c.write('|challstr|1|test');
+      c.on('data', message => {try {
+        if (message.startsWith('|/trn')) c.write('|pm| Tester| Roman-016|/challenge gen7ou|gen7ou|||');
+        if (message === '|/accept tester') c.write('>battle-gen7ou-9\n|init|battle\n|player|p1|Roman-016\n|player|p2|Tester\n|tier|[Gen 7] OU\n|win|Roman-016\n|win|Roman-016');
+        if (message === 'battle-gen7ou-9|/leave') resolve();
+      } catch (error) {reject(error);}});
+    }));
+    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'Roman-016', model: 'model.json', teams: {gen7ou: 'team.txt'}, teamPool: {state: 'pool.json', size: 3, mutateEvery: 0}}, dir, {fetchImpl: async () => ({ok: true, text: async () => 'test,signed'})});
+    await done;
+    const state = JSON.parse(fs.readFileSync(path.join(dir, 'pool.json'), 'utf8'));
+    assert.equal(state.games, 1);assert.equal(state.records.reduce((s, r) => s + r.wins, 0), 1);
+  } finally {stop?.();conn?.close();await new Promise(resolve => server.close(resolve));fs.rmSync(dir, {recursive: true});}
+});

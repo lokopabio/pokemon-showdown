@@ -160,3 +160,24 @@ time node scripts/battle-bot/train.cjs --episodes 1000 --eval-every 200 --eval-p
 ```
 
 For a warm start, add `--resume scripts/battle-bot/results/pc-benchmark-001/best.json`. This keeps learned weights but starts a fresh opponent archive and team pool; it does not reproduce continuation of the earlier run. The live VPS bots do not change until you explicitly copy a new checkpoint and restart their client. Compare repeated seeds and a separate test pool before claiming improvement from the larger model.
+
+## Private metagame suggestions and adaptive live teams
+
+`train.cjs` and `breed.cjs` accept `--metagame-bank PATH/metagame-bank.json`. The private bank is a JSON object with `schema: 1`, `format: "gen7ou"`, `sets` entries containing `set`, and optional `teams` entries containing ordered six-member `team` arrays. All suggestions are revalidated; illegal/custom-out-of-scope sets and Z-Crystals fail loading. Team order, EVs, IVs, items and empty item slots are preserved. Cosmetic nicknames/shininess are ignored for set deduplication, not removed from the stored source data.
+
+Complete human teams are sampled as starting candidates alongside generated teams. Suggested individual sets are available alongside synthetic sets, and set mutation can try a suggestion. No usage frequency or win-rate prior is inferred from archive repetition or a human label of "good". The trainer separates the imported full-team list into roughly two-thirds training and one-third validation seeds. Individual sets and near-duplicate cores can still overlap, so validation is not an independent metagame test. Input file changes do not update already running bots.
+
+Live adaptation is opt-in. Prepare a new config next to the existing one:
+
+```sh
+node scripts/battle-bot/prepare-live.cjs PATH/bots-active.json PATH/metagame-bank.json PATH/bots-adaptive.json
+node scripts/battle-bot/connect.cjs PATH/bots-adaptive.json
+```
+
+Preparation creates 12 legal candidates per account, seeded by its original team, complete teams from the bank, and legal mutations. A legacy seed holding a Z-Crystal is replaced with a bank team; original files are left intact. Both commands require the updated source and the private bank locally. Credential environment references are preserved. If output config already exists, choose another name. Do not run two clients using the same bot names at once.
+
+Each account owns a separate persistent pool file, scoped to its model weights and simulator fingerprint. The picker avoids consecutive repeats, favours smoothed observed results with an uncertainty bonus, and explores randomly 20% of the time. Wins, losses and ties from completed live battles update the exact selected team only after a matching format/opponent/player room is identified. Disconnects and room removal do not count as losses. Duplicate result events do not increment statistics twice. Pool writes are atomic. Use one client process per pool file and `maxBattles: 1`; shared-file concurrent writers and overlapping adaptive matches are not supported.
+
+Every five completed games it can replace a tested weaker candidate with a legal mutation of a better-scoring one; retired results remain in a bounded archive. These variants are live experiments, not pre-validated stronger teams. Selection scores are opponent-dependent, and a few human matches do not establish reliable team quality. The selector updates team preferences only; battle decision weights remain frozen. A changed model/account requires a fresh pool state path. New states are opt-in and do not alter the existing fixed-team configuration.
+
+Pool JSON records candidate teams, wins/losses/ties, provenance and archived variants. Match logs include `teamId` so results can be traced to the submitted lineup. Inspect these files locally; generated teams and metagame suggestions are not included in the public source repository.

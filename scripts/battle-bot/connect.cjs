@@ -5,6 +5,7 @@ const {Teams, TeamValidator, Dex, toID} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
 const {getAssertion} = require('./auth.cjs');
 const {Model, LearnedPolicy} = require('./learned.cjs');
+const {TeamPool} = require('./team-pool.cjs');
 function incomingChallenges(line, username) {
   if (line.startsWith('|updatechallenges|')) return JSON.parse(line.slice(18)).challengesFrom || {};
   if (!line.startsWith('|pm|')) return {};
@@ -26,6 +27,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   if (logDirectory) fs.mkdirSync(logDirectory, {recursive: true});
   const session = `${Date.now()}-${require('node:crypto').randomBytes(3).toString('hex')}`;
   const packed = {};
+  let adaptivePool;
   for (const format of formats) {
     const f = Dex.formats.get(format);
     if (!f.exists || f.gameType !== 'singles') throw new Error(`Unknown or unsupported singles format: ${format}`);
@@ -38,6 +40,10 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
     const problems = TeamValidator.get(format).validateTeam(team);
     if (problems) throw new Error(`Invalid ${format} team: ${problems.join('; ')}`);
     packed[format] = Teams.pack(team);
+    if (config.teamPool) {
+      if (!model || format !== 'gen7ou' || formats.length !== 1 || (config.maxBattles || 1) !== 1) throw new Error('Adaptive teams require a learned Gen 7 OU bot with maxBattles=1.');
+      adaptivePool = new TeamPool({...config.teamPool, file: path.resolve(base, config.teamPool.state), owner: config.username, model, seedTeam: team, bankFile: config.teamPool.bankFile && path.resolve(base, config.teamPool.bankFile)});
+    }
   }
   if (!config.username || /[|\n\r]/.test(config.username)) throw new Error('Configure a valid username.');
   let stopped = false;
@@ -45,6 +51,8 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   let reconnect;
   const rooms = new Map();
   let pendingUntil = 0;
+  let pendingTeam = null;
+  const finishedRooms = new Set();
   const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
   const log = message => console.log(`[${config.username}] ${message}`);
   async function login(challenge) {
@@ -75,7 +83,10 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
         if (config.allowedUsers?.length && !config.allowedUsers.map(toID).includes(toID(user))) continue;
         if (rooms.size >= (config.maxBattles || 1) || Date.now() < pendingUntil) continue;
         pendingUntil = Date.now() + 15000;
-        send('', `/utm ${packed[format]}`);
+        const selected = adaptivePool?.choose();
+        pendingTeam = selected ? {selected, opponent: toID(user), format} : null;
+        send('', `/utm ${selected?.packed || packed[format]}`);
+        if (selected) log(`Selected team ${selected.id} (estimated score ${selected.estimatedScore.toFixed(2)})`);
         send('', `/accept ${user}`);
         log(`Accepting challenge from ${user}`);
         break;
@@ -84,15 +95,26 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
         log(`Server: ${line.slice(line.indexOf('|', 1) + 1).slice(0, 500)}`);
         pendingUntil = 0;
       }
-      if (!room.startsWith('battle-')) continue;
+      if (!room.startsWith('battle-') || finishedRooms.has(room)) continue;
       pendingUntil = 0;
-      if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false});
+      if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false, players: {}});
       const state = rooms.get(room);
       if (logDirectory && /^[a-zA-Z0-9-]+$/.test(room)) {
         state.logFile = path.join(logDirectory, `${session}-${room}.log`);
         fs.appendFileSync(state.logFile, line + '\n');
       }
       state.history.push(line);
+      if (line.startsWith('|player|')) {
+        const fields = line.split('|');
+        state.players[fields[2]] = toID(fields[3]);
+      }
+      if (line.startsWith('|tier|')) state.format = toID(line.slice(6));
+      if (pendingTeam && !state.teamSelection && state.format === pendingTeam.format &&
+          Object.values(state.players).includes(toID(config.username)) && Object.values(state.players).includes(pendingTeam.opponent)) {
+        state.teamSelection = pendingTeam.selected;
+        state.opponent = pendingTeam.opponent;
+        pendingTeam = null;
+      }
       if (line.startsWith('|tier|')) {
         const format = toID(line.slice(6));
         if (!packed[format]) {send(room, '/forfeit'); continue;}
@@ -119,9 +141,17 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
       }
       if (line.startsWith('|win|') || line === '|tie' || line === '|deinit') {
         log(`${room}: ${line}`);
+        if (adaptivePool && state.teamSelection && line !== '|deinit') {
+          const winner = line.startsWith('|win|') ? line.slice(5) : null;
+          const result = winner ? (toID(winner) === toID(config.username) ? 'win' : 'loss') : 'tie';
+          adaptivePool.record(state.teamSelection.id, result, `${url.origin}/${room}`);
+          log(`Updated team ${state.teamSelection.id}: ${result}`);
+        }
+        finishedRooms.add(room);
+        if (finishedRooms.size > 10000) finishedRooms.delete(finishedRooms.values().next().value);
         if (logDirectory && line !== '|deinit') {
           const winner = line.startsWith('|win|') ? line.slice(5) : null;
-          fs.appendFileSync(path.join(logDirectory, 'matches.jsonl'), JSON.stringify({time: new Date().toISOString(), room, username: config.username, winner, result: winner ? (toID(winner) === toID(config.username) ? 'win' : 'loss') : 'tie', model: config.model || null, logFile: state.logFile}) + '\n');
+          fs.appendFileSync(path.join(logDirectory, 'matches.jsonl'), JSON.stringify({time: new Date().toISOString(), room, username: config.username, winner, result: winner ? (toID(winner) === toID(config.username) ? 'win' : 'loss') : 'tie', model: config.model || null, teamId: state.teamSelection?.id || null, opponent: state.opponent || null, logFile: state.logFile}) + '\n');
         }
         send(room, '/leave');
         rooms.delete(room);
@@ -131,6 +161,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   function open() {
     rooms.clear();
     pendingUntil = 0;
+    pendingTeam = null;
     socket = new WebSocket(url);
     socket.addEventListener('open', () => log(`Connected to ${url.origin}`));
     socket.addEventListener('message', event => {
