@@ -114,5 +114,31 @@ class BankTests(unittest.TestCase):
         self.assertEqual(battle.user.active.boosts['speed'], 2)
         self.assertEqual(battle.user.reserve[0].boosts['speed'], 0)
 
+    def test_fidbueluna_busted_form_uses_base_set_hypotheses(self):
+        pokemon = Pokemon('fidbuelunabusted', 100)
+        self.assertEqual(pokemon.name, 'fidbuelunabusted')
+        self.assertEqual(pokemon.types, ['rock', 'fairy'])
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(pokemon.name, 'fidbuelunabusted')
+        self.assertEqual(pokemon.ability, 'disguise')
+
+    def test_own_disguise_form_change_reads_current_request(self):
+        from fp.battle.state import Battle
+        from fp.battle.protocol import form_change
+        # Complete minimal own request: no opponent or hidden team information.
+        row = {'ident': 'p1: Fidbueluna', 'details': 'Fidbueluna-Busted, F',
+               'condition': '175/199', 'active': True,
+               'stats': {'atk': 99, 'def': 174, 'spa': 215, 'spd': 175, 'spe': 267},
+               'moves': ['geomancy', 'rapidspin', 'moonblast', 'moongeistbeam'],
+               'baseAbility': 'disguise', 'ability': 'disguise', 'item': 'powerherb'}
+        battle = Battle('disguise-test')
+        battle.user.name = 'p1'
+        battle.opponent.name = 'p2'
+        battle.user.active = Pokemon('fidbueluna', 100)
+        battle.request_json = {'side': {'id': 'p1', 'pokemon': [row]}}
+        form_change(battle, ['', 'detailschange', 'p1a: Fidbueluna', 'Fidbueluna-Busted, F'])
+        self.assertEqual(battle.user.active.name, 'fidbuelunabusted')
+        self.assertEqual(battle.user.active.hp, 175)
+
 if __name__ == '__main__':
     unittest.main()

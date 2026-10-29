@@ -1,5 +1,5 @@
 'use strict';
-// Imports species data only. Does not claim ability/move parity or launch a bot.
+// Imports species, internal forms and selected mechanics; does not launch a bot.
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
@@ -13,18 +13,22 @@ function speciesData() {
   const first = all.findIndex(s => s.id === 'carletto'), last = all.findIndex(s => s.id === 'lugamon');
   if (first < 0 || last < first) throw new Error('Missing species boundaries');
   const pool = all.slice(first, last + 1).filter(s => s.exists && s.num < 0 && !s.isMega && !s.battleOnly && !s.requiredItem);
+  const baseIds = new Set(pool.map(s => s.id));
+  const forms = all.filter(s => s.exists && s.battleOnly && !s.isMega && baseIds.has(norm(s.baseSpecies)));
+  const entries = [...pool, ...forms];
   const names = {hp: 'hp', atk: 'attack', def: 'defense', spa: 'special-attack', spd: 'special-defense', spe: 'speed'};
   const data = {};
-  for (const s of pool) {
+  for (const s of entries) {
     data[s.id] = {num: s.num, name: s.id, types: s.types.map(t => t.toLowerCase()),
       baseStats: Object.fromEntries(Object.entries(names).map(([k,v]) => [v, s.baseStats[k]])),
+      ...(s.battleOnly ? {baseSpecies: s.baseSpecies, battleOnly: s.battleOnly} : {}),
       abilities: s.abilities, weightkg: s.weightkg, heightm: s.heightm,
       ...(s.evos?.length ? {evos: s.evos} : {}), ...(s.prevo ? {prevo: s.prevo} : {}),
       // No otherFormes/requiredItem: Mega Evolutions are excluded from this integration.
       ...(s.gender ? {gender: s.gender} : {genderRatio: s.genderRatio}),
     };
   }
-  return {dex, pool, data};
+  return {dex, pool, forms, entries, data};
 }
 function prepare(engineDir, foulDir) {
   engineDir = path.resolve(engineDir); foulDir = path.resolve(foulDir);
@@ -32,21 +36,21 @@ function prepare(engineDir, foulDir) {
     const actual = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: dir, encoding: 'utf8'}).trim();
     if (actual !== expected) throw new Error(`Unsupported upstream revision in ${dir}: ${actual}; expected ${expected}`);
   }
-  const {pool, data} = speciesData();
+  const {pool, entries, data} = speciesData();
   const writes = new Map();
-  const read = (root, file) => fs.readFileSync(path.join(root, file), 'utf8');
+  const read = (root, file) => fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
   let species = read(engineDir, 'src/pokemon.rs');
   const enumMarker = '        // ROMAN FAKEMON BEGIN';
   species = species.replace(/        \/\/ ROMAN FAKEMON BEGIN[\s\S]*?        \/\/ ROMAN FAKEMON END\n/g, '');
   const end = '    },\n    default = NONE';
   if (!species.includes(end)) throw new Error('Pokemon enum structure changed');
-  species = species.replace(end, enumMarker + '\n' + pool.map(s => `        ${s.id.toUpperCase()},`).join('\n') + '\n        // ROMAN FAKEMON END\n' + end);
+  species = species.replace(end, enumMarker + '\n' + entries.map(s => `        ${s.id.toUpperCase()},`).join('\n') + '\n        // ROMAN FAKEMON END\n' + end);
   writes.set(path.join(engineDir, 'src/pokemon.rs'), species);
   let stats = read(engineDir, 'src/genx/base_stats.rs');
   stats = stats.replace(/            \/\/ ROMAN STATS BEGIN[\s\S]*?            \/\/ ROMAN STATS END\n/g, '');
   const marker = '    pub fn base_stats(&self) -> (i16, i16, i16, i16, i16, i16) {\n        match self {\n';
   if (!stats.includes(marker)) throw new Error('Base stat structure changed');
-  stats = stats.replace(marker, marker + '            // ROMAN STATS BEGIN\n' + pool.map(s => `            PokemonName::${s.id.toUpperCase()} => (${['hp','atk','def','spa','spd','spe'].map(k => s.baseStats[k]).join(', ')}),`).join('\n') + '\n            // ROMAN STATS END\n');
+  stats = stats.replace(marker, marker + '            // ROMAN STATS BEGIN\n' + entries.map(s => `            PokemonName::${s.id.toUpperCase()} => (${['hp','atk','def','spa','spd','spe'].map(k => s.baseStats[k]).join(', ')}),`).join('\n') + '\n            // ROMAN STATS END\n');
   writes.set(path.join(engineDir, 'src/genx/base_stats.rs'), stats);
   let state = read(engineDir, 'src/genx/state.rs');
   // Gen 7: a Shadow Tag user cannot be trapped by another Shadow Tag user.
@@ -55,6 +59,26 @@ function prepare(engineDir, foulDir) {
   if (!state.includes(oldTrap) && !state.includes(newTrap)) throw new Error('Shadow Tag implementation changed');
   state = state.replace(oldTrap, newTrap);
   writes.set(path.join(engineDir, 'src/genx/state.rs'), state);
+  let abilities = read(engineDir, 'src/genx/abilities.rs');
+  if (!abilities.includes('PokemonName::FIDBUELUNA')) {
+    abilities = abilities.replaceAll('|| defending_pkmn.id == PokemonName::MIMIKYUTOTEM)', '|| defending_pkmn.id == PokemonName::MIMIKYUTOTEM\n                    || defending_pkmn.id == PokemonName::FIDBUELUNA)');
+    abilities = abilities.replaceAll('name_change: PokemonName::MIMIKYUBUSTED as i16 - defending_pkmn.id as i16,', 'name_change: (if defending_pkmn.id == PokemonName::FIDBUELUNA { PokemonName::FIDBUELUNABUSTED } else { PokemonName::MIMIKYUBUSTED }) as i16 - defending_pkmn.id as i16,');
+    abilities = abilities.replaceAll('defending_pkmn.id = PokemonName::MIMIKYUBUSTED;', 'defending_pkmn.id = if defending_pkmn.id == PokemonName::FIDBUELUNA { PokemonName::FIDBUELUNABUSTED } else { PokemonName::MIMIKYUBUSTED };');
+  }
+  if (!abilities.includes('// ROMAN FIDBUELUNA DISGUISE HP')) {
+    const transition = 'defending_pkmn.id = if defending_pkmn.id == PokemonName::FIDBUELUNA { PokemonName::FIDBUELUNABUSTED } else { PokemonName::MIMIKYUBUSTED };';
+    if (!abilities.includes(transition)) throw new Error('Custom Disguise transition missing');
+    abilities = abilities.replace(transition, transition + `
+            // ROMAN FIDBUELUNA DISGUISE HP: this server applies 1/8 even in Gen 7.
+            if defending_pkmn.id == PokemonName::FIDBUELUNABUSTED {
+                let dmg = cmp::min(defending_pkmn.hp, defending_pkmn.maxhp / 8);
+                instructions.instruction_list.push(Instruction::Damage(DamageInstruction {
+                    side_ref: side_ref.get_other_side(), damage_amount: dmg,
+                }));
+                defending_pkmn.hp -= dmg;
+            }`);
+  }
+  writes.set(path.join(engineDir, 'src/genx/abilities.rs'), abilities);
   const pokedex = JSON.parse(read(foulDir, 'fp/data/pokedex.json'));
   Object.assign(pokedex, data);
   writes.set(path.join(foulDir, 'fp/data/pokedex.json'), JSON.stringify(pokedex, null, 4) + '\n');
@@ -69,8 +93,32 @@ function prepare(engineDir, foulDir) {
   }
   writes.set(path.join(foulDir, 'fp/teams/load_team.py'), loader);
   // Native tests prove identifiers roundtrip and every exported stat tuple matches.
-  const rustTest = `use poke_engine::pokemon::PokemonName;\nuse std::str::FromStr;\n#[test]\nfn roman_species_roundtrip_and_stats() {\n${pool.map(s => `    let p = PokemonName::from_str("${s.id}").unwrap();\n    assert_eq!(p.to_string().to_lowercase(), "${s.id}");\n    assert_eq!(p.base_stats(), (${['hp','atk','def','spa','spd','spe'].map(k => s.baseStats[k]).join(', ')}));`).join('\n')}\n}\n`;
+  const rustTest = `use poke_engine::pokemon::PokemonName;\nuse std::str::FromStr;\n#[test]\nfn roman_species_roundtrip_and_stats() {\n${entries.map(s => `    let p = PokemonName::from_str("${s.id}").unwrap();\n    assert_eq!(p.to_string().to_lowercase(), "${s.id}");\n    assert_eq!(p.base_stats(), (${['hp','atk','def','spa','spd','spe'].map(k => s.baseStats[k]).join(', ')}));`).join('\n')}\n}\n`;
   writes.set(path.join(engineDir, 'tests/roman_species.rs'), rustTest);
+  writes.set(path.join(engineDir, 'tests/roman_disguise.rs'), `use poke_engine::state::{State, SideReference};
+use poke_engine::pokemon::PokemonName;
+use poke_engine::engine::abilities::{Abilities, ability_before_move};
+use poke_engine::choices::{Choices, MOVES};
+use poke_engine::instruction::StateInstructions;
+#[test]
+fn fidbueluna_disguise_busts_once_and_costs_one_eighth_hp() {
+    let mut state = State::default();
+    state.side_two.get_active().id = PokemonName::FIDBUELUNA;
+    state.side_two.get_active().ability = Abilities::DISGUISE;
+    state.side_two.get_active().hp = 199;
+    state.side_two.get_active().maxhp = 199;
+    let mut hit = MOVES.get(&Choices::TACKLE).unwrap().clone();
+    let mut instructions = StateInstructions {percentage: 100.0, instruction_list: vec![]};
+    ability_before_move(&mut state, &mut hit, &SideReference::SideOne, &mut instructions);
+    assert_eq!(hit.base_power, 0.0);
+    assert_eq!(state.side_two.get_active().id, PokemonName::FIDBUELUNABUSTED);
+    assert_eq!(state.side_two.get_active().hp, 175);
+    let mut second = MOVES.get(&Choices::TACKLE).unwrap().clone();
+    ability_before_move(&mut state, &mut second, &SideReference::SideOne, &mut instructions);
+    assert!(second.base_power > 0.0);
+    assert_eq!(state.side_two.get_active().hp, 175);
+}
+`);
   writes.set(path.join(engineDir, 'tests/roman_shadow_tag.rs'), `use poke_engine::state::{State, PokemonType};
 use poke_engine::engine::abilities::Abilities;
 use poke_engine::engine::items::Items;

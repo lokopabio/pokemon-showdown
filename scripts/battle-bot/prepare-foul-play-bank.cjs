@@ -7,6 +7,8 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ['fp/battle/state.py', '        pokedex_name = normalize_name(pokedex[self.active.name][constants.NAME])',
+      '        pokedex_name = normalize_name(pokedex[self.active.name][constants.NAME])\n        # Own active slot is authoritative across custom battle-only form changes.\n        active_rows = [p for p in request_json["side"]["pokemon"] if p.get("active")]\n        if len(active_rows) == 1:\n            active_name = normalize_name(active_rows[0][constants.DETAILS].split(",")[0])\n            if active_name == self.active.name or normalize_name(pokedex.get(active_name, {}).get("baseSpecies", "")) == self.active.base_name:\n                pokedex_name = active_name'],
     ['fp/battle/protocol.py', '    item = normalize_name(split_msg[3].strip())\n\n    if (',
       '    item = normalize_name(split_msg[3].strip())\n    if any("[from] move: " + move in extra for move in ("Trick", "Switcheroo") for extra in split_msg[4:]):\n        side.active.roman_item_changed = True\n\n    if ('],
     ['fp/modes/standard_battle.py', '        self.team_datasets = TeamDatasets()\n        self.smogon_sets = SmogonSets()',
@@ -18,7 +20,7 @@ function prepareBank(directory) {
   ];
   const writes = [];
   for (const [file, before, after] of patches) {
-    const target = path.join(directory,file); let source = fs.readFileSync(target,'utf8');
+    const target = path.join(directory,file); let source = fs.readFileSync(target,'utf8').replace(/\r\n/g,'\n');
     if (!source.includes(after)) {
       if (!source.includes(before)) throw new Error('Patch target changed: ' + file);
       source = source.replace(before,after);

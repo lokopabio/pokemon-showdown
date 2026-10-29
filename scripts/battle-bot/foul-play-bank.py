@@ -11,6 +11,7 @@ from fp.data.sets.base import PokemonMoveset, PokemonSet, PredictedPokemonSet
 from fp.data.sets.team_datasets import TeamDatasets
 from fp.data.sets.smogon import SmogonSets
 from fp.search.helpers import populate_pkmn_from_set
+from fp.data import pokedex
 from fp.teams.roman_guard import validate_custom_team
 
 logger = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ class BankPriors(SmogonSets):
         return [s.pkmn_set for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(pkmn)]
 
 def sample_bank_pokemon(pkmn):
+    bank_name = normalize_name(pokedex.get(pkmn.name, {}).get('baseSpecies', pkmn.name))
     probe = copy(pkmn)
     # Trace/Skill Swap changes the current ability, not the set's original ability.
     if pkmn.original_ability:
@@ -95,7 +97,7 @@ def sample_bank_pokemon(pkmn):
         probe.removed_item = None
     # Custom mechanic speed inference has not been validated; don't treat inferred
     # bounds as hard observations. Revealed moves, items and abilities remain hard.
-    remaining = [s for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
+    remaining = [s for s in bank_sets().get(bank_name, []) if s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
     if not remaining and probe.ability in (None, 'illusion'):
         # A move incompatible with the apparent species can be an Illusion clue.
         # This changes only a sampled battle copy, never the observed battle.
