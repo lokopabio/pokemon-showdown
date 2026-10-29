@@ -1,0 +1,87 @@
+'use strict';
+const {test} = require('node:test');
+const assert = require('node:assert/strict');
+const {Policy, fraction} = require('./policy.cjs');
+const {play} = require('./evaluate.cjs');
+const mon = (name, active = true, condition = '300/300') => ({ident: `p1: ${name}`, details: name, active, condition, stats: {atk: 100, spa: 100}, moves: []});
+function request(moves, extra = {}) {
+  return {side: {id: 'p1', pokemon: [mon('Pikachu'), mon('Blastoise', false)]}, active: [{moves}], ...extra};
+}
+test('wait, fainting, forced switches and disabled moves', () => {
+  const p = new Policy();
+  assert.equal(p.choose({wait: true}), null);
+  assert.equal(fraction('0 fnt'), 0);
+  assert.equal(p.choose(request([], {forceSwitch: [true], active: undefined})), 'switch 2');
+  assert.equal(p.choose(request([{id: 'thunderbolt', disabled: true}, {id: 'tackle'}])), 'move 2');
+});
+test('public opponent tracking and type immunity', () => {
+  const p = new Policy();
+  p.side = 'p1';
+  p.observe('|switch|p2a: Garchomp|Garchomp, L100|100/100');
+  assert.equal(p.choose(request([{id: 'thunderbolt'}, {id: 'hiddenpowerice'}])), 'move 2');
+  p.observe('|-status|p2a: Garchomp|par');
+  assert.equal(p.foe.status, 'par');
+  p.observe('|switch|p1a: Pikachu|Pikachu|100/100');
+  assert.equal(p.foe.species, 'Garchomp');
+});
+test('reads custom species and handles mega and Z choices', () => {
+  const p = new Policy();
+  assert.equal(p.dex.species.get('carletto').exists, true);
+  const r = request([{id: 'tackle'}]);
+  r.active[0].canMegaEvo = 'Pikachu-Mega';
+  assert.equal(p.choose(r), 'move 1 mega');
+  delete r.active[0].canMegaEvo;
+  r.active[0].canZMove = [{move: 'Breakneck Blitz'}];
+  assert.equal(p.choose(r), 'move 1 zmove');
+});
+test('full battles finish through player-specific simulator streams', {timeout: 30000}, async () => {
+  const team1 = [{species: 'Pikachu', ability: 'Static', moves: ['Thunderbolt', 'Quick Attack']}];
+  const team2 = [{species: 'Blastoise', ability: 'Torrent', moves: ['Surf', 'Tackle']}];
+  for (let i = 0; i < 5; i++) assert.ok(['Heuristic', 'Baseline', 'tie'].includes(await play('gen7customgame', team1, team2, [i + 1, 2, 3, 4])));
+  const custom = [{species: 'Carletto', moves: ['Tackle'], ability: 'Pressure'}];
+  assert.ok(['Heuristic', 'Baseline', 'tie'].includes(await play('gen7customgame', custom, team2)));
+});
+test('WebSocket login, challenge acceptance and battle choice', {timeout: 10000}, async () => {
+  const http = require('node:http');
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const path = require('node:path');
+  const sockjs = require('sockjs');
+  const {connect} = require('./connect.cjs');
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-bot-'));
+  fs.writeFileSync(path.join(directory, 'team.txt'), 'Pikachu\nAbility: Static\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Thunderbolt\n');
+  const server = http.createServer();
+  const transport = sockjs.createServer({log() {}});
+  transport.installHandlers(server, {prefix: '/showdown'});
+  let stop;
+  let connection;
+  try {
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    const completed = new Promise((resolve, reject) => {
+      transport.on('connection', conn => {
+        connection = conn;
+        conn.write('|challstr|1|test');
+        conn.on('data', text => {
+          try {
+            if (text.startsWith('|/trn')) conn.write('|updatechallenges|{"challengesFrom":{"Tester":"gen7ou"}}');
+            if (text === '|/accept Tester') {
+              conn.write('>battle-gen7ou-1\n|tier|[Gen 7] OU\n|switch|p2a: Blastoise|Blastoise|100/100');
+              conn.write('>battle-gen7ou-1\n|request|' + JSON.stringify({...request([{id: 'thunderbolt'}]), rqid: 1}));
+            }
+            if (text.startsWith('battle-gen7ou-1|/choose')) {
+              assert.equal(text, 'battle-gen7ou-1|/choose move 1|1');
+              resolve();
+            }
+          } catch (error) {reject(error);}
+        });
+      });
+    });
+    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'TestBot', teams: {gen7ou: 'team.txt'}}, directory);
+    await completed;
+  } finally {
+    stop?.();
+    connection?.close();
+    await new Promise(resolve => server.close(resolve));
+    fs.rmSync(directory, {recursive: true});
+  }
+});

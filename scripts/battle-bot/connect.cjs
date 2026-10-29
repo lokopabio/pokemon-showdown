@@ -1,0 +1,115 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const {Teams, TeamValidator, Dex, toID} = require('../../dist/sim');
+const {Policy} = require('./policy.cjs');
+function connect(config, base = process.cwd()) {
+  const url = new URL(config.server);
+  if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
+  const formats = Object.keys(config.teams || {});
+  if (!formats.length) throw new Error('Configure at least one format and team file.');
+  const packed = {};
+  for (const format of formats) {
+    const f = Dex.formats.get(format);
+    if (!f.exists || f.gameType !== 'singles') throw new Error(`Unknown or unsupported singles format: ${format}`);
+    const team = Teams.import(fs.readFileSync(path.resolve(base, config.teams[format]), 'utf8'));
+    if (!team?.length) throw new Error(`Empty team: ${format}`);
+    const problems = TeamValidator.get(format).validateTeam(team);
+    if (problems) throw new Error(`Invalid ${format} team: ${problems.join('; ')}`);
+    packed[format] = Teams.pack(team);
+  }
+  if (!config.username || /[|\n\r]/.test(config.username)) throw new Error('Configure a valid username.');
+  let stopped = false;
+  let socket;
+  let reconnect;
+  const rooms = new Map();
+  const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
+  const log = message => console.log(`[${config.username}] ${message}`);
+  async function login(challenge) {
+    let assertion = '';
+    const password = config.passwordEnv && process.env[config.passwordEnv];
+    if (config.passwordEnv && !password) throw new Error(`Missing environment variable ${config.passwordEnv}`);
+    if (password) {
+      const loginUrl = new URL(config.loginServer || 'https://play.pokemonshowdown.com/action.php');
+      if (loginUrl.protocol !== 'https:') throw new Error('Password login requires HTTPS.');
+      const response = await fetch(loginUrl, {method: 'POST', body: new URLSearchParams({act: 'login', name: config.username, pass: password, challstr: challenge}), signal: AbortSignal.timeout(15000)});
+      if (!response.ok) throw new Error(`Login HTTP ${response.status}`);
+      const body = await response.text();
+      const result = JSON.parse(body.startsWith(']') ? body.slice(1) : body);
+      if (!result.actionsuccess || !result.assertion) throw new Error('Login rejected. Check bot credentials and loginServer.');
+      assertion = result.assertion;
+    }
+    send('', `/trn ${config.username},0,${assertion}`);
+  }
+  function receive(message) {
+    const lines = message.split('\n');
+    const room = lines[0].startsWith('>') ? lines.shift().slice(1) : '';
+    for (const line of lines) {
+      if (line.startsWith('|challstr|')) login(line.slice(10)).catch(err => {log(err.message); stopped = true; socket.close();});
+      if (line.startsWith('|updateuser|')) log('User state updated');
+      if (line.startsWith('|updatechallenges|')) {
+        const incoming = JSON.parse(line.slice(18)).challengesFrom || {};
+        for (const [user, format] of Object.entries(incoming)) {
+          if (!packed[format]) continue;
+          if (config.allowedUsers?.length && !config.allowedUsers.map(toID).includes(toID(user))) continue;
+          if (rooms.size >= (config.maxBattles || 1)) continue;
+          send('', `/utm ${packed[format]}`);
+          send('', `/accept ${user}`);
+          break;
+        }
+      }
+      if (!room.startsWith('battle-')) continue;
+      if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false});
+      const state = rooms.get(room);
+      state.history.push(line);
+      if (line.startsWith('|tier|')) {
+        const format = toID(line.slice(6));
+        if (!packed[format]) {send(room, '/forfeit'); continue;}
+        state.policy = new Policy(format);
+      }
+      if (line.startsWith('|request|')) {
+        const request = JSON.parse(line.slice(9));
+        if (!request || request.wait || state.rqid === request.rqid) continue;
+        if (!state.policy) {log(`No supported format identified for ${room}`); continue;}
+        state.policy.side = request.side.id;
+        for (const event of state.history) state.policy.observe(event);
+        state.history = [];
+        const choice = state.policy.choose(request);
+        if (choice) {
+          state.rqid = request.rqid;
+          state.fallback = false;
+          send(room, `/choose ${choice}|${request.rqid}`);
+        }
+      }
+      if (line.startsWith('|error|[Invalid choice]') || line.startsWith('|error|[Unavailable choice]')) {
+        if (!state.fallback) {state.fallback = true; send(room, `/choose default|${state.rqid}`);}
+        else log(`Choice rejected in ${room}: ${line}`);
+      }
+      if (line.startsWith('|win|') || line === '|tie' || line === '|deinit') {
+        log(`${room}: ${line}`);
+        send(room, '/leave');
+        rooms.delete(room);
+      }
+    }
+  }
+  function open() {
+    rooms.clear();
+    socket = new WebSocket(url);
+    socket.addEventListener('open', () => log(`Connected to ${url.origin}`));
+    socket.addEventListener('message', event => {
+      try {receive(String(event.data));} catch (err) {log(`Protocol error: ${err.message}`);}
+    });
+    socket.addEventListener('error', () => log('WebSocket error'));
+    socket.addEventListener('close', () => {if (!stopped) reconnect = setTimeout(open, 5000);});
+  }
+  open();
+  return () => {stopped = true; clearTimeout(reconnect); socket.close();};
+}
+if (require.main === module) {
+  if (typeof WebSocket === 'undefined') throw new Error('Use Node.js 22 or later.');
+  const file = path.resolve(process.argv[2] || 'scripts/battle-bot/config.json');
+  const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const stop = (Array.isArray(config) ? config : [config]).map(c => connect(c, path.dirname(file)));
+  process.on('SIGINT', () => {for (const close of stop) close();});
+}
+module.exports = {connect};
