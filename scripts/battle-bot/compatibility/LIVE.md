@@ -121,3 +121,29 @@ Testing also caught a catalog error: a move can be legal through an alternate ab
 node scripts/battle-bot/prepare-foul-play-bank.cjs ../roman-foul-play
 node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json --python ../roman-foul-play/.venv/Scripts/python.exe --foul ../roman-foul-play --output scripts/battle-bot/results/benito-discovery-003 --population 4 --generations 2 --seed 1910 --searchMs 30 --calculatorEngine scripts/battle-bot/results/calculator-engine.cjs
 ```
+
+## Calculator baseline before team discovery
+
+Run calculator reconnaissance separately, before self-play. Refresh it when the server's legality, calculator engine or target evidence changes. `calc-baseline.cjs` profiles every selectable custom species across native-supported abilities, physical/special/mixed attack plans, physical/special bulk plans, and applicable Life Orb/Choice/Leftovers/Eviolite item variants. It greedily selects complementary coverage moves against exact target sets, weighting accuracy and excluding sacrificial moves from reusable coverage scoring. It then searches 4-EV increments for individual offensive/defensive/speed benchmarks and reallocates remaining investment. These are best-tested proposals under the specified assumptions, not globally optimal sets or proofs of team strength.
+
+`--results` points to a completed discovery folder (`teams.json` and `games.jsonl`). Teams with at least four completed games supply observed success evidence for half the target panel. This does not attribute their success to individual members. The rest of the panel samples fully evolved species across strong-stat/diverse profiles, using bank examples or independently generated legal sets. Candidate eligibility still includes every selectable species, including unevolved species. Baseline targets have equal weight; they are not asserted usage rates or a settled list of threats.
+
+Outputs: `manifest.json` identifies exact targets, assumptions and data/engine hashes. `species.jsonl` contains role/set probes, damage profiles, failed probes and investment searches. `baseline.json` contains the concise role evidence and proposed sets. Defensive evidence uses survival of two strongest incoming hits at full HP in a neutral field; it does not model switching hazards, recovery, setup or context-dependent abilities. Offensive evidence and EV benchmarks are conditional on hits. Support moves and relevant abilities are separately recorded with an unmeasured status, and support exploration proposals are retained rather than scored as ineffective because they deal little direct damage. A missing role probe is `null`, distinct from a measured score of zero.
+
+Use two separate PowerShell commands, running the second only after the first finishes:
+
+```powershell
+node scripts/battle-bot/calc-baseline.cjs --bank metagame/metagame-bank.json --calculatorEngine scripts/battle-bot/results/calculator-engine.cjs --results scripts/battle-bot/results/benito-discovery-002 --output scripts/battle-bot/results/calc-baseline-001 --targetCount 24 --seed 2201
+```
+
+```powershell
+node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json --python ../roman-foul-play/.venv/Scripts/python.exe --foul ../roman-foul-play --calculatorEngine scripts/battle-bot/results/calculator-engine.cjs --baselineFile scripts/battle-bot/results/calc-baseline-001/baseline.json --output scripts/battle-bot/results/benito-discovery-004 --population 4 --generations 2 --seed 2202 --searchMs 30
+```
+
+For a smaller calculator diagnostic, `--species rickymartin,pabio,himnassio` restricts only that baseline pass. It does not restrict discovery's species pool. A calculator pass prints progress per species and may take several minutes. It does not run battles or log in to any account.
+
+With `--baselineFile`, each new set attempts a calculator-derived proposal 75% of the time and uses the independent generator otherwise. Role-score floors and an explicit unmeasured support prior retain exploration. Poor defensive evidence reduces proposal priority without banning the species/role. Exact benchmarked spreads survive unrelated mutations; changing the set invalidates their signature and restores coherence repair. `proposal-sources.json` records proposal counts, including rejected proposals, not battle usage. This is not yet a learned posterior or an exhaustive combinatorial search over six-member team synergy.
+
+Holdout opponents must not contain exact target sets from the loaded baseline. The loader checks legality data and the optional active calculator hash. Updating either requires rebuilding the baseline. Battle results still select teams and apply admission checks; calculator scores cannot automatically promote a team into live play.
+
+Potential future bot usernames noted: `BalongaAlso` and `MonsieurBonVoyage`. Neither is configured or launched by this change. Credentials must be supplied outside the repository.

@@ -23,10 +23,17 @@ function catalog(){
 }
 function writeCatalog(file){fs.writeFileSync(file,JSON.stringify(catalog(),null,2)+'\n');}
 class SetExplorer{
-  constructor(seed=1,random=rng(seed)){this.random=random;this.data=catalog();this.dex=Dex.forFormat('gen7ou');this.validator=TeamValidator.get('gen7ou');this.pool=Object.keys(this.data.species).filter(id=>this.data.species[id].selectable);this.rules=new (require('./set-rules.cjs').SetRules)(this);}
+  constructor(seed=1,random=rng(seed)){this.random=random;this.data=catalog();this.dex=Dex.forFormat('gen7ou');this.validator=TeamValidator.get('gen7ou');this.pool=Object.keys(this.data.species).filter(id=>this.data.species[id].selectable);this.rules=new (require('./set-rules.cjs').SetRules)(this);this.baseline=null;this.baselineProposals=0;this.independentProposals=0;}
   sample(a){return a[Math.floor(this.random()*a.length)];}
   spread(){const evs={hp:0,atk:0,def:0,spa:0,spd:0,spe:0},stats=Object.keys(evs);if(this.random()<0.5){const shuffled=stats.map(s=>({s,r:this.random()})).sort((a,b)=>a.r-b.r);evs[shuffled[0].s]=252;evs[shuffled[1].s]=252;evs[shuffled[2].s]=4;}else for(let i=0;i<127;i++){const choices=stats.filter(s=>evs[s]<252);evs[this.sample(choices)]+=4;}return evs;}
-  set(name,plan={}){const s=this.data.species[name];if(!s)throw Error('Unknown species');const abilities=s.abilities.filter(a=>a!=='moody'&&this.data.nativeAbilities.includes(a)),moves=s.moves.filter(m=>this.data.moves[m].native),items=this.data.items.filter(i=>i.native);if(!abilities.length||moves.length<4)throw Error('Insufficient native identifier support for '+name);
+  set(name,plan={}){
+    const record=this.baseline?.species.find(r=>r.species===name);
+    if(record&&!plan.trickRoom&&this.random()<0.75){
+      const proposals=record.proposals.filter(p=>!this.validator.validateTeam([clone(p.set)]));
+      if(proposals.length){const chosen=proposals.map(p=>({p,k:-Math.log(Math.max(this.random(),1e-9))/Math.max(0.02,p.role==='support'?0.1:p.score*p.score)})).sort((a,b)=>a.k-b.k)[0].p;this.baselineProposals++;return clone(chosen.set);}
+    }
+    this.independentProposals++;
+    const s=this.data.species[name];if(!s)throw Error('Unknown species');const abilities=s.abilities.filter(a=>a!=='moody'&&this.data.nativeAbilities.includes(a)),moves=s.moves.filter(m=>this.data.moves[m].native),items=this.data.items.filter(i=>i.native);if(!abilities.length||moves.length<4)throw Error('Insufficient native identifier support for '+name);
     for(let attempt=0;attempt<200;attempt++){
       // Every move has positive sampling weight; no bank membership requirement.
       const ranked=moves.map(id=>{const m=this.data.moves[id],w=this.random()<0.25?1:Math.max(15,m.power||40)*(s.types.includes(m.type)?1.3:1);return {id,k:-Math.log(Math.max(this.random(),1e-9))/w};}).sort((a,b)=>a.k-b.k);

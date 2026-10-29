@@ -45,6 +45,8 @@ class SetRules{
     return this.e.sample(preferred.length&&this.e.random()<0.9?preferred:good)?.name||'';
   }
   repair(original,plan={}){
+    const benchmarkValid=original.benchmark&&require('./calc-baseline.cjs').signature(original)===original.benchmark.signature;
+    if(benchmarkValid&&!plan.trickRoom)return clone(original);
     const set=clone(original),species=this.dex.species.get(set.species),pool=this.e.data.species[species.id].moves.filter(m=>this.e.data.moves[m].native&&this.usefulMove(m));
     const has=id=>set.moves.some(m=>this.dex.moves.get(m).id===id),physical=species.baseStats.atk>=species.baseStats.spa;
     const attackPool=pool.filter(m=>this.dex.moves.get(m).category!=='Status');
@@ -87,6 +89,8 @@ class SetRules{
     const alternatives=Object.values(species.abilities).map(a=>this.dex.abilities.get(a).id);
     if((inertAbilities.has(ability)||harmfulAbilities.has(ability))&&alternatives.some(a=>!inertAbilities.has(a)&&!harmfulAbilities.has(a)&&a!=='moody'))set.ability=this.chooseAbility(set);
     if(!this.itemWorks(set,set.item,plan))set.item=this.chooseItem(set,plan);
+    if(benchmarkValid&&!plan.trickRoom){const expected=clone(original);delete expected.benchmark;const actual=clone(set);delete actual.benchmark;actual.evs=expected.evs;if(JSON.stringify(actual)===JSON.stringify(expected))set.evs=clone(original.evs);else delete set.benchmark;}
+    else if(set.benchmark)delete set.benchmark;
     return set;
   }
   team(team,plan={}){const actual={trickRoom:!!plan.trickRoom&&team.some(s=>s.moves.some(m=>this.dex.moves.get(m).id==='trickroom'))};return team.map(s=>this.repair(s,actual));}
