@@ -68,8 +68,8 @@ test('WebSocket learned checkpoint login, challenge, choice and live logs', {tim
         conn.on('data', text => {
           try {
             if (text.startsWith('|/trn')) {assert.match(text, /,0,signed,test-token$/);} 
-            if (text.startsWith('|/trn')) conn.write('|updatechallenges|{"challengesFrom":{"Tester":"gen7ou"}}');
-            if (text === '|/accept Tester') {
+            if (text.startsWith('|/trn')) conn.write('|pm| Tester| Roman-016|/challenge gen7ou|gen7ou|||');
+            if (text === '|/accept tester') {
               conn.write('>battle-gen7ou-1\n|tier|[Gen 7] OU\n|switch|p2a: Blastoise|Blastoise|100/100');
               conn.write('>battle-gen7ou-1\n|request|' + JSON.stringify({...request([{id: 'thunderbolt'}]), rqid: 1}));
             }
@@ -252,4 +252,13 @@ test('registered authentication parses standard Showdown login responses', async
     });
     assert.equal(assertion, 'userid,token,signature');
   } finally {delete process.env.ROMAN_TEST_PASSWORD;}
+});
+
+test('challenge parser supports server PM challenges and legacy events', () => {
+  const {incomingChallenges} = require('./connect.cjs');
+  assert.deepEqual(incomingChallenges('|pm|+loko1| Roman-016|/challenge gen7ou|gen7ou|||', 'Roman-016'), {loko1: 'gen7ou'});
+  assert.deepEqual(incomingChallenges('|pm| Roman-016|+loko1|/challenge gen7ou|gen7ou|||', 'Roman-016'), {});
+  assert.deepEqual(incomingChallenges('|pm|+loko1| Roman-016|/challenge', 'Roman-016'), {});
+  assert.deepEqual(incomingChallenges('|pm|+loko1| Roman-003|/challenge gen7ou|gen7ou|||', 'Roman-016'), {});
+  assert.deepEqual(incomingChallenges('|updatechallenges|{"challengesFrom":{"loko1":"gen7ou"}}', 'Roman-016'), {loko1: 'gen7ou'});
 });

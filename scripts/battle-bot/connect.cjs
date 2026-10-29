@@ -5,6 +5,16 @@ const {Teams, TeamValidator, Dex, toID} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
 const {getAssertion} = require('./auth.cjs');
 const {Model, LearnedPolicy} = require('./learned.cjs');
+function incomingChallenges(line, username) {
+  if (line.startsWith('|updatechallenges|')) return JSON.parse(line.slice(18)).challengesFrom || {};
+  if (!line.startsWith('|pm|')) return {};
+  const fields = line.split('|');
+  if (toID(fields[3]) !== toID(username) || toID(fields[2]) === toID(username)) return {};
+  const message = fields[4] || '';
+  if (!message.startsWith('/challenge ')) return {};
+  const format = message.slice(11).trim();
+  return format ? {[toID(fields[2])]: format} : {};
+}
 function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   const url = new URL(config.server);
   if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
@@ -34,6 +44,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   let socket;
   let reconnect;
   const rooms = new Map();
+  let pendingUntil = 0;
   const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
   const log = message => console.log(`[${config.username}] ${message}`);
   async function login(challenge) {
@@ -57,18 +68,24 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
         stopped = true;
         socket.close();
       }
-      if (line.startsWith('|updatechallenges|')) {
-        const incoming = JSON.parse(line.slice(18)).challengesFrom || {};
-        for (const [user, format] of Object.entries(incoming)) {
-          if (!packed[format]) continue;
-          if (config.allowedUsers?.length && !config.allowedUsers.map(toID).includes(toID(user))) continue;
-          if (rooms.size >= (config.maxBattles || 1)) continue;
-          send('', `/utm ${packed[format]}`);
-          send('', `/accept ${user}`);
-          break;
-        }
+      const incoming = incomingChallenges(line, config.username);
+      for (const [user, format] of Object.entries(incoming)) {
+        log(`Challenge from ${user}: ${format}`);
+        if (!packed[format]) {log(`Unsupported format: ${format}`); continue;}
+        if (config.allowedUsers?.length && !config.allowedUsers.map(toID).includes(toID(user))) continue;
+        if (rooms.size >= (config.maxBattles || 1) || Date.now() < pendingUntil) continue;
+        pendingUntil = Date.now() + 15000;
+        send('', `/utm ${packed[format]}`);
+        send('', `/accept ${user}`);
+        log(`Accepting challenge from ${user}`);
+        break;
+      }
+      if (line.startsWith('|popup|') || line.startsWith('|error|')) {
+        log(`Server: ${line.slice(line.indexOf('|', 1) + 1).slice(0, 500)}`);
+        pendingUntil = 0;
       }
       if (!room.startsWith('battle-')) continue;
+      pendingUntil = 0;
       if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false});
       const state = rooms.get(room);
       if (logDirectory && /^[a-zA-Z0-9-]+$/.test(room)) {
@@ -113,6 +130,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   }
   function open() {
     rooms.clear();
+    pendingUntil = 0;
     socket = new WebSocket(url);
     socket.addEventListener('open', () => log(`Connected to ${url.origin}`));
     socket.addEventListener('message', event => {
@@ -131,4 +149,4 @@ if (require.main === module) {
   const stop = (Array.isArray(config) ? config : [config]).map(c => connect(c, path.dirname(file)));
   for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {for (const close of stop) close();});
 }
-module.exports = {connect};
+module.exports = {connect, incomingChallenges};
