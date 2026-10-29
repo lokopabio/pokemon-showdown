@@ -85,3 +85,40 @@ test('WebSocket login, challenge acceptance and battle choice', {timeout: 10000}
     fs.rmSync(directory, {recursive: true});
   }
 });
+test('breeder restricts species, enforces Gen 7 OU and reproduces seeded teams', {timeout: 30000}, () => {
+  const {Breeder} = require('./breed.cjs');
+  const {Teams} = require('../../dist/sim');
+  const a = new Breeder(42);
+  const b = new Breeder(42);
+  const team = a.team();
+  assert.equal(Teams.pack(team), Teams.pack(b.team()));
+  assert.equal(a.allowed.has('pikachu'), false);
+  const first = a.dex.species.all().findIndex(s => s.id === 'carletto');
+  const boundary = new Set(a.dex.species.all().slice(first).filter(s => s.num < 0).map(s => s.id));
+  for (let i = 0; i < 10; i++) {
+    const child = a.mutate(team);
+    assert.equal(a.legal(child), true);
+    assert.equal(child.length, 6);
+    assert.ok(child.every(s => boundary.has(a.dex.species.get(s.species).id)));
+  }
+  const bad = structuredClone(team);
+  bad[0].species = 'Pikachu';
+  assert.equal(a.legal(bad), false);
+});
+test('evolution runs actual battles and exports a legal champion and held-out report', {timeout: 30000}, async () => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const path = require('node:path');
+  const {evolve, Breeder} = require('./breed.cjs');
+  const output = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-breed-'));
+  try {
+    const {champion, report} = await evolve({seed: 7, population: 4, generations: 2, opponents: 1, maxTurns: 30, output});
+    assert.equal(new Breeder(7).legal(champion), true);
+    assert.equal(report.history.length, 2);
+    assert.equal(report.heldout.games, 2);
+    assert.equal(report.heldout.wins + report.heldout.losses + report.heldout.ties, 2);
+    assert.ok(report.history[1].best.points >= report.history[0].best.points);
+    assert.ok(fs.statSync(path.join(output, 'best.txt')).size > 0);
+    assert.ok(fs.statSync(path.join(output, 'checkpoint.json')).size > 0);
+  } finally {fs.rmSync(output, {recursive: true});}
+});

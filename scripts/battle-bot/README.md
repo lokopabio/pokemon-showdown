@@ -32,3 +32,26 @@ Reads the selected format's Dex directly, including custom species and move powe
 This is a heuristic first version, not a learned agent. It does not yet simulate candidate turns, model every custom ability, infer hidden sets, track hazards and boosts comprehensively, or evaluate weather and items accurately. Loading custom data does not mean understanding arbitrary ability callbacks. Automatic Mega Evolution and simple setup scoring can be strategically poor. Dynamax and Terastallization decisions are not implemented. Training and stronger search are subsequent work.
 
 Tests cover legal choice handling, opponent tracking, immunities, custom species loading, Mega/Z choice generation, six complete simulated battles (including Carletto), and login/challenge/choice messages against a local WebSocket fixture. Registered-account login and deployment to your live server require separate verification.
+
+## Battle-tested Fakemon team builder
+
+Run from the repository root:
+
+```
+node scripts/battle-bot/breed.cjs --population 8 --generations 3 --opponents 3 --seed 1
+```
+
+The builder uses **Gen 7 OU**. Its species whitelist starts at Carletto in this fork's Pokédex source order, includes only negative-numbered custom species, and excludes direct entry with battle-only or Mega forms. All six-member teams and generated sets must pass the actual Gen 7 OU validator. Mega stones and Z-Crystals are considered, but banned forms/items are rejected by validation. Lower evolutionary stages remain eligible. The initial population favors higher base-stat totals; mutation explores the entire eligible pool.
+
+It generates sets with varied moves, abilities, items, offensive EV spreads and natures. It plays each candidate against a fixed generated opponent pool with the same heuristic policy on both sides. Every matchup runs twice with reversed sides and a shared battle seed. Wins score 1, ties score 0.5, losses score 0. Better teams survive, and children replace a member, regenerate a set, or change the lead. Elite teams are retained unchanged. Repeated seed values reproduce candidate generation and battle randomness. This is evolutionary team search, **not training the battle policy**.
+
+Defaults run 144 selection battles plus 6 held-out battles. `--population`, `--generations` and `--opponents` increase the search. `--max-turns 200` controls the cap, which counts as a tie. Final evaluation uses separate generated teams and different battle seeds; these held-out results do not affect selection. There is no guarantee of improvement against humans or unseen strategies, and the fixed opponent pool can be overfit. Generated sets use a limited family of EV spreads, not unrestricted optimization.
+
+Results are written after each generation to `scripts/battle-bot/results/`:
+
+- `best.txt`: winning team in teambuilder import format, ready for manual inspection or bot use.
+- `checkpoint.json`: last completed generation, ranked teams, options and progress history. This is an inspection checkpoint; automatic resume is not implemented.
+- `opponents.json`: training and held-out teams for inspection.
+- `report.json`: final selection history and separate held-out score.
+
+Use `--output PATH` for a separate run directory. Reusing a directory replaces that run's results. To play the exported team, set the connection config's team path to `"gen7ou": "results/best.txt"` (relative to the config in this directory). Multiple accounts can use outputs from different seeds.

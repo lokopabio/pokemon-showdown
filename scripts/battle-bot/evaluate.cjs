@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const {BattleStream, getPlayerStreams, Teams, Dex} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
-async function play(format, team1, team2, seed = [1, 2, 3, 4]) {
+async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
   const battle = new BattleStream();
   const streams = getPlayerStreams(battle);
   async function player(stream, random) {
@@ -27,18 +27,22 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4]) {
       }
     }
   }
-  const players = [player(streams.p1, false), player(streams.p2, true)];
+  const players = [player(streams.p1, false), player(streams.p2, options.baseline !== false)];
   let winner = 'tie';
   const watch = (async () => {
     for await (const chunk of streams.omniscient) {
       for (const line of chunk.split('\n')) {
         if (line.startsWith('|win|')) winner = line.slice(5);
-        if (line.startsWith('|turn|') && Number(line.slice(6)) >= 300) await battle.write('>forcetie');
+        if (line.startsWith('|turn|') && Number(line.slice(6)) >= (options.maxTurns || 300)) await battle.write('>forcetie');
       }
     }
   })();
   await battle.write(`>start ${JSON.stringify({formatid: format, seed})}\n>player p1 ${JSON.stringify({name: 'Heuristic', team: Teams.pack(team1)})}\n>player p2 ${JSON.stringify({name: 'Baseline', team: Teams.pack(team2)})}`);
-  await Promise.all([...players, watch]);
+  try {
+    await Promise.all([...players, watch]);
+  } finally {
+    await battle.writeEnd();
+  }
   return winner;
 }
 if (require.main === module) {
