@@ -163,6 +163,23 @@ Defaults read `calc-baseline-001/baseline.json`, the existing calculator engine,
 3. `baseline/baseline.json`: rebuilt role/move/EV proposals. Direct-damage rankings use moves with no disagreement or dependency observed in the tested nonnegative-ability contexts. Other moves are explicitly deferred. Negative-rated cost-sensitive abilities are deferred from cheap static ranking pending longer evaluation. This is conservative uncertainty handling, not proof those strategies are bad. Support remains unmeasured and preserved for exploration.
 4. `summary.json`: current stage and final output paths or error.
 
-The audit has an eight-hour limit by default and stops between scenarios. If it does not complete, the baseline rebuild is withheld. The baseline itself is a finite calculator pass without a separate hard wall-clock timeout. Completion may take minutes or longer depending on the machine. Keep the PC awake and terminal open; no power settings are changed. A new run needs a fresh output folder. Intermediate audit detail is saved as it runs, but this preparation command does not promise exact resume after interruption.
+The audit has an eight-hour limit by default and stops between scenarios. If it does not complete, the baseline rebuild is withheld. The supervised CLI now applies a shared whole-run deadline to both stages, as described below. Completion may take minutes or longer depending on the machine. Keep the PC awake and terminal open; no power settings are changed. A new run needs a fresh output folder. Intermediate audit detail is saved as it runs, but this preparation command does not promise exact resume after interruption.
 
 This prepares a mechanic-aware **bounded** baseline; it does not complete a universal mechanics evaluator or establish native parity for every possible battle. Inspect disagreements and deferred coverage before authorizing a large self-play experiment. Native-engine fixes require separate reviewed changes and rebuilding the native wheel when necessary.
+
+
+### Low-load supervised preparation
+
+The preparation CLI now starts a supervised Node worker with a 1 GB V8 heap cap and attempts below-normal process priority. Default work-unit pauses are 100 ms. It still runs one native probe process at a time. These reduce load but are not an exact CPU-percentage cap.
+
+Both stages share a whole-run eight-hour deadline. Checkpoints also enforce a 2 GB Node RSS budget, an approximate 1 GB output budget and a 10 GB remaining-disk reserve. Disk/RSS checks occur between work units, so brief overshoots are possible. The Node RSS budget does not include the native Python process. The supervisor tracks that helper for cleanup if the Node worker fails and force-stops its process tree after a 10-second grace period. Windows uses the built-in taskkill command; no power settings or live-bot processes are changed.
+
+On a controlled limit stop, partial reports remain and `summary.json` explains the reason. An incomplete audit cannot trigger the baseline rebuild. The baseline remains marked incomplete if interrupted. This limits resource use and contains failures; it cannot guarantee a failure-free run or exact resume.
+
+Use a fresh output folder:
+
+```powershell
+node scripts/battle-bot/prepare-research.cjs --hours 8 --output scripts/battle-bot/results/research-prep-safe-001
+```
+
+Optional CLI limits: `--pauseMs`, `--maxMemoryMB` (Node RSS), `--maxDiskMB`, `--minFreeGB`. The supervisor's 1 GB heap cap is fixed. Keep Windows awake and the terminal open; the monitor can turn off.
