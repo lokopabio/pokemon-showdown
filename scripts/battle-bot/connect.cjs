@@ -25,6 +25,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
   const foul = config.foulPlay && {...config.foulPlay, python:path.resolve(base,config.foulPlay.python), foul:path.resolve(base,config.foulPlay.foul), bank:path.resolve(base,config.foulPlay.bank),passwordEnv:config.passwordEnv};
   if(foul&&(model||config.teamPool||formats.some(f=>f!=='gen7ou')||(config.maxBattles||1)!==1))throw new Error('Foul Play requires one Gen 7 OU battle, without model or adaptive pool.');
   if(foul){for(const key of ['python','foul','bank'])if(!fs.existsSync(foul[key]))throw new Error('Missing Foul Play '+key);if(!Number.isInteger(foul.searchMs||100)||(foul.searchMs||100)<1||(foul.searchMs||100)>10000)throw new Error('Invalid Foul Play search budget');}
+  if(config.foulRoster&&!foul)throw new Error('foulRoster requires Foul Play');
   if (model && formats.some(f => f !== 'gen7ou')) throw new Error('Learned models support gen7ou only');
   const logDirectory = config.logDirectory && path.resolve(base, config.logDirectory);
   if (logDirectory) fs.mkdirSync(logDirectory, {recursive: true});
@@ -52,6 +53,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
       adaptivePool = new TeamPool({...config.teamPool, file: path.resolve(base, config.teamPool.state), owner: config.username, model, seedTeam: team, bankFile: config.teamPool.bankFile && path.resolve(base, config.teamPool.bankFile)});
     }
   }
+  if(config.foulRoster)adaptivePool=new (require('./foul-play-roster.cjs').FoulRoster)({file:path.resolve(base,config.foulRoster.file),state:path.resolve(base,config.foulRoster.state),owner:config.username});
   if (!config.username || /[|\n\r]/.test(config.username)) throw new Error('Configure a valid username.');
   let stopped = false;
   let socket;
@@ -95,7 +97,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
         const selected = adaptivePool?.choose();
         pendingTeam = selected ? {selected, opponent: toID(user), format} : null;
         send('', `/utm ${selected?.packed || packed[format]}`);
-        if (selected) log(`Selected team ${selected.id} (estimated score ${selected.estimatedScore.toFixed(2)})`);
+        if (selected) log(`Selected team ${selected.id}${selected.estimatedScore===undefined?'':` (estimated score ${selected.estimatedScore.toFixed(2)})`}`);
         send('', `/accept ${user}`);
         log(`Accepting challenge from ${user}`);
         break;

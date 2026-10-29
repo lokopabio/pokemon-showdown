@@ -19,14 +19,19 @@ for(const side of ['p1','p2'])test(`Foul Play accepts a WebSocket challenge and 
   try {
     await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
     const output=path.join(temp,'config');
-    const config=prepareLive({server:`ws://127.0.0.1:${server.address().port}/showdown/websocket`,username:'LiveFoul',python,foul,bank,output,searchMs:5});
+    const rosterFile=path.join(temp,'roster.json');
+    const {candidates}=require('./foul-play-roster.cjs');
+    const roster=candidates(JSON.parse(fs.readFileSync(bank,'utf8'))).originals;
+    fs.writeFileSync(rosterFile,JSON.stringify({schema:1,format:'gen7ou',records:roster}));
+    const config=prepareLive({server:`ws://127.0.0.1:${server.address().port}/showdown/websocket`,username:'LiveFoul',python,foul,bank,output,searchMs:5,roster:rosterFile});
     assert(!fs.readFileSync(path.join(output,'config.json'),'utf8').includes('pass":'));
-    let choices=0,started=false;
+    let choices=0,started=false,selectedTeam;
     const completed=new Promise((resolve,reject)=>{
       transport.on('connection',conn=>{
         connection=conn;conn.write('|challstr|1|test');
         conn.on('data',async text=>{
           try {
+            if(text.startsWith('|/utm '))selectedTeam=text.slice(6);
             if(text.startsWith('|/trn')){conn.write('|updateuser|LiveFoul|1|1');conn.write('|pm| Tester| LiveFoul|/challenge gen7ou|gen7ou|||');}
             if(text==='|/accept tester'&&!started){
               started=true;stream=new BattleStream();const streams=getPlayerStreams(stream);
@@ -35,7 +40,7 @@ for(const side of ['p1','p2'])test(`Foul Play accepts a WebSocket challenge and 
               (async()=>{for await(const chunk of streams[side]){const lines=chunk.split('\n').filter(l=>!l.startsWith('|tier|')).map(l=>{if(!l.startsWith('|request|'))return l;const r=JSON.parse(l.slice(9));return '|request|'+JSON.stringify({...r,rqid:++rqid});});conn.write('>battle-gen7ou-live\n'+lines.join('\n'));}})().catch(reject);
               (async()=>{const policy=new Policy('gen7ou');const other=side==='p1'?'p2':'p1';policy.side=other;let events=[];for await(const chunk of streams[other])for(const line of chunk.split('\n')){if(line.startsWith('|request|')){for(const e of events)policy.observe(e);events=[];const c=policy.choose(JSON.parse(line.slice(9)));if(c)await streams[other].write(c);}else events.push(line);}})().catch(reject);
               (async()=>{for await(const chunk of streams.omniscient)if(chunk.split('\n').some(l=>l.startsWith('|turn|')&&Number(l.slice(6))>=100))await stream.write('>forcetie');})().catch(reject);
-              const team=Teams.import(fs.readFileSync(path.join(output,'team.txt'),'utf8'));
+              const team=Teams.unpack(selectedTeam);assert.equal(Teams.pack(team),Teams.pack(roster[0].team));
               conn.stream=streams[side];
               await stream.write(`>start ${JSON.stringify({formatid:'gen7ou',seed:[1,2,3,4]})}\n>player p1 ${JSON.stringify({name:side==='p1'?'LiveFoul':'Tester',team:Teams.pack(team)})}\n>player p2 ${JSON.stringify({name:side==='p2'?'LiveFoul':'Tester',team:Teams.pack(team)})}`);
             }
@@ -49,5 +54,6 @@ for(const side of ['p1','p2'])test(`Foul Play accepts a WebSocket challenge and 
     stop=connect({...config,passwordEnv:undefined},output,{fetchImpl:async()=>({ok:true,text:async()=> 'signed,test-token'})});
     await completed;assert(choices>1);
     assert(fs.readFileSync(path.join(output,'logs','matches.jsonl'),'utf8').includes('LiveFoul'));
+    assert(fs.readFileSync(path.join(output,'logs','matches.jsonl'),'utf8').includes(roster[0].id));
   } finally {stop?.();connection?.close();if(stream)await stream.writeEnd();await new Promise(r=>server.close(r));fs.rmSync(temp,{recursive:true,force:true});}
 });
