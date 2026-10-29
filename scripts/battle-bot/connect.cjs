@@ -3,17 +3,27 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {Teams, TeamValidator, Dex, toID} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
+const {Model, LearnedPolicy} = require('./learned.cjs');
 function connect(config, base = process.cwd()) {
   const url = new URL(config.server);
   if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
   const formats = Object.keys(config.teams || {});
   if (!formats.length) throw new Error('Configure at least one format and team file.');
+  const model = config.model ? Model.load(path.resolve(base, config.model)) : null;
+  if (model && formats.some(f => f !== 'gen7ou')) throw new Error('Learned models support gen7ou only');
+  const logDirectory = config.logDirectory && path.resolve(base, config.logDirectory);
+  if (logDirectory) fs.mkdirSync(logDirectory, {recursive: true});
+  const session = `${Date.now()}-${require('node:crypto').randomBytes(3).toString('hex')}`;
   const packed = {};
   for (const format of formats) {
     const f = Dex.formats.get(format);
     if (!f.exists || f.gameType !== 'singles') throw new Error(`Unknown or unsupported singles format: ${format}`);
     const team = Teams.import(fs.readFileSync(path.resolve(base, config.teams[format]), 'utf8'));
     if (!team?.length) throw new Error(`Empty team: ${format}`);
+    if (model) {
+      const {Breeder} = require('./breed.cjs');
+      if (!new Breeder().legal(team)) throw new Error('Learned challenge bot requires a legal six-member Fakemon-only Gen 7 OU team.');
+    }
     const problems = TeamValidator.get(format).validateTeam(team);
     if (problems) throw new Error(`Invalid ${format} team: ${problems.join('; ')}`);
     packed[format] = Teams.pack(team);
@@ -46,7 +56,13 @@ function connect(config, base = process.cwd()) {
     const room = lines[0].startsWith('>') ? lines.shift().slice(1) : '';
     for (const line of lines) {
       if (line.startsWith('|challstr|')) login(line.slice(10)).catch(err => {log(err.message); stopped = true; socket.close();});
-      if (line.startsWith('|updateuser|')) log('User state updated');
+      if (line.startsWith('|updateuser|')) {
+        const fields = line.split('|');
+        if (fields[3] === '1') {
+          log(`Online as ${fields[2]}${model ? ' with learned checkpoint' : ' with heuristic policy'}`);
+          send('', '/join lobby');
+        } else log('Login is not complete; registered names may require passwordEnv.');
+      }
       if (line.startsWith('|updatechallenges|')) {
         const incoming = JSON.parse(line.slice(18)).challengesFrom || {};
         for (const [user, format] of Object.entries(incoming)) {
@@ -61,11 +77,15 @@ function connect(config, base = process.cwd()) {
       if (!room.startsWith('battle-')) continue;
       if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false});
       const state = rooms.get(room);
+      if (logDirectory && /^[a-zA-Z0-9-]+$/.test(room)) {
+        state.logFile = path.join(logDirectory, `${session}-${room}.log`);
+        fs.appendFileSync(state.logFile, line + '\n');
+      }
       state.history.push(line);
       if (line.startsWith('|tier|')) {
         const format = toID(line.slice(6));
         if (!packed[format]) {send(room, '/forfeit'); continue;}
-        state.policy = new Policy(format);
+        state.policy = model ? new LearnedPolicy(format, model) : new Policy(format);
       }
       if (line.startsWith('|request|')) {
         const request = JSON.parse(line.slice(9));
@@ -79,6 +99,7 @@ function connect(config, base = process.cwd()) {
           state.rqid = request.rqid;
           state.fallback = false;
           send(room, `/choose ${choice}|${request.rqid}`);
+          if (state.logFile) fs.appendFileSync(state.logFile, `|botchoice|${request.rqid}|${choice}\n`);
         }
       }
       if (line.startsWith('|error|[Invalid choice]') || line.startsWith('|error|[Unavailable choice]')) {
@@ -87,6 +108,10 @@ function connect(config, base = process.cwd()) {
       }
       if (line.startsWith('|win|') || line === '|tie' || line === '|deinit') {
         log(`${room}: ${line}`);
+        if (logDirectory && line !== '|deinit') {
+          const winner = line.startsWith('|win|') ? line.slice(5) : null;
+          fs.appendFileSync(path.join(logDirectory, 'matches.jsonl'), JSON.stringify({time: new Date().toISOString(), room, username: config.username, winner, result: winner ? (toID(winner) === toID(config.username) ? 'win' : 'loss') : 'tie', model: config.model || null, logFile: state.logFile}) + '\n');
+        }
         send(room, '/leave');
         rooms.delete(room);
       }
@@ -110,6 +135,6 @@ if (require.main === module) {
   const file = path.resolve(process.argv[2] || 'scripts/battle-bot/config.json');
   const config = JSON.parse(fs.readFileSync(file, 'utf8'));
   const stop = (Array.isArray(config) ? config : [config]).map(c => connect(c, path.dirname(file)));
-  process.on('SIGINT', () => {for (const close of stop) close();});
+  for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {for (const close of stop) close();});
 }
 module.exports = {connect};

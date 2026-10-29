@@ -90,3 +90,50 @@ Access these files through your server's terminal, SFTP or file manager:
 The detailed logs intentionally include both training teams and omniscient simulator events, and are written only by the evaluator. Playing policies still receive their own player streams. These are local protocol logs, not uploaded Showdown replay URLs, and there is no browser dashboard yet. The last completed generation remains available if a run stops early; individual completed battles are indexed immediately. A final report appears only on successful completion.
 
 To put the exported champion online, copy the example connection config, keep `username` as `Roman-016`, and set its `gen7ou` team path to `results/roman-run-001/best.txt`. Then run `node scripts/battle-bot/connect.cjs`. Training logs describe local evaluation battles; the connection client does not yet persist live match logs.
+
+## Learned decisions and six challengeable Roman bots
+
+The initial six policies are in the private training-log archive. Extract it into `scripts/battle-bot/results/`; it contains `roman-six-roster-001/` and `roman-six-training-001/`. Generated models, teams and logs are not published with the source code. They use a small linear softmax policy trained with REINFORCE, not Metamon pretrained weights. A policy receives only its private request and public battle events. It scores legal attacks, Mega/Ultra/Z variants, and switches using bounded tactical features and hashed action identities. Terminal wins/losses produce actual parameter updates. Candidate features include approximate damage, health, boosts, recovery, hazards, status and switch matchup. Custom callbacks are executed by the real simulator during training, but the model has no explicit understanding of every ability. This is a first trainable model, not an expert agent.
+
+Training mixes frozen older policies and the heuristic opponent. Teams are held fixed during a run to separate policy learning from team evolution. A separate validation team pool selects `best.json`; this reused validation score is not an unbiased final test. Evaluation is deterministic, training samples actions, and no parameters change during live human challenges. `latest.json` may perform worse than `best.json`. Saved policy fingerprint checks require matching simulator/data source; rebuild before training and deployment.
+
+Train a new run from the repository root:
+
+```sh
+node scripts/battle-bot/train.cjs --episodes 240 --eval-every 40 --eval-pairs 4 --output scripts/battle-bot/results/roman-learning-002
+```
+
+Outputs include `initial.json`, `latest.json`, `best.json`, a checkpoint per evaluation in `checkpoints/`, `metrics.csv`, `report.json`, battle logs with seeds/decisions, an exported team, and `bot.json` for one challenge bot. Extend a saved policy using `--resume PATH/latest.json` with a fresh output directory. This warm-starts the policy and reward baseline; it is not an exact continuation of the former opponent archive or RNG stream. Useful options: `--seed`, `--rate`, `--max-turns`, `--server`, and `--name`.
+
+To create a six-bot roster from at least six distinct trained checkpoints:
+
+```sh
+node scripts/battle-bot/roster.cjs scripts/battle-bot/results/roman-learning-002 --pairs 8 --output scripts/battle-bot/results/roman-roster-002
+```
+
+The roster tests all 15 policy pairs with swapped sides and common team matchups, then assigns names in ascending measured score:
+
+1. Roman-0009
+2. Roman-003
+3. Roman-016
+4. Roman-021
+5. Roman-062
+6. Roman-162
+
+This is a provisional ranking, not a guarantee of strictly separated skill or head-to-head victories. Mirrored seeded games are correlated; the reported counts should not be interpreted as independent samples for significance testing. More training time does not guarantee better policies. Rerun evaluation on different seeds and more teams before making strong strength claims.
+
+### Put all six online
+
+Requires Node.js 22 or later and the same built server data. The initial roster is ready to load:
+
+```sh
+node scripts/battle-bot/connect.cjs scripts/battle-bot/results/roman-six-roster-001/bots.json
+```
+
+The supplied config points to `ws://localhost:8000/showdown/websocket`. Edit `server` for all six entries if needed. Each connects as a separate named user, joins the lobby, and accepts Gen 7 OU challenges. On your client, use `/challenge Roman-016, gen7ou` or open that username and click Challenge. The six bots initially share the same custom-only team so policy comparisons are not confounded by team quality. Generated rosters work the same way with their `bots.json`.
+
+If names are registered, add a different `passwordEnv` to each account and set those environment variables; the client uses the configured HTTPS login service. No credentials are bundled. Do not disable the live server's security settings. Keep the client process running, using your normal process manager if desired. It reconnects after connection loss, but the supplied scripts are not installed as a background service automatically. Start training as a separate process so an in-progress run does not change an active opponent's policy.
+
+Each account writes live protocol logs and decisions to its `logDirectory`, with outcomes in `matches.jsonl`. Live logs contain that bot's own private battle requests; keep them under your control. No chat messages are sent automatically. For multiple accounts with the same base username, Showdown treats punctuation/case as insignificant; the six supplied names have distinct normalized IDs.
+
+Initial evidence: 240 policy-training battles plus 56 validation battles, followed by a 240-battle six-policy round robin. `roman-six-roster-001/ranking.json`, `roman-six-training-001/report.json`, `roman-six-training-001/metrics.csv` and the runs' `battles.jsonl` files provide the saved summaries. These measurements apply to this limited team pool and policy representation. Human strength is unmeasured. Local simulator and WebSocket-fixture tests passed; deployment to the user's live server has not been performed.

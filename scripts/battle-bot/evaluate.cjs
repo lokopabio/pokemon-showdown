@@ -12,7 +12,7 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
   const battle = new BattleStream();
   const streams = getPlayerStreams(battle);
   async function player(stream, random, side) {
-    const policy = new Policy(format, () => 0.5);
+    const policy = options.policyFactory ? options.policyFactory(side) : new Policy(format, () => 0.5);
     let pending = [];
     for await (const chunk of stream) {
       for (const line of chunk.split('\n')) {

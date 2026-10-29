@@ -41,7 +41,7 @@ test('full battles finish through player-specific simulator streams', {timeout: 
   const custom = [{species: 'Carletto', moves: ['Tackle'], ability: 'Pressure'}];
   assert.ok(['Heuristic', 'Baseline', 'tie'].includes(await play('gen7customgame', custom, team2)));
 });
-test('WebSocket login, challenge acceptance and battle choice', {timeout: 10000}, async () => {
+test('WebSocket learned checkpoint login, challenge, choice and live logs', {timeout: 10000}, async () => {
   const http = require('node:http');
   const fs = require('node:fs');
   const os = require('node:os');
@@ -49,7 +49,11 @@ test('WebSocket login, challenge acceptance and battle choice', {timeout: 10000}
   const sockjs = require('sockjs');
   const {connect} = require('./connect.cjs');
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-bot-'));
-  fs.writeFileSync(path.join(directory, 'team.txt'), 'Pikachu\nAbility: Static\nEVs: 252 SpA / 4 SpD / 252 Spe\nTimid Nature\n- Thunderbolt\n');
+  const {Teams} = require('../../dist/sim');
+  const {Breeder} = require('./breed.cjs');
+  const {Model} = require('./learned.cjs');
+  fs.writeFileSync(path.join(directory, 'team.txt'), Teams.export(new Breeder(11).team()));
+  new Model().save(path.join(directory, 'model.json'));
   const server = http.createServer();
   const transport = sockjs.createServer({log() {}});
   transport.installHandlers(server, {prefix: '/showdown'});
@@ -70,14 +74,19 @@ test('WebSocket login, challenge acceptance and battle choice', {timeout: 10000}
             }
             if (text.startsWith('battle-gen7ou-1|/choose')) {
               assert.equal(text, 'battle-gen7ou-1|/choose move 1|1');
-              resolve();
+              conn.write('>battle-gen7ou-1\n|win|Roman-016');
             }
+            if (text === 'battle-gen7ou-1|/leave') resolve();
           } catch (error) {reject(error);}
         });
       });
     });
-    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'TestBot', teams: {gen7ou: 'team.txt'}}, directory);
+    stop = connect({server: `ws://127.0.0.1:${server.address().port}/showdown/websocket`, username: 'Roman-016', model: 'model.json', logDirectory: 'live', teams: {gen7ou: 'team.txt'}}, directory);
     await completed;
+    const matches = fs.readFileSync(path.join(directory, 'live', 'matches.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+    assert.equal(matches[0].result, 'win');
+    assert.equal(matches[0].model, 'model.json');
+    assert.match(fs.readFileSync(matches[0].logFile, 'utf8'), /botchoice/);
   } finally {
     stop?.();
     connection?.close();
@@ -135,4 +144,85 @@ test('evolution runs actual battles and exports a legal champion and held-out re
     assert.ok(fs.statSync(path.join(output, 'best.txt')).size > 0);
     assert.ok(fs.statSync(path.join(output, 'checkpoint.json')).size > 0);
   } finally {fs.rmSync(output, {recursive: true});}
+});
+test('policy gradient increases rewarded action probability and checkpoints roundtrip', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const os = require('node:os');
+  const {Model, FEATURES} = require('./learned.cjs');
+  const model = new Model(FEATURES.map(() => 0));
+  const a = FEATURES.map(() => 0); a[2] = 1;
+  const b = FEATURES.map(() => 0); b[2] = -1;
+  const actions = [{features: a}, {features: b}];
+  const before = model.probabilities(actions)[0];
+  for (let i = 0; i < 10; i++) model.update([{actions, probabilities: model.probabilities(actions), selected: 0}], 1, 0.1);
+  assert.ok(model.probabilities(actions)[0] > before);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-model-'));
+  try {
+    const file = path.join(dir, 'model.json');
+    model.save(file);
+    assert.deepEqual(Model.load(file).weights, model.weights);
+    const corrupt = JSON.parse(fs.readFileSync(file, 'utf8')); corrupt.fingerprint = 'wrong';
+    fs.writeFileSync(file, JSON.stringify(corrupt));
+    assert.throws(() => Model.load(file), /fingerprint/);
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('learned policy masks unavailable moves and generates transformation choices', () => {
+  const {Model, LearnedPolicy} = require('./learned.cjs');
+  const p = new LearnedPolicy('gen7ou', new Model());
+  const r = request([{id: 'thunderbolt', disabled: true}, {id: 'tackle'}]);
+  r.active[0].canMegaEvo = 'test';
+  r.active[0].canZMove = [null, {move: 'Breakneck Blitz'}];
+  const choices = p.candidates(r).map(a => a.choice);
+  assert.ok(!choices.some(c => c.startsWith('move 1')));
+  assert.ok(choices.includes('move 2 mega'));
+  assert.ok(choices.includes('move 2 zmove'));
+  r.active[0].trapped = true;
+  assert.ok(!p.candidates(r).some(a => a.choice.startsWith('switch')));
+});
+test('RL updates weights from real battles, saves loadable policies and resumes', {timeout: 30000}, async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const os = require('node:os');
+  const {train} = require('./train.cjs');
+  const {Model} = require('./learned.cjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-train-'));
+  try {
+    const first = path.join(dir, 'first');
+    const result = await train({episodes: 3, seed: 3, evalEvery: 3, evalPairs: 1, maxTurns: 30, output: first});
+    const initial = Model.load(path.join(first, 'initial.json'));
+    const latest = Model.load(path.join(first, 'latest.json'));
+    assert.notDeepEqual(initial.weights, latest.weights);
+    assert.equal(latest.episodes, 3);
+    assert.equal(result.report.validation.length, 2);
+    const config = JSON.parse(fs.readFileSync(path.join(first, 'bot.json'), 'utf8'));
+    assert.equal(config.username, 'Roman-016');
+    assert.equal(config.model, 'best.json');
+    assert.equal(config.logDirectory, 'live');
+    const resumed = await train({episodes: 1, seed: 3, evalEvery: 1, evalPairs: 1, maxTurns: 30, output: path.join(dir, 'second'), resume: path.join(first, 'latest.json')});
+    assert.equal(resumed.model.episodes, 4);
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('roster exports all six names with measured ordering and loadable models', {timeout: 30000}, async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const os = require('node:os');
+  const {Model} = require('./learned.cjs');
+  const {roster, NAMES} = require('./roster.cjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-roster-'));
+  try {
+    fs.mkdirSync(path.join(dir, 'input', 'checkpoints'), {recursive: true});
+    for (let i = 1; i <= 6; i++) {
+      const model = new Model(); model.weights[1] = i / 5; model.episodes = i;
+      model.save(path.join(dir, 'input', 'checkpoints', `episode-${i}.json`));
+    }
+    const output = path.join(dir, 'output');
+    const report = await roster(path.join(dir, 'input'), {output, pairs: 1, maxTurns: 20});
+    assert.deepEqual(report.ranking.map(r => r.name), NAMES);
+    assert.equal(report.games, 30);
+    assert.ok(report.ranking.every((r, i, arr) => i === 0 || r.points >= arr[i - 1].points));
+    const config = JSON.parse(fs.readFileSync(path.join(output, 'bots.json'), 'utf8'));
+    assert.deepEqual(config.map(c => c.username), NAMES);
+    for (const bot of config) assert.ok(Model.load(path.join(output, bot.model)));
+  } finally {fs.rmSync(dir, {recursive: true});}
 });
