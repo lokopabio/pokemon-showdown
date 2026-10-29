@@ -27,16 +27,7 @@ function audit(bank) {
     if (set.item) {
       wanted.items.add(id(set.item));
       const item = dex.items.get(set.item);
-      if (item.zMove || item.zMoveType) forbidden.push(set.item);
-    }
-  }
-  // Include transformations reachable through the supplied Mega Stones.
-  for (const item of wanted.items) {
-    const mega = dex.items.get(item).megaStone;
-    if (mega) {
-      const species = dex.species.get(mega);
-      wanted.species.add(species.id);
-      for (const ability of Object.values(species.abilities)) wanted.abilities.add(id(ability));
+      if (item.zMove || item.zMoveType || item.megaStone) forbidden.push(set.item);
     }
   }
   const coverage = {};
@@ -58,10 +49,10 @@ function audit(bank) {
   return {schema: 1, engine: {repository: catalog.repository, commit: catalog.commit, buildFeature: 'gen7'},
     target: {format: 'gen7ou', generation: dex.gen, teamPreview: rules.has('teampreview'), zMoves: false,
       selectableSpecies: pool.map(s => s.id), speciesBoundary: ['carletto', 'lugamon'],
-      note: 'Z-Moves disabled for this benchmark only; the live format is not changed.'},
+      megaEvolutions: false, note: 'Z-Moves and Megas disabled for this integration only; the live format is not changed.'},
     readyForBenchmark: false, blockers: ['Mechanics parity tests and battle adapter are not implemented',
       ...Object.entries(coverage).filter(([, v]) => v.missing.length).map(([k, v]) => `${v.missing.length} missing ${k} identifiers`),
-      ...(forbidden.length ? ['Bank contains Z-Crystals'] : []),
+      ...(forbidden.length ? ['Bank contains Z-Crystals or Mega Stones'] : []),
       ...(outsidePool.length ? ['Bank contains species outside Carletto–Lugamon: ' + [...new Set(outsidePool)].join(', ')] : []),
       ...(rules.has('teampreview') ? ['Server format enables Team Preview'] : [])], coverage};
 }
