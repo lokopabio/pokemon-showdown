@@ -6,11 +6,12 @@ const {Breeder} = require('./breed.cjs');
 const {Model, LearnedPolicy} = require('./learned.cjs');
 const {play} = require('./evaluate.cjs');
 const NAMES = ['Roman-0009', 'Roman-003', 'Roman-016', 'Roman-021', 'Roman-062', 'Roman-162'];
-async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/roman-roster-001', pairs = 4, seed = 725, maxTurns = 150, server = 'ws://localhost:8000/showdown/websocket'} = {}) {
+async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/roman-roster-001', pairs = 4, seed = 725, maxTurns = 150, server = 'ws://localhost:8000/showdown/websocket', calculatorEngine, bankFile} = {}) {
   if (!Number.isSafeInteger(pairs) || pairs < 1 || pairs > 1000) throw new Error('Invalid pairs');
   if (!Number.isSafeInteger(seed) || seed < 0 || seed > 65535) throw new Error('Invalid seed');
   if (!Number.isSafeInteger(maxTurns) || maxTurns < 1) throw new Error('Invalid maxTurns');
   if (fs.existsSync(output) && fs.readdirSync(output).length) throw new Error('Use a new or empty output directory');
+  const calculator = calculatorEngine ? {enginePath: path.resolve(calculatorEngine), bankFile: bankFile && path.resolve(bankFile)} : undefined;
   const source = path.join(trainingDirectory, 'checkpoints');
   const files = fs.readdirSync(source).filter(f => /^episode-[1-9][0-9]*\.json$/.test(f)).sort((a, b) => Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]));
   if (files.length < 6) throw new Error('Need at least six trained checkpoints. Train at least 6 evaluation intervals.');
@@ -34,7 +35,7 @@ async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/r
           const pair = reverse ? [...teams[k]].reverse() : teams[k];
           const winner = await play('gen7ou', ...pair, [seed, k + 1, 53, 61], {
             baseline: false, maxTurns, names: [a.id, b.id],
-            policyFactory: id => new LearnedPolicy('gen7ou', id === 'p1' ? a.model : b.model),
+            policyFactory: id => new LearnedPolicy('gen7ou', id === 'p1' ? a.model : b.model, {calculator}),
             logFile: path.join(output, 'battles', `${i}-${j}-${k}-${reverse ? 'reverse' : 'forward'}.log`),
             onResult: r => fs.appendFileSync(path.join(output, 'battles.jsonl'), JSON.stringify(r) + '\n'),
           });
@@ -60,7 +61,7 @@ async function roster(trainingDirectory, {output = 'scripts/battle-bot/results/r
     fs.copyFileSync(candidates[i].file, path.join(output, `${NAMES[i]}.json`));
     // Same deployed team keeps initial difficulty comparisons focused on policy.
     fs.writeFileSync(path.join(output, `${NAMES[i]}.txt`), Teams.export(teams[0][0]));
-    config.push({server, username: NAMES[i], model: `${NAMES[i]}.json`, logDirectory: `live/${NAMES[i]}`, maxBattles: 1, allowedUsers: [], teams: {gen7ou: `${NAMES[i]}.txt`}});
+    config.push({server, ...(calculator ? {calculator} : {}), username: NAMES[i], model: `${NAMES[i]}.json`, logDirectory: `live/${NAMES[i]}`, maxBattles: 1, allowedUsers: [], teams: {gen7ou: `${NAMES[i]}.txt`}});
   }
   fs.writeFileSync(path.join(output, 'bots.json'), JSON.stringify(config, null, 2));
   fs.writeFileSync(path.join(output, 'ranking.json'), JSON.stringify(report, null, 2));
@@ -71,11 +72,11 @@ if (require.main === module) {
   const [directory, ...args] = process.argv.slice(2);
   if (!directory) throw new Error('Usage: node scripts/battle-bot/roster.cjs TRAINING_DIR [--output PATH --pairs 4 --server ws://HOST:PORT/showdown/websocket]');
   const options = {};
-  const keys = {output: 'output', pairs: 'pairs', seed: 'seed', 'max-turns': 'maxTurns', server: 'server'};
+  const keys = {output: 'output', pairs: 'pairs', seed: 'seed', 'max-turns': 'maxTurns', server: 'server', 'calculator-engine': 'calculatorEngine', 'metagame-bank': 'bankFile'};
   for (let i = 0; i < args.length; i += 2) {
     const key = keys[args[i].replace(/^--/, '')];
     if (!key || args[i + 1] === undefined) throw new Error('Unknown argument or missing value');
-    options[key] = ['output', 'server'].includes(key) ? args[i + 1] : Number(args[i + 1]);
+    options[key] = ['output', 'server', 'calculatorEngine', 'bankFile'].includes(key) ? args[i + 1] : Number(args[i + 1]);
   }
   roster(directory, options).catch(error => {console.error(error); process.exitCode = 1;});
 }

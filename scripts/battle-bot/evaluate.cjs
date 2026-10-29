@@ -11,8 +11,11 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
   const started = Date.now();
   const battle = new BattleStream();
   const streams = getPlayerStreams(battle);
+  const policies = {};
   async function player(stream, random, side) {
     const policy = options.policyFactory ? options.policyFactory(side) : new Policy(format, () => 0.5);
+    policies[side] = policy;
+    policy.setTeam?.(side === 'p1' ? team1 : team2);
     let pending = [];
     for await (const chunk of stream) {
       for (const line of chunk.split('\n')) {
@@ -27,7 +30,7 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
             if (moves.length) choice = `move ${moves[Math.floor(policy.random() * moves.length)]}`;
           }
           if (choice) {
-            if (options.logFile) decisions.push({side, rqid: request.rqid, choice});
+            if (options.logFile) decisions.push({side, rqid: request.rqid, choice, ...(policy.calculator ? {calculator: policy.calculator.last} : {})});
             await stream.write(choice);
           }
         } else if (line.startsWith('|error|')) {
@@ -57,7 +60,7 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
   } finally {
     await battle.writeEnd();
   }
-  const result = {format, seed, names, winner, turns, capped, durationMs: Date.now() - started};
+  const result = {format, seed, names, winner, turns, capped, durationMs: Date.now() - started, calculator: Object.fromEntries(Object.entries(policies).filter(([, p]) => p.calculator).map(([side, p]) => [side, {engineSha: p.calculator.sha, unavailableEstimates: p.calculator.failures}]))};
   if (options.logFile) {
     fs.mkdirSync(require('node:path').dirname(options.logFile), {recursive: true});
     fs.writeFileSync(options.logFile, events.join('\n') + '\n');

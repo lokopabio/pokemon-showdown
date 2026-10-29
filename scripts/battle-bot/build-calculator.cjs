@@ -1,0 +1,10 @@
+'use strict';
+const path = require('node:path');
+const fs = require('node:fs');
+const esbuild = require('esbuild');
+const root = path.resolve(process.argv[2] || '../damage-calc');
+const output = path.resolve(process.argv[3] || 'scripts/battle-bot/results/calculator-engine.cjs');
+if (!fs.existsSync(path.join(root, 'calc/src/index.ts'))) throw new Error('Pass the path to your lokopabio/damage-calc checkout');
+fs.mkdirSync(path.dirname(output), {recursive: true});
+esbuild.buildSync({entryPoints: [path.join(root, 'calc/src/index.ts')], bundle: true, platform: 'node', format: 'cjs', outfile: output});
+console.log(`Calculator engine: ${output}`);

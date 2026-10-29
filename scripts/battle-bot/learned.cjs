@@ -70,7 +70,7 @@ class Model {
   save(file, metadata = {}) {
     fs.mkdirSync(path.dirname(file), {recursive: true});
     const temp = file + '.tmp';
-    fs.writeFileSync(temp, JSON.stringify({...this.snapshot(), metadata, fingerprint: fingerprint()}, null, 2));
+    fs.writeFileSync(temp, JSON.stringify({...this.snapshot(), metadata: {...metadata, ...(this.calculatorSha ? {calculatorSha: this.calculatorSha} : {})}, fingerprint: fingerprint()}, null, 2));
     fs.renameSync(temp, file);
   }
   static load(file, checkFingerprint = true) {
@@ -79,20 +79,34 @@ class Model {
     if (checkFingerprint && data.fingerprint !== fingerprint() && !(data.schema === 1 && data.fingerprint === fingerprint(true))) throw new Error('Model simulator fingerprint differs. Rebuild and retrain for the current server data.');
     const model = new Model(data.weights);
     if (!Number.isSafeInteger(data.episodes) || data.episodes < 0 || !Number.isFinite(data.baseline)) throw new Error('Invalid training metadata');
+    model.calculatorSha = data.metadata?.calculatorSha || null;
     model.episodes = data.episodes;
     model.baseline = data.baseline;
     return model;
   }
 }
 class LearnedPolicy extends Policy {
-  constructor(format, model, {random = Math.random, training = false} = {}) {
+  constructor(format, model, {random = Math.random, training = false, calculator} = {}) {
     super(format, random);
     this.model = model;
+    this.calculator = calculator ? new (require('./calculator.cjs').Calculator)(calculator) : null;
+    if (model.calculatorSha && this.calculator?.sha !== model.calculatorSha) throw new Error('This policy requires the matching calculator engine used in training.');
     this.training = training;
     this.trajectory = [];
     this.memory = new BattleMemory();
     this.ownBoosts = {};
     this.hazards = {own: new Set(), foe: new Set()};
+  }
+  setTeam(team) {this.calculator?.setTeam(team);}
+  scoreMove(data, own) {
+    const move = this.dex.moves.get(data.id || data.move);
+    if (this.calculator && move.category !== 'Status') {
+      const key = `${own.ident}:${move.id}`;
+      let estimate = this.calculator.cache.get(key);
+      if (estimate === undefined) {estimate = this.calculator.estimate(this, own, move); this.calculator.cache.set(key, estimate);}
+      if (estimate) return Math.min(400, (estimate.meanPercent * 2 + 100 * estimate.onHitKOScenarios / estimate.assumptions) * (typeof move.accuracy === 'number' ? move.accuracy / 100 : 1));
+    }
+    return super.scoreMove(data, own);
   }
   observe(line) {
     super.observe(line);
@@ -192,6 +206,8 @@ class LearnedPolicy extends Policy {
       const risk = known.length ? Math.max(...known.map(m => this.effectiveness(m.type, species))) : 1;
       set('revealedMoveSwitchRisk', known.length ? Math.min(4, risk) / 4 : 0);
       set('revealedMoveSwitchSafe', known.length && risk <= 0.5 ? 1 : 0);
+      const incoming = this.calculator?.incoming(this, target);
+      if (incoming) {set('revealedMoveSwitchRisk', incoming.incomingMeanPercent / 100); set('revealedMoveSwitchSafe', incoming.incomingWorstPercent < 25 ? 1 : 0);}
       set('switchStatus', (target.condition || '').includes(' ') ? 1 : 0);
       set('switchRecovery', id(target.ability || target.baseAbility) === 'regenerator' ? 1 - fraction(target.condition) : 0);
       set('switchBoots', id(target.item) === 'heavydutyboots' ? this.hazards.own.size : 0);
@@ -239,6 +255,7 @@ class LearnedPolicy extends Policy {
     for (const context of contexts) hashContext(context);
   }
   choose(request) {
+    this.calculator?.begin();
     const actions = this.candidates(request);
     if (!actions.length) return super.choose(request);
     const probabilities = this.model.probabilities(actions);

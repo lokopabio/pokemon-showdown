@@ -8,9 +8,9 @@ async function rollout(job) {
   const random = rng(job.randomSeed);
   const model = new Model(job.weights);
   model.baseline = job.baseline;
-  const learning = new LearnedPolicy('gen7ou', model, {training: true, random});
+  const learning = new LearnedPolicy('gen7ou', model, {training: true, random, calculator: job.calculator});
   const opponent = job.opponentKind === 'heuristic' ? new Policy('gen7ou', random) :
-    new LearnedPolicy('gen7ou', new Model(job.opponentWeights), {training: true, random});
+    new LearnedPolicy('gen7ou', new Model(job.opponentWeights), {training: true, random, calculator: job.calculator});
   let result;
   const winner = await play('gen7ou', ...job.teams, job.battleSeed, {
     baseline: false, maxTurns: job.maxTurns,

@@ -26,7 +26,9 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   const logDirectory = config.logDirectory && path.resolve(base, config.logDirectory);
   if (logDirectory) fs.mkdirSync(logDirectory, {recursive: true});
   const session = `${Date.now()}-${require('node:crypto').randomBytes(3).toString('hex')}`;
+  const calculator = config.calculator ? {...config.calculator, enginePath: path.resolve(base, config.calculator.enginePath), bankFile: config.calculator.bankFile && path.resolve(base, config.calculator.bankFile)} : undefined;
   const packed = {};
+  const teamSets = {};
   let adaptivePool;
   for (const format of formats) {
     const f = Dex.formats.get(format);
@@ -40,6 +42,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
     const problems = TeamValidator.get(format).validateTeam(team);
     if (problems) throw new Error(`Invalid ${format} team: ${problems.join('; ')}`);
     packed[format] = Teams.pack(team);
+    teamSets[format] = team;
     if (config.teamPool) {
       if (!model || format !== 'gen7ou' || formats.length !== 1 || (config.maxBattles || 1) !== 1) throw new Error('Adaptive teams require a learned Gen 7 OU bot with maxBattles=1.');
       adaptivePool = new TeamPool({...config.teamPool, file: path.resolve(base, config.teamPool.state), owner: config.username, model, seedTeam: team, bankFile: config.teamPool.bankFile && path.resolve(base, config.teamPool.bankFile)});
@@ -112,13 +115,15 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
       if (pendingTeam && !state.teamSelection && state.format === pendingTeam.format &&
           Object.values(state.players).includes(toID(config.username)) && Object.values(state.players).includes(pendingTeam.opponent)) {
         state.teamSelection = pendingTeam.selected;
+        state.policy?.setTeam(state.teamSelection.team);
         state.opponent = pendingTeam.opponent;
         pendingTeam = null;
       }
       if (line.startsWith('|tier|')) {
         const format = toID(line.slice(6));
         if (!packed[format]) {send(room, '/forfeit'); continue;}
-        state.policy = model ? new LearnedPolicy(format, model) : new Policy(format);
+        state.policy = model ? new LearnedPolicy(format, model, {calculator}) : new Policy(format);
+        state.policy.setTeam?.(state.teamSelection?.team || teamSets[format]);
       }
       if (line.startsWith('|request|')) {
         const request = JSON.parse(line.slice(9));
@@ -132,6 +137,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
           state.rqid = request.rqid;
           state.fallback = false;
           send(room, `/choose ${choice}|${request.rqid}`);
+          if (state.logFile && state.policy.calculator) fs.appendFileSync(state.logFile, `|botcalc|${JSON.stringify(state.policy.calculator.last)}\n`);
           if (state.logFile) fs.appendFileSync(state.logFile, `|botchoice|${request.rqid}|${choice}\n`);
         }
       }

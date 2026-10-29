@@ -449,3 +449,39 @@ test('adaptive challenge results update the exact selected team only once', {tim
     assert.equal(state.games, 1);assert.equal(state.records.reduce((s, r) => s + r.wins, 0), 1);
   } finally {stop?.();conn?.close();await new Promise(resolve => server.close(resolve));fs.rmSync(dir, {recursive: true});}
 });
+test('calculator uses revealed facts to narrow opponent hypotheses without reading hidden sets', () => {
+  const {Calculator} = require('./calculator.cjs');
+  const {Dex} = require('../../dist/sim');
+  const advisor = Object.create(Calculator.prototype);
+  advisor.dex = Dex.forFormat('gen7ou'); advisor.maxHypotheses = 3;
+  advisor.sets = new Map([['dijeypepe', [
+    {species: 'Dijeypepe', ability: 'Competitive', item: 'Leftovers', moves: ['Earth Power', 'Flamethrower', 'Nasty Plot', 'Substitute']},
+    {species: 'Dijeypepe', ability: 'Reckless', item: 'Choice Scarf', moves: ['Earthquake', 'Flare Blitz', 'U-turn', 'Volt Tackle']},
+  ]]]);
+  const unknown = {species: 'Dijeypepe', moves: new Set(), item: null, ability: null};
+  assert.equal(advisor.hypotheses(unknown).length, 2);
+  const narrowed = advisor.hypotheses({...unknown, moves: new Set(['earthpower'])});
+  assert.equal(narrowed.length, 1);
+  assert.equal(narrowed[0].ability, 'Competitive');
+  const consumed = advisor.hypotheses({...unknown, item: ''});
+  assert.ok(consumed.every(s => s.item === ''));
+  const fallback = advisor.hypotheses({...unknown, moves: new Set(['tackle'])});
+  assert.ok(fallback.every(s => s.hypothesisSource === 'generic-assumption'));
+});
+test('fork calculator returns damage ranges, applies items and rejects known inconsistent mechanics', {skip: !process.env.ROMAN_TEST_CALC_ENGINE}, () => {
+  const {Calculator} = require('./calculator.cjs');
+  const {Model, LearnedPolicy} = require('./learned.cjs');
+  const p = new LearnedPolicy('gen7ou', new Model(), {calculator: {enginePath: process.env.ROMAN_TEST_CALC_ENGINE}});
+  const own = {species: 'Dijeypepe', ability: 'Competitive', item: '', nature: 'Timid', evs: {spa: 252, spe: 252}, ivs: {atk: 0}, moves: ['Flamethrower', 'Earth Power', 'Nasty Plot', 'Substitute']};
+  p.setTeam([own]);p.side = 'p1';p.observe('|switch|p2a: Enemy|Carlis|100/100');
+  const active = {...own, ident: 'p1: Dijeypepe', details: 'Dijeypepe', condition: '300/300'};
+  const move = p.dex.moves.get('flamethrower');
+  const normal = p.calculator.estimate(p, active, move);
+  assert.ok(normal && normal.maxPercent >= normal.minPercent);
+  p.calculator.setTeam([{...own, item: 'Choice Specs'}]);
+  const specs = p.calculator.estimate(p, {...active, item: 'Choice Specs'}, move);
+  assert.ok(specs.meanPercent > normal.meanPercent);
+  const attacker = p.calculator.pokemon({...own, ability: 'Final Verdict'}, '300/300');
+  const defender = p.calculator.pokemon({species: 'Carlis', ability: 'Gooey'}, '100/100');
+  assert.throws(() => p.calculator.range(attacker, defender, p.dex.moves.get('judgment'), p.calculator.field(p)), /Final Verdict/);
+});
