@@ -16,12 +16,15 @@ function incomingChallenges(line, username) {
   const format = message.slice(11).trim();
   return format ? {[toID(fields[2])]: format} : {};
 }
-function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
+function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} = {}) {
   const url = new URL(config.server);
   if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
   const formats = Object.keys(config.teams || {});
   if (!formats.length) throw new Error('Configure at least one format and team file.');
   const model = config.model ? Model.load(path.resolve(base, config.model)) : null;
+  const foul = config.foulPlay && {...config.foulPlay, python:path.resolve(base,config.foulPlay.python), foul:path.resolve(base,config.foulPlay.foul), bank:path.resolve(base,config.foulPlay.bank),passwordEnv:config.passwordEnv};
+  if(foul&&(model||config.teamPool||formats.some(f=>f!=='gen7ou')||(config.maxBattles||1)!==1))throw new Error('Foul Play requires one Gen 7 OU battle, without model or adaptive pool.');
+  if(foul){for(const key of ['python','foul','bank'])if(!fs.existsSync(foul[key]))throw new Error('Missing Foul Play '+key);if(!Number.isInteger(foul.searchMs||100)||(foul.searchMs||100)<1||(foul.searchMs||100)>10000)throw new Error('Invalid Foul Play search budget');}
   if (model && formats.some(f => f !== 'gen7ou')) throw new Error('Learned models support gen7ou only');
   const logDirectory = config.logDirectory && path.resolve(base, config.logDirectory);
   if (logDirectory) fs.mkdirSync(logDirectory, {recursive: true});
@@ -35,6 +38,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
     if (!f.exists || f.gameType !== 'singles') throw new Error(`Unknown or unsupported singles format: ${format}`);
     const team = Teams.import(fs.readFileSync(path.resolve(base, config.teams[format]), 'utf8'));
     if (!team?.length) throw new Error(`Empty team: ${format}`);
+    if(foul)require('./foul-play-team.cjs').validateCustomTeam(team);
     if (model) {
       const {Breeder} = require('./breed.cjs');
       if (!new Breeder().legal(team)) throw new Error('Learned challenge bot requires a legal six-member Fakemon-only Gen 7 OU team.');
@@ -59,10 +63,12 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
   const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
   const log = message => console.log(`[${config.username}] ${message}`);
   async function login(challenge) {
+    const loginSocket=socket;
     const assertion = await getAssertion(config, challenge, fetchImpl);
+    if(socket!==loginSocket||loginSocket.readyState!==1)return;
     send('', `/trn ${config.username},0,${assertion}`);
   }
-  function receive(message) {
+  async function receive(message) {
     const lines = message.split('\n');
     const room = lines[0].startsWith('>') ? lines.shift().slice(1) : '';
     for (const line of lines) {
@@ -70,7 +76,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
       if (line.startsWith('|updateuser|')) {
         const fields = line.split('|');
         if (fields[3] === '1') {
-          log(`Online as ${fields[2]}${model ? ' with learned checkpoint' : ' with heuristic policy'}`);
+          log(`Online as ${fields[2]}${foul ? ' with Foul Play search' : model ? ' with learned checkpoint' : ' with heuristic policy'}`);
           send('', '/join lobby');
         }
       }
@@ -122,17 +128,19 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
       if (line.startsWith('|tier|')) {
         const format = toID(line.slice(6));
         if (!packed[format]) {send(room, '/forfeit'); continue;}
-        state.policy = model ? new LearnedPolicy(format, model, {calculator}) : new Policy(format);
+        state.policy?.close?.();
+        state.policy = foul ? (foulFactory?foulFactory(foul):new (require('./foul-play-live.cjs').FoulPlayLive)(foul)) : model ? new LearnedPolicy(format, model, {calculator}) : new Policy(format);
         state.policy.setTeam?.(state.teamSelection?.team || teamSets[format]);
       }
       if (line.startsWith('|request|')) {
         const request = JSON.parse(line.slice(9));
-        if (!request || request.wait || state.rqid === request.rqid) continue;
+        if (!request || (!foul&&request.wait) || (!request.wait&&state.rqid === request.rqid)) continue;
         if (!state.policy) {log(`No supported format identified for ${room}`); continue;}
         state.policy.side = request.side.id;
         for (const event of state.history) state.policy.observe(event);
         state.history = [];
-        const choice = state.policy.choose(request);
+        let choice;
+        try {choice = await state.policy.choose(request);} catch(error){log(`Decision failed in ${room}: ${error.message}`);state.policy.close?.();send(room,'/forfeit');continue;}
         if (choice) {
           state.rqid = request.rqid;
           state.fallback = false;
@@ -160,24 +168,26 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch} = {}) {
           fs.appendFileSync(path.join(logDirectory, 'matches.jsonl'), JSON.stringify({time: new Date().toISOString(), room, username: config.username, winner, result: winner ? (toID(winner) === toID(config.username) ? 'win' : 'loss') : 'tie', model: config.model || null, teamId: state.teamSelection?.id || null, opponent: state.opponent || null, logFile: state.logFile}) + '\n');
         }
         send(room, '/leave');
+        state.policy?.close?.();
         rooms.delete(room);
       }
     }
   }
   function open() {
+    for(const state of rooms.values())state.policy?.close?.();
     rooms.clear();
     pendingUntil = 0;
     pendingTeam = null;
     socket = new WebSocket(url);
     socket.addEventListener('open', () => log(`Connected to ${url.origin}`));
-    socket.addEventListener('message', event => {
-      try {receive(String(event.data));} catch (err) {log(`Protocol error: ${err.message}`);}
-    });
+    let queue=Promise.resolve();
+    const currentSocket=socket;
+    socket.addEventListener('message', event => {queue=queue.then(()=>socket===currentSocket&&currentSocket.readyState===1?receive(String(event.data)):undefined).catch(err=>log(`Protocol error: ${err.message}`));});
     socket.addEventListener('error', () => log('WebSocket error'));
-    socket.addEventListener('close', () => {if (!stopped) reconnect = setTimeout(open, 5000);});
+    socket.addEventListener('close', () => {for(const state of rooms.values())state.policy?.close?.();if (!stopped) reconnect = setTimeout(open, 5000);});
   }
   open();
-  return () => {stopped = true; clearTimeout(reconnect); socket.close();};
+  return () => {stopped = true; clearTimeout(reconnect); for(const state of rooms.values())state.policy?.close?.();socket.close();};
 }
 if (require.main === module) {
   if (typeof WebSocket === 'undefined') throw new Error('Use Node.js 22 or later.');
