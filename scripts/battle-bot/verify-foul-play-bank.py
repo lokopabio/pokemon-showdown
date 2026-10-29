@@ -167,5 +167,54 @@ class BankTests(unittest.TestCase):
         priors = {'carlis': {'raw_count': 1, 'teammates': {}}, 'carletto': {'raw_count': 1, 'teammates': {}}}
         self.assertEqual(predict_team_likelihood({'unknownspecies'}, priors), {'carlis': 1.0, 'carletto': 1.0})
 
+    def test_trace_after_possible_prior_illusion_keeps_current_reveals(self):
+        from copy import deepcopy
+        observed = Pokemon('habiemigo', 100)
+        observed.ability = 'snowwarning'
+        observed.original_ability = 'trace'
+        observed.can_have_choice_item = False
+        for move in ['lightscreen', 'spore', 'batonpass', 'psychic']:
+            observed.add_move(move)
+        observed.moves_used_since_switch_in = {'psychic'}
+        observed.get_move('psychic').current_pp = 7
+        sampled = deepcopy(observed)
+        sample_bank_pokemon(sampled)
+        self.assertEqual(sampled.ability, 'snowwarning')
+        self.assertEqual(sampled.original_ability, 'trace')
+        self.assertIsNotNone(sampled.get_move('psychic'))
+        self.assertEqual(sampled.get_move('psychic').current_pp, 7)
+        self.assertIsNone(sampled.get_move('spore'))
+        self.assertEqual([m.name for m in observed.moves], ['lightscreen', 'spore', 'batonpass', 'psychic'])
+
+    def test_current_appearance_moves_cannot_be_discarded_as_prior_illusion(self):
+        observed = Pokemon('habiemigo', 100)
+        observed.ability = 'snowwarning'
+        observed.original_ability = 'trace'
+        for move in ['lightscreen', 'spore', 'batonpass']:
+            observed.add_move(move)
+        observed.moves_used_since_switch_in = {'spore', 'batonpass'}
+        with self.assertRaisesRegex(ValueError, 'No compatible'):
+            sample_bank_pokemon(observed)
+
+    def test_trace_reveal_separates_disguised_appearance_before_damage_inference(self):
+        from fp.battle.state import Battle
+        from fp.battle.protocol import update_ability
+        battle = Battle('trace-prior-illusion')
+        battle.user.name = 'p1'
+        battle.opponent.name = 'p2'
+        battle.user.active = Pokemon('tholmas', 100)
+        pokemon = Pokemon('habiemigo', 100)
+        for move in ['lightscreen', 'spore', 'batonpass', 'psychic']:
+            pokemon.add_move(move)
+        pokemon.moves_used_since_switch_in = {'psychic'}
+        battle.opponent.active = pokemon
+        update_ability(battle, ['', '-ability', 'p2a: Habiemigo', 'Snow Warning', '[from] ability: Trace', '[of] p1a: Tholmas'])
+        self.assertEqual(pokemon.ability, 'snowwarning')
+        self.assertEqual(pokemon.original_ability, 'trace')
+        self.assertEqual([m.name for m in pokemon.moves], ['psychic'])
+        self.assertEqual([name for name, pp in pokemon.roman_uncertain_appearances[0]['moves']], ['lightscreen', 'spore', 'batonpass'])
+        sample_bank_pokemon(pokemon)
+        self.assertIsNotNone(pokemon.get_move('psychic'))
+
 if __name__ == '__main__':
     unittest.main()

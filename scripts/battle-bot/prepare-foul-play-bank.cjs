@@ -7,6 +7,8 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ['fp/battle/protocol.py', '    side.active.ability = ability\n\n\ndef illusion_end',
+      '    side.active.ability = ability\n    if is_opponent(battle, split_msg):\n        from fp.data.sets.roman_bank import reconcile_prior_illusion_history\n        reconcile_prior_illusion_history(side.active)\n\n\ndef illusion_end'],
     ['fp/search/standard_battles.py', '    revealed_set = set(revealed_pokemon)',
       '    from fp.data.sets.roman_bank import bank_species_name\n    revealed_set = {bank_species_name(name) for name in revealed_pokemon}'],
     ['fp/search/standard_battles.py', '    existing_pokemon_names = {pkmn.name for pkmn in existing_pokemon}',
