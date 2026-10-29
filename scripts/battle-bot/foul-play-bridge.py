@@ -41,6 +41,8 @@ def main():
             if battle is not None:
                 battle.msg_list = message['events']
                 process_battle_updates(battle)
+                if hasattr(battle, "roman_tracker"):
+                    battle.roman_tracker.finish(battle)
             print(json.dumps({'choice': None}), flush=True)
             continue
         first = battle is None
@@ -69,15 +71,25 @@ def main():
             events.append(event)
         battle.msg_list = events
         process_battle_updates(battle)
+        if hasattr(battle, "roman_tracker"):
+            battle.roman_tracker.finish(battle)
         reconcile_own_illusion(battle, own_active)
         battle.user.update_from_request_json(request)
         battle.request_json = request
         battle.rqid = request.get('rqid', 0)
         battle.force_switch = bool(request.get('forceSwitch'))
-        sampled, _ = prepare_battles(battle, 1)[0]
-        state = battle_to_poke_engine_state(sampled)
-        result = monte_carlo_tree_search(state, int(os.environ.get('ROMAN_SEARCH_MS', '10')), threads=1)
-        best = max(result.side_one, key=lambda action: action.visits).move_choice
+        budget = int(os.environ.get('ROMAN_SEARCH_MS', '10'))
+        scores = {}
+        visits = 0
+        hypotheses = 3
+        for sampled, weight in prepare_battles(battle, hypotheses):
+            state = battle_to_poke_engine_state(sampled)
+            result = monte_carlo_tree_search(state, max(1, budget // hypotheses), threads=1)
+            total = sum(action.visits for action in result.side_one) or 1
+            visits += result.total_visits
+            for action in result.side_one:
+                scores[action.move_choice] = scores.get(action.move_choice, 0) + weight * action.visits / total
+        best = max(scores, key=scores.get)
         battle.user.last_selected_move = LastUsedMove(battle.user.active.name, best, battle.turn)
         if best.startswith('switch '):
             target = best.split(' ', 1)[1]
@@ -87,7 +99,7 @@ def main():
             moves = request.get('active', [{}])[0].get('moves', [])
             index = next(i + 1 for i, m in enumerate(moves) if m['id'] == best or (best.startswith('hiddenpower') and m['id'].startswith('hiddenpower')))
             choice = f'move {index}'
-        print(json.dumps({'choice': choice, 'visits': result.total_visits}), flush=True)
+        print(json.dumps({'choice': choice, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None)}), flush=True)
 
 if __name__ == '__main__':
     main()

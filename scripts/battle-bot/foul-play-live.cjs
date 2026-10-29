@@ -14,7 +14,7 @@ class FoulPlayLive {
     this.process.on('exit',code=>{if(!this.closed)this.fail(new Error(`Foul Play exited ${code}: ${this.stderr}`));});
     this.lines=readline.createInterface({input:this.process.stdout});
     this.lines.on('line',line=>{
-      try {const result=JSON.parse(line);if(this.pending){const current=this.pending;this.pending=null;clearTimeout(current.timer);current.resolve(result.choice);}}
+      try {const result=JSON.parse(line);this.lastDecision=result;if(this.pending){const current=this.pending;this.pending=null;clearTimeout(current.timer);current.resolve(result.choice);}}
       catch {this.fail(new Error('Invalid response from Foul Play bridge'));}
     });
   }

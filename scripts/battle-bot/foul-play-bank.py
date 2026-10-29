@@ -51,6 +51,11 @@ def bank_sets():
             pkmn_moveset=PokemonMoveset(moves=moves),
         )
         result.setdefault(name, []).append(predicted)
+    from fp.data.sets.roman_open import legal_catalog, generated_hypothesis
+    from fp.battle.state import Pokemon
+    for name, species in legal_catalog()['species'].items():
+        if species['selectable'] and name not in result:
+            result[name] = [generated_hypothesis(Pokemon(name, 100))]
     if len(result) < 6:
         raise ValueError('Need hypotheses for at least six species')
     return result
@@ -83,83 +88,9 @@ class BankPriors(SmogonSets):
         return [s.pkmn_set for s in bank_sets().get(pkmn.name, []) if s.full_set_pkmn_can_have_set(pkmn)]
 
 def sample_bank_pokemon(pkmn):
-    pkmn.roman_prior_illusion_moves = []
-    bank_name = bank_species_name(pkmn.name)
-    probe = copy(pkmn)
-    # Trace/Skill Swap changes the current ability, not the set's original ability.
-    if pkmn.original_ability:
-        probe.ability = pkmn.original_ability
-    # Upstream deductions from missing activations assume standard mechanics.
-    # Keep explicit reveals hard, but don't eliminate a custom set on these
-    # unverified negative inferences (for example, a missed recovery message).
-    probe.impossible_items = set()
-    probe.impossible_abilities = set()
-    changed_item = getattr(pkmn, 'roman_item_changed', False)
-    match_item = not changed_item or pkmn.removed_item is not None
-    if changed_item and pkmn.removed_item is not None:
-        probe.item = pkmn.removed_item
-        probe.removed_item = None
-    # Custom mechanic speed inference has not been validated; don't treat inferred
-    # bounds as hard observations. Revealed moves, items and abilities remain hard.
-    remaining = [s for s in bank_sets().get(bank_name, []) if s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
-    source = 'custom-bank-hypothesis'
-    if not remaining and probe.ability not in (None, 'illusion'):
-        # An earlier undamaged Illusion user can leave moves on its disguise's
-        # public record. A later real switch (e.g. Trace activation) must not
-        # force those uncertain historical moves into the current species' set.
-        current_moves = pkmn.moves_used_since_switch_in
-        older = [m for m in probe.moves if m.name not in current_moves]
-        historical = copy(probe)
-        historical.moves = older
-        possible_prior_illusion = older and any(
-            s.pkmn_set.ability == 'illusion' and s.pkmn_moveset.makes_sense_on_pkmn(historical)
-            for sets in bank_sets().values() for s in sets)
-        if possible_prior_illusion:
-            current = copy(probe)
-            current.moves = [m for m in probe.moves if m.name in current_moves]
-            remaining = [s for s in bank_sets().get(bank_name, [])
-                         if s.full_set_pkmn_can_have_set(current, speed_check=False, match_item=match_item)]
-            if remaining:
-                # This object is in a sampled battle copy, not observed memory.
-                pkmn.moves = list(current.moves)
-                pkmn.roman_prior_illusion_moves = [m.name for m in older]
-                source = 'custom-bank-possible-prior-illusion'
-    if not remaining and probe.ability in (None, 'illusion'):
-        # A move incompatible with the apparent species can be an Illusion clue.
-        # This changes only a sampled battle copy, never the observed battle.
-        hypotheses = [(name, s) for name, sets in bank_sets().items() for s in sets
-                      if s.pkmn_set.ability == 'illusion'
-                      and s.full_set_pkmn_can_have_set(probe, speed_check=False, match_item=match_item)]
-        if hypotheses:
-            name, chosen = random.choice(hypotheses)
-            apparent = pkmn.name
-            pkmn.forme_change(name)
-            pkmn.zoroark_disguised_as = apparent
-            logger.info('Custom Illusion hypothesis: apparent=%s possible=%s', apparent, name)
-            remaining = [chosen]
-    if not remaining:
-        # Never replace revealed information with a contradictory bank guess.
-        details = {'ability': pkmn.ability, 'original_ability': pkmn.original_ability,
-                   'item': pkmn.item, 'removed_item': pkmn.removed_item,
-                   'moves': [m.name for m in pkmn.moves], 'impossible_items': sorted(pkmn.impossible_items),
-                   'impossible_abilities': sorted(pkmn.impossible_abilities), 'choice_possible': pkmn.can_have_choice_item}
-        raise ValueError(f'No compatible custom set hypothesis for {pkmn.name}: {details}')
-    populate_pkmn_from_set(pkmn, deepcopy(random.choice(remaining)), source=source)
+    from fp.data.sets.roman_open import sample_open_pokemon
+    return sample_open_pokemon(pkmn, bank_sets().get(bank_species_name(pkmn.name), []))
 
 def reconcile_prior_illusion_history(pkmn):
-    if not pkmn.moves or not (pkmn.original_ability or pkmn.ability):
-        return
-    sampled = deepcopy(pkmn)
-    try:
-        sample_bank_pokemon(sampled)
-    except ValueError:
-        return
-    ambiguous = set(sampled.roman_prior_illusion_moves)
-    if ambiguous:
-        histories = list(getattr(pkmn, 'roman_uncertain_appearances', []))
-        histories.append({'apparent_species': pkmn.name, 'possible_prior_illusion': True,
-                          'moves': [(m.name, m.current_pp) for m in pkmn.moves if m.name in ambiguous]})
-        pkmn.roman_uncertain_appearances = histories
-        pkmn.moves = [m for m in pkmn.moves if m.name not in ambiguous]
-        logger.info('Retained uncertain prior appearance separately for %s: %s', pkmn.name, sorted(ambiguous))
-
+    from fp.data.sets.roman_open import reconcile_history
+    reconcile_history(pkmn)

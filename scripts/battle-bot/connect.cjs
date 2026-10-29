@@ -147,6 +147,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
           state.rqid = request.rqid;
           state.fallback = false;
           send(room, `/choose ${choice}|${request.rqid}`);
+          if (state.logFile && foul && state.policy.lastDecision) fs.appendFileSync(state.logFile, `|botsearch|${JSON.stringify(state.policy.lastDecision)}\n`);
           if (state.logFile && state.policy.calculator) fs.appendFileSync(state.logFile, `|botcalc|${JSON.stringify(state.policy.calculator.last)}\n`);
           if (state.logFile) fs.appendFileSync(state.logFile, `|botchoice|${request.rqid}|${choice}\n`);
         }

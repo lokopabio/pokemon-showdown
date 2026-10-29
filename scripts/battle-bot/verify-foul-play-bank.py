@@ -44,7 +44,7 @@ class BankTests(unittest.TestCase):
     def test_contradictory_hypotheses_are_not_silently_used(self):
         pokemon = Pokemon(next(iter(bank_sets())), 100)
         pokemon.ability = 'notarealability'
-        with self.assertRaisesRegex(ValueError, 'No compatible'):
+        with self.assertRaisesRegex(ValueError, 'conflict'):
             sample_bank_pokemon(pokemon)
         self.assertEqual(pokemon.ability, 'notarealability')
 
@@ -61,13 +61,13 @@ class BankTests(unittest.TestCase):
 
     def test_custom_illusion_is_only_a_sampled_hypothesis(self):
         from copy import deepcopy
-        observed = Pokemon('waynero', 100)
+        observed = Pokemon('pavoaero', 100)
         observed.add_move('triattack')
         sampled = deepcopy(observed)
         sample_bank_pokemon(sampled)
-        self.assertEqual(observed.name, 'waynero')
+        self.assertEqual(observed.name, 'pavoaero')
         self.assertEqual(sampled.ability, 'illusion')
-        self.assertEqual(sampled.zoroark_disguised_as, 'waynero')
+        self.assertEqual(sampled.zoroark_disguised_as, 'pavoaero')
         self.assertIsNotNone(sampled.get_move('triattack'))
 
     def test_unverified_negative_inferences_do_not_empty_the_bank(self):
@@ -193,7 +193,7 @@ class BankTests(unittest.TestCase):
         for move in ['lightscreen', 'spore', 'batonpass']:
             observed.add_move(move)
         observed.moves_used_since_switch_in = {'spore', 'batonpass'}
-        with self.assertRaisesRegex(ValueError, 'No compatible'):
+        with self.assertRaisesRegex(ValueError, 'conflict'):
             sample_bank_pokemon(observed)
 
     def test_trace_reveal_separates_disguised_appearance_before_damage_inference(self):
@@ -215,6 +215,71 @@ class BankTests(unittest.TestCase):
         self.assertEqual([name for name, pp in pokemon.roman_uncertain_appearances[0]['moves']], ['lightscreen', 'spore', 'batonpass'])
         sample_bank_pokemon(pokemon)
         self.assertIsNotNone(pokemon.get_move('psychic'))
+
+class OpenTests(unittest.TestCase):
+    def test_unbanked_legal_set_keeps_every_revealed_move_and_pp(self):
+        from fp.data.sets.roman_open import legal_catalog
+        pokemon=Pokemon('carlis',100)
+        moves=legal_catalog()['species']['carlis']['moves'][:4]
+        for move in moves:
+            pokemon.add_move(move)
+            pokemon.get_move(move).current_pp=2
+        pokemon.moves_used_since_switch_in=set(moves)
+        pokemon.item='choicescarf'
+        pokemon.ability='gooey'
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(set(m.name for m in pokemon.moves),set(moves))
+        self.assertTrue(all(m.current_pp==2 for m in pokemon.moves))
+        self.assertEqual(pokemon.item,'choicescarf')
+
+    def test_all_selectable_species_have_hidden_team_proposals(self):
+        from fp.data.sets.roman_open import legal_catalog
+        self.assertTrue(all(name in bank_sets() for name,s in legal_catalog()['species'].items() if s['selectable']))
+
+    def make_battle(self):
+        from fp.battle.state import Battle
+        from fp.data.sets.roman_open import AppearanceTracker
+        battle=Battle('appearance-test')
+        battle.user.name='p1';battle.opponent.name='p2'
+        battle.opponent.active=Pokemon('ponshead',100)
+        return battle,AppearanceTracker()
+
+    def test_illegal_move_forces_only_sampled_illusion_and_history_does_not_leak(self):
+        from copy import deepcopy
+        battle,tracker=self.make_battle()
+        tracker.before(battle,'|switch|p2a: Ponshead|Ponshead, M|100/100')
+        tracker.before(battle,'|move|p2a: Ponshead|Tri Attack|p1a: Carlis')
+        battle.opponent.active.add_move('triattack');tracker.apply(battle)
+        self.assertEqual(tracker.current['probability'],1)
+        sampled=deepcopy(battle.opponent.active);sample_bank_pokemon(sampled)
+        self.assertEqual(sampled.name,'chemfalse')
+        self.assertEqual(battle.opponent.active.name,'ponshead')
+        tracker.before(battle,'|switch|p2a: Ponshead|Ponshead, M|100/100')
+        tracker.before(battle,'|move|p2a: Ponshead|Iron Head|p1a: Carlis')
+        battle.opponent.active.add_move('ironhead');tracker.apply(battle)
+        self.assertIsNone(battle.opponent.active.get_move('triattack'))
+        self.assertEqual(tracker.history[0]['moves'],['triattack'])
+
+    def test_legal_unfamiliar_move_does_not_force_illusion(self):
+        battle,tracker=self.make_battle()
+        tracker.before(battle,'|switch|p2a: Ponshead|Ponshead, M|100/100')
+        tracker.before(battle,'|move|p2a: Ponshead|Iron Head|p1a: Carlis')
+        self.assertLess(tracker.current['probability'],1)
+
+    def test_called_move_is_not_learnset_evidence(self):
+        battle,tracker=self.make_battle()
+        tracker.before(battle,'|switch|p2a: Ponshead|Ponshead, M|100/100')
+        tracker.before(battle,'|move|p2a: Ponshead|Tri Attack|p1a: Carlis|[from] move: Metronome')
+        self.assertEqual(tracker.current['moves'],[])
+        self.assertEqual(tracker.current['probability'],tracker.prior)
+
+    def test_damage_resolves_real_identity_but_poison_does_not(self):
+        battle,tracker=self.make_battle()
+        tracker.before(battle,'|switch|p2a: Ponshead|Ponshead, M|100/100')
+        tracker.before(battle,'|-damage|p2a: Ponshead|90/100|[from] psn')
+        tracker.finish(battle);self.assertEqual(tracker.current['probability'],tracker.prior)
+        tracker.before(battle,'|-damage|p2a: Ponshead|80/100')
+        tracker.finish(battle);self.assertEqual(tracker.current['probability'],0)
 
 if __name__ == '__main__':
     unittest.main()

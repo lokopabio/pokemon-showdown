@@ -7,6 +7,10 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ['fp/battle/protocol.py', '        function_to_call = battle_modifiers_lookup.get(action)',
+      '        from fp.data.sets.roman_open import AppearanceTracker\n        if not hasattr(battle, "roman_tracker"):\n            battle.roman_tracker = AppearanceTracker()\n        battle.roman_tracker.before(battle, line)\n        function_to_call = battle_modifiers_lookup.get(action)'],
+    ['fp/battle/protocol.py', '            function_to_call(battle, split_msg)',
+      '            function_to_call(battle, split_msg)\n            battle.roman_tracker.apply(battle)'],
     ['fp/battle/protocol.py', '    side.active.ability = ability\n\n\ndef illusion_end',
       '    side.active.ability = ability\n    if is_opponent(battle, split_msg):\n        from fp.data.sets.roman_bank import reconcile_prior_illusion_history\n        reconcile_prior_illusion_history(side.active)\n\n\ndef illusion_end'],
     ['fp/search/standard_battles.py', '    revealed_set = set(revealed_pokemon)',
@@ -37,6 +41,8 @@ function prepareBank(directory) {
     }
     writes.set(target,source);
   }
+  writes.set(path.join(directory,'fp/data/roman-legal.json'),JSON.stringify(require('./legal-space.cjs').catalog(),null,2)+'\n');
+  writes.set(path.join(directory,'fp/data/sets/roman_open.py'),fs.readFileSync(path.join(__dirname,'foul-play-open.py'),'utf8'));
   writes.set(path.join(directory,'fp/data/sets/roman_bank.py'), fs.readFileSync(path.join(__dirname,'foul-play-bank.py'),'utf8'));
   for (const [file,source] of writes) fs.writeFileSync(file,source);
 }

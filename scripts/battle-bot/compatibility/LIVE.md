@@ -76,18 +76,34 @@ node scripts/battle-bot/connect.cjs scripts/battle-bot/results/benito-live-002/c
 
 The last command requires `BENITO_PASSWORD` set as described above. New build runs require a new output directory; change the seed to explore other variants. Stop/restart using the new config after building a new roster. Fixed-team configs continue to work. Search/prediction weaknesses such as overpredicting switches are separate from this team-builder change.
 
-## Empirical metagame discovery (preferred)
+## Open legal-set discovery (preferred)
 
-Use `discover-metagame.cjs` when the goal is to discover teams independently of human compositions. Initial candidates assemble six legal members from the bank's set inventory. Subsequent generations allocate half the population to independent exploration and half to recombinations of measured leaders. Human teams are comparison opponents, not assumed champions. No hand-written team-role preservation rules are imposed in this mode.
+`discover-metagame.cjs` now uses the server Dex and TeamValidator to export `legal-space.json`: full inherited legal move pools, abilities, items and natures. A set's absence from the human bank is not evidence of illegality. Bank teams supply comparison opponents and bank sets remain optional inference proposals, not hard limits.
 
-Both sides use Foul Play. Each candidate faces the same two opponents and battle seeds within its generation, in both player positions. Later generations face a discovered leader as one opponent. Final leaders face two disjoint human-bank holdout teams. Results are provisional and depend on this search policy's weaknesses; the held-out human opponents alone do not establish metagame dominance. The current implementation explores team composition and existing set choices, not new movesets. Exhaustive species/move coverage and large independent evaluations remain future work.
+Initial candidates are assembled independently using newly generated sets. Later generations explore species, individual moves, abilities, items, natures, legal EV allocations, IVs and lead order. Every candidate passes the custom-only/no-Mega/no-Z/no-Moody guard and whole-team Gen 7 validator. Shadow Tag remains legal. All moves have positive sampling probability. Native identifier support is separately recorded; unsupported identifiers remain visible in the catalog but are not generated for native search. Identifier coverage is not proof of mechanical parity.
 
-Artifacts: `manifest.json` identifies the bank and schedule parameters; `teams.json` stores exact teams; `games.jsonl` stores every matchup, seed, result and error; `search.json` stores generation standings; `holdout.json` stores independent results; `metagame.json` stores species exposure and associated team points. `roster.json` contains compatible tested discoveries plus two human-bank controls for live rotation. Capped held-out runs and errors prevent admission. Rankings use measured team results, never training age. Live results are stored per selected team, but do not automatically retrain this offline search.
+Both players use Foul Play. Generations share opponents and seeds for comparisons; archived leaders are re-evaluated and retained for final independent testing instead of disappearing at a generation boundary. Failed matchups are retried once, with both attempt errors preserved. Persistent failures remain incomplete rather than counting as losses or wins. Four-game screens are provisional compatibility checks, not proof of improvement. Larger populations, multiple battle policies and broader evaluations are needed for metagame conclusions.
 
-First discovery run, from PowerShell:
+Opponent inference now draws new legal sets as well as bank proposals. Revealed moves, items and abilities are retained; current PP is preserved. An appearance tracker keeps public move histories separate across switches. It retains a structural Illusion prior (initially 0.1, not an empirically calibrated usage probability), rules out identities using legal learnsets, and resolves public ability/damage/replacement evidence. Called moves do not imply learnset illegality. Unresolved appearance histories are not merged into confirmed species sets. Three sampled hypotheses share each decision's search budget. Live logs include `botsearch` entries with action weights and current identity evidence. This remains an approximation, not an exact joint belief over every hidden team.
+
+### Calculator guidance
+
+`--calculatorEngine PATH` enables neutral-field damage/survival/speed matchup profiles. Without an explicit target file, it profiles sets from two training comparison teams, without using held-out team sets. These are baseline probes, not usage-derived “common attack” frequencies. `calculations.json` records exact target sets, assumptions, ranges, objective outcomes and calculator hash. Unsupported calculations are explicitly unavailable, not silently successful.
+
+`--matchupTargets PATH` optionally reads a JSON array. Each entry has a complete legal `set` for the opponent, optional `forSpecies` limiting the member assigned that job, and a `role`: `check`, `breaker`, `revenge`, or `profile`. Optional fields are `move` (incoming attack to check), `surviveHits` (default 1), `damagePercent` (minimum outgoing damage percentage, default 100 for breaker/revenge), and `outspeed`. A check objective requires survival; revenge requires neutral speed superiority and outgoing damage; breaker requires outgoing damage. For example, target entry structure is `{ "set": { ...complete opponent set... }, "forSpecies": "Pabio", "role": "check", "move": "Focus Blast", "surviveHits": 1 }`.
+
+Specific objectives take priority over the broader profile, which only breaks ties. Calculator-guided mutations compete with ordinary mutations and independent exploration. The guide currently ranks sampled mutations; it is not an exhaustive EV-threshold solver. Profiles assume full HP, no hazards/status/boosts/weather and do not prove a multi-turn counter relationship. Speed includes Scarf/Iron Ball/Macho Brace, not ability/weather activation. Battle results alone rank teams; calculator scores are proposal guidance.
+
+### Windows update and first run
+
+Stop the bot, pull the branch, and reinstall the Python data/adapter patches. No Rust rebuild is needed for this update:
 
 ```powershell
-node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json --python ../roman-foul-play/.venv/Scripts/python.exe --foul ../roman-foul-play --output scripts/battle-bot/results/benito-discovery-001 --population 8 --generations 2 --seed 1909 --searchMs 10
+git pull --ff-only
+node scripts/battle-bot/prepare-foul-play-bank.cjs ../roman-foul-play
+node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json --python ../roman-foul-play/.venv/Scripts/python.exe --foul ../roman-foul-play --output scripts/battle-bot/results/benito-discovery-002 --population 4 --generations 2 --seed 1910 --searchMs 30 --calculatorEngine scripts/battle-bot/results/calculator-engine.cjs
 ```
 
-This schedules 64 search battles and up to 16 held-out battles. Use its `roster.json` with the live preparer's `--roster` option instead of the variant-builder roster. Large runs should follow validation of search behavior and custom mechanic parity; more battles cannot correct a consistently faulty policy.
+Archive re-evaluations and retries make battle counts variable. Keep previous run folders intact. To use a new roster, pass its `roster.json` via `--roster` to `prepare-foul-play-live.cjs` with a new output directory, then start that new config as above. Live results are recorded by team; they do not automatically retrain the offline search.
+
+Artifacts include exact teams, every battle/attempt error, generation standings, archived IDs, held-out results, species exposure counts (not causal strength or human usage), the legality catalog and calculator profiles. Existing set banks no longer bound discovery or opponent hypotheses. The current generator and structural priors are starting distributions; the small runs do not establish a settled metagame.
