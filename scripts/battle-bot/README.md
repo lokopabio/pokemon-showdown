@@ -54,4 +54,39 @@ Results are written after each generation to `scripts/battle-bot/results/`:
 - `opponents.json`: training and held-out teams for inspection.
 - `report.json`: final selection history and separate held-out score.
 
-Use `--output PATH` for a separate run directory. Reusing a directory replaces that run's results. To play the exported team, set the connection config's team path to `"gen7ou": "results/best.txt"` (relative to the config in this directory). Multiple accounts can use outputs from different seeds.
+Use `--output PATH` for a separate run directory. Each run requires a new or empty output directory to preserve previous logs. To play the exported team, set the connection config's team path to `"gen7ou": "results/best.txt"` (relative to the config in this directory). Multiple accounts can use outputs from different seeds.
+
+
+## Running Roman-016 on your server and inspecting results
+
+Training runs are ordinary Node.js processes using this fork's in-process battle simulator. They do not need a browser, GPU, online battle rooms, or a running Showdown WebSocket server. Run them alongside Showdown using the same checkout and built data, with Node.js 22 or later. They consume CPU, so start small on a shared server. No training job has been deployed automatically.
+
+From the repository root, after fetching this branch, installing dependencies and building:
+
+```sh
+node scripts/battle-bot/breed.cjs --name Roman-016 --population 8 --generations 3 --opponents 3 --output scripts/battle-bot/results/roman-run-001
+```
+
+On a Linux host, to keep a run alive after disconnecting and capture progress:
+
+```sh
+mkdir -p scripts/battle-bot/results/console
+nohup node scripts/battle-bot/breed.cjs --name Roman-016 --output scripts/battle-bot/results/roman-run-002 > scripts/battle-bot/results/console/roman-run-002.log 2>&1 &
+```
+
+Access these files through your server's terminal, SFTP or file manager:
+
+| File | Contents |
+| --- | --- |
+| `run.json` | Bot name, settings, Node version and start timestamp |
+| `battles.csv` | Spreadsheet-friendly per-battle outcome, side, generation, candidate, opponent, turn count, turn-cap flag and duration |
+| `battles.jsonl` | Same battle index with simulator seeds and player names |
+| `battles/*.log` | Turn-by-turn simulator battle protocol |
+| `battles/*.log.json` | Both complete teams, seed, result and submitted decisions for reproducing a matchup |
+| `checkpoint.json` | Generation rankings, full teams and selection scores |
+| `report.json` | Final selection history and separate held-out wins/losses/ties |
+| `best.txt` | Importable champion team |
+
+The detailed logs intentionally include both training teams and omniscient simulator events, and are written only by the evaluator. Playing policies still receive their own player streams. These are local protocol logs, not uploaded Showdown replay URLs, and there is no browser dashboard yet. The last completed generation remains available if a run stops early; individual completed battles are indexed immediately. A final report appears only on successful completion.
+
+To put the exported champion online, copy the example connection config, keep `username` as `Roman-016`, and set its `gen7ou` team path to `results/roman-run-001/best.txt`. Then run `node scripts/battle-bot/connect.cjs`. Training logs describe local evaluation battles; the connection client does not yet persist live match logs.

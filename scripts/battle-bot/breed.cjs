@@ -129,25 +129,40 @@ class Breeder {
     return this.team();
   }
 }
-async function score(team, opponents, seed, maxTurns = 200) {
+async function score(team, opponents, seed, maxTurns = 200, logging = {}) {
   let points = 0;
   const results = {wins: 0, losses: 0, ties: 0};
   for (let i = 0; i < opponents.length; i++) {
     // Reverse sides with the same simulator seed to reduce first-player bias.
     for (const reverse of [false, true]) {
       const winner = await play(FORMAT, reverse ? opponents[i] : team, reverse ? team : opponents[i],
-        [seed, i + 1, 17, 29], {baseline: false, maxTurns});
+        [seed, i + 1, 17, 29], {baseline: false, maxTurns,
+          names: reverse ? ['SparringPartner', logging.name || 'Roman-016'] : [logging.name || 'Roman-016', 'SparringPartner'],
+          logFile: logging.directory && path.join(logging.directory, `${logging.label}-opponent-${i + 1}-${reverse ? 'p2' : 'p1'}.log`),
+          onResult: result => {
+            if (!logging.output) return;
+            const record = {...result, phase: logging.phase, generation: logging.generation, candidate: logging.candidate, opponent: i + 1, candidateSide: reverse ? 'p2' : 'p1'};
+            fs.appendFileSync(path.join(logging.output, 'battles.jsonl'), JSON.stringify(record) + '\n');
+            fs.appendFileSync(path.join(logging.output, 'battles.csv'), [record.phase, record.generation || '', record.candidate || '', record.opponent, record.candidateSide, record.winner, record.turns, record.capped, record.durationMs].join(',') + '\n');
+          },
+        });
       if (winner === 'tie') {points += 0.5; results.ties++;}
-      else if (winner === (reverse ? 'Baseline' : 'Heuristic')) {points++; results.wins++;}
+      else if (winner === (logging.name || 'Roman-016')) {points++; results.wins++;}
       else results.losses++;
     }
   }
   return {points, games: opponents.length * 2, ...results};
 }
-async function evolve({seed = 1, population = 8, generations = 3, opponents = 3, maxTurns = 200, output = 'scripts/battle-bot/results'} = {}) {
+async function evolve({seed = 1, population = 8, generations = 3, opponents = 3, maxTurns = 200, output = 'scripts/battle-bot/results', name = 'Roman-016'} = {}) {
   for (const [key, value, min] of [['seed', seed, 0], ['population', population, 4], ['generations', generations, 1], ['opponents', opponents, 1], ['maxTurns', maxTurns, 1]]) {
     if (!Number.isSafeInteger(value) || value < min || value > 65535) throw new Error(`Invalid ${key}`);
   }
+  if (!/^[A-Za-z0-9-]{1,40}$/.test(name) || name === 'SparringPartner') throw new Error('Use a distinct bot name containing letters, digits or hyphens.');
+  if (fs.existsSync(output) && fs.readdirSync(output).length) throw new Error('Output directory is not empty. Choose a new --output directory to preserve previous logs.');
+  fs.mkdirSync(output, {recursive: true});
+  const startedAt = new Date().toISOString();
+  fs.writeFileSync(path.join(output, 'run.json'), JSON.stringify({name, format: FORMAT, seed, population, generations, opponents, maxTurns, startedAt, node: process.version}, null, 2));
+  fs.writeFileSync(path.join(output, 'battles.csv'), 'phase,generation,candidate,opponent,candidateSide,winner,turns,capped,durationMs\n');
   const builder = new Breeder(seed);
   const training = Array.from({length: opponents}, () => builder.team());
   const holdout = Array.from({length: opponents}, () => builder.team());
@@ -158,7 +173,7 @@ async function evolve({seed = 1, population = 8, generations = 3, opponents = 3,
   for (let generation = 0; generation < generations; generation++) {
     const ranked = [];
     for (let i = 0; i < teams.length; i++) {
-      const result = await score(teams[i], training, seed, maxTurns);
+      const result = await score(teams[i], training, seed, maxTurns, {name, output, directory: path.join(output, 'battles'), label: `gen-${generation + 1}-team-${i + 1}`, phase: 'selection', generation: generation + 1, candidate: i + 1});
       ranked.push({team: teams[i], result});
       console.log(`Generation ${generation + 1}, team ${i + 1}/${population}: ${result.points}/${result.games}`);
     }
@@ -172,8 +187,8 @@ async function evolve({seed = 1, population = 8, generations = 3, opponents = 3,
   }
   // Held-out teams never affect selection. Report separately to expose overfitting.
   const champion = Teams.import(fs.readFileSync(path.join(output, 'best.txt'), 'utf8'));
-  const heldout = await score(champion, holdout, (seed + 97) % 65536, maxTurns);
-  const report = {format: FORMAT, seed, population, generations, opponents, maxTurns, eligibleSpecies: builder.sets.size, history, heldout,
+  const heldout = await score(champion, holdout, (seed + 97) % 65536, maxTurns, {name, output, directory: path.join(output, 'battles'), label: 'heldout', phase: 'heldout'});
+  const report = {name, startedAt, completedAt: new Date().toISOString(), format: FORMAT, seed, population, generations, opponents, maxTurns, eligibleSpecies: builder.sets.size, history, heldout,
     limitation: 'Team evolution with a fixed heuristic battle policy. Results measure this policy matchup, not human competitive strength.'};
   fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2));
   console.log(`Held out: ${heldout.points}/${heldout.games}. Team saved to ${path.join(output, 'best.txt')}`);
@@ -182,11 +197,11 @@ async function evolve({seed = 1, population = 8, generations = 3, opponents = 3,
 if (require.main === module) {
   const args = process.argv.slice(2);
   const options = {};
-  const keys = {seed: 'seed', population: 'population', generations: 'generations', opponents: 'opponents', 'max-turns': 'maxTurns', output: 'output'};
+  const keys = {seed: 'seed', population: 'population', generations: 'generations', opponents: 'opponents', 'max-turns': 'maxTurns', output: 'output', name: 'name'};
   for (let i = 0; i < args.length; i += 2) {
     const key = keys[args[i].replace(/^--/, '')];
     if (!key || args[i + 1] === undefined) throw new Error('Usage: node scripts/battle-bot/breed.cjs [--seed 1 --population 8 --generations 3 --opponents 3 --max-turns 200 --output PATH]');
-    options[key] = key === 'output' ? args[i + 1] : Number(args[i + 1]);
+    options[key] = ['output', 'name'].includes(key) ? args[i + 1] : Number(args[i + 1]);
   }
   evolve(options).catch(error => {console.error(error); process.exitCode = 1;});
 }

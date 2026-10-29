@@ -3,9 +3,15 @@ const fs = require('node:fs');
 const {BattleStream, getPlayerStreams, Teams, Dex} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
 async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
+  const names = options.names || ['Heuristic', 'Baseline'];
+  const events = [];
+  const decisions = [];
+  let turns = 0;
+  let capped = false;
+  const started = Date.now();
   const battle = new BattleStream();
   const streams = getPlayerStreams(battle);
-  async function player(stream, random) {
+  async function player(stream, random, side) {
     const policy = new Policy(format, () => 0.5);
     let pending = [];
     for await (const chunk of stream) {
@@ -20,29 +26,44 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
             const moves = request.active[0].moves.map((m, i) => m.disabled ? null : i + 1).filter(Boolean);
             if (moves.length) choice = `move ${moves[Math.floor(policy.random() * moves.length)]}`;
           }
-          if (choice) await stream.write(choice);
+          if (choice) {
+            decisions.push({side, rqid: request.rqid, choice});
+            await stream.write(choice);
+          }
         } else if (line.startsWith('|error|')) {
           throw new Error(line);
         } else pending.push(line);
       }
     }
   }
-  const players = [player(streams.p1, false), player(streams.p2, options.baseline !== false)];
+  const players = [player(streams.p1, false, 'p1'), player(streams.p2, options.baseline !== false, 'p2')];
   let winner = 'tie';
   const watch = (async () => {
     for await (const chunk of streams.omniscient) {
       for (const line of chunk.split('\n')) {
+        events.push(line);
+        if (line.startsWith('|turn|')) turns = Number(line.slice(6));
         if (line.startsWith('|win|')) winner = line.slice(5);
-        if (line.startsWith('|turn|') && Number(line.slice(6)) >= (options.maxTurns || 300)) await battle.write('>forcetie');
+        if (line.startsWith('|turn|') && turns >= (options.maxTurns || 300)) {
+          capped = true;
+          await battle.write('>forcetie');
+        }
       }
     }
   })();
-  await battle.write(`>start ${JSON.stringify({formatid: format, seed})}\n>player p1 ${JSON.stringify({name: 'Heuristic', team: Teams.pack(team1)})}\n>player p2 ${JSON.stringify({name: 'Baseline', team: Teams.pack(team2)})}`);
+  await battle.write(`>start ${JSON.stringify({formatid: format, seed})}\n>player p1 ${JSON.stringify({name: names[0], team: Teams.pack(team1)})}\n>player p2 ${JSON.stringify({name: names[1], team: Teams.pack(team2)})}`);
   try {
     await Promise.all([...players, watch]);
   } finally {
     await battle.writeEnd();
   }
+  const result = {format, seed, names, winner, turns, capped, durationMs: Date.now() - started};
+  if (options.logFile) {
+    fs.mkdirSync(require('node:path').dirname(options.logFile), {recursive: true});
+    fs.writeFileSync(options.logFile, events.join('\n') + '\n');
+    fs.writeFileSync(options.logFile + '.json', JSON.stringify({...result, teams: [team1, team2], decisions}, null, 2));
+  }
+  if (options.onResult) options.onResult(result);
   return winner;
 }
 if (require.main === module) {

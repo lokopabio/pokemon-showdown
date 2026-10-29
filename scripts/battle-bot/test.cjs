@@ -114,7 +114,21 @@ test('evolution runs actual battles and exports a legal champion and held-out re
   try {
     const {champion, report} = await evolve({seed: 7, population: 4, generations: 2, opponents: 1, maxTurns: 30, output});
     assert.equal(new Breeder(7).legal(champion), true);
+    assert.equal(report.name, 'Roman-016');
     assert.equal(report.history.length, 2);
+    const records = fs.readFileSync(path.join(output, 'battles.jsonl'), 'utf8').trim().split('\n').map(line => JSON.parse(line));
+    assert.equal(records.length, 18);
+    assert.equal(records.filter(r => r.phase === 'heldout').length, 2);
+    assert.ok(records.every(r => r.names.includes('Roman-016')));
+    assert.ok(records.some(r => r.candidateSide === 'p1'));
+    assert.ok(records.some(r => r.candidateSide === 'p2'));
+    assert.equal(fs.readFileSync(path.join(output, 'battles.csv'), 'utf8').trim().split('\n').length, 19);
+    const logFile = path.join(output, 'battles', 'gen-1-team-1-opponent-1-p1.log');
+    assert.match(fs.readFileSync(logFile, 'utf8'), /\|turn\|/);
+    const metadata = JSON.parse(fs.readFileSync(logFile + '.json', 'utf8'));
+    assert.equal(metadata.teams.length, 2);
+    assert.ok(metadata.decisions.length > 0);
+    await assert.rejects(evolve({output}), /not empty/);
     assert.equal(report.heldout.games, 2);
     assert.equal(report.heldout.wins + report.heldout.losses + report.heldout.ties, 2);
     assert.ok(report.history[1].best.points >= report.history[0].best.points);
