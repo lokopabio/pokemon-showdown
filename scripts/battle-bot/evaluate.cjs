@@ -27,7 +27,7 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
             if (moves.length) choice = `move ${moves[Math.floor(policy.random() * moves.length)]}`;
           }
           if (choice) {
-            decisions.push({side, rqid: request.rqid, choice});
+            if (options.logFile) decisions.push({side, rqid: request.rqid, choice});
             await stream.write(choice);
           }
         } else if (line.startsWith('|error|')) {
@@ -41,7 +41,7 @@ async function play(format, team1, team2, seed = [1, 2, 3, 4], options = {}) {
   const watch = (async () => {
     for await (const chunk of streams.omniscient) {
       for (const line of chunk.split('\n')) {
-        events.push(line);
+        if (options.logFile) events.push(line);
         if (line.startsWith('|turn|')) turns = Number(line.slice(6));
         if (line.startsWith('|win|')) winner = line.slice(5);
         if (line.startsWith('|turn|') && turns >= (options.maxTurns || 300)) {

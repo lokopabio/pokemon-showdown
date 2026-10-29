@@ -95,7 +95,7 @@ To put the exported champion online, copy the example connection config, keep `u
 
 The initial six policies are in the private training-log archive. Extract it into `scripts/battle-bot/results/`; it contains `roman-six-roster-001/` and `roman-six-training-001/`. Generated models, teams and logs are not published with the source code. They use a small linear softmax policy trained with REINFORCE, not Metamon pretrained weights. A policy receives only its private request and public battle events. It scores legal attacks, Mega/Ultra/Z variants, and switches using bounded tactical features and hashed action identities. Terminal wins/losses produce actual parameter updates. Candidate features include approximate damage, health, boosts, recovery, hazards, status and switch matchup. Custom callbacks are executed by the real simulator during training, but the model has no explicit understanding of every ability. This is a first trainable model, not an expert agent.
 
-Training mixes frozen older policies and the heuristic opponent. Teams are held fixed during a run to separate policy learning from team evolution. A separate validation team pool selects `best.json`; this reused validation score is not an unbiased final test. Evaluation is deterministic, training samples actions, and no parameters change during live human challenges. `latest.json` may perform worse than `best.json`. Saved policy fingerprint checks require matching simulator/data source; rebuild before training and deployment.
+Training mixes frozen older policies and the heuristic opponent. Training teams rotate periodically from a configurable legal Fakemon pool. Validation teams remain fixed and are never inserted into that pool. A separate validation team pool selects `best.json`; this reused validation score is not an unbiased final test. Evaluation is deterministic, training samples actions, and no parameters change during live human challenges. `latest.json` may perform worse than `best.json`. Saved policy fingerprint checks require matching simulator/data source; rebuild before training and deployment.
 
 Train a new run from the repository root:
 
@@ -137,3 +137,26 @@ If names are registered, add a different `passwordEnv` to each account and set t
 Each account writes live protocol logs and decisions to its `logDirectory`, with outcomes in `matches.jsonl`. Live logs contain that bot's own private battle requests; keep them under your control. No chat messages are sent automatically. For multiple accounts with the same base username, Showdown treats punctuation/case as insignificant; the six supplied names have distinct normalized IDs.
 
 Initial evidence: 240 policy-training battles plus 56 validation battles, followed by a 240-battle six-policy round robin. `roman-six-roster-001/ranking.json`, `roman-six-training-001/report.json`, `roman-six-training-001/metrics.csv` and the runs' `battles.jsonl` files provide the saved summaries. These measurements apply to this limited team pool and policy representation. Human strength is unmeasured. Local simulator and WebSocket-fixture tests passed; deployment to the user's live server has not been performed.
+
+
+## Trainer v2: richer observations and CPU workers
+
+New models use schema 2 and 248 action features. The original schema-1 checkpoints load by appending zero weights for new features, preserving their logits. Saving an upgraded checkpoint writes schema 2; update the challenge client before deploying new models. Fingerprints now normalize path separators and CRLF/LF line endings so new Windows-trained models can load on Linux when simulator/data sources match. Legacy Windows checkpoints can be loaded on the Windows host that created them and resaved with canonical fingerprints.
+
+The policy now tracks revealed opponent moves/items/abilities per visible identity, own held items/abilities from private requests, status, weather, terrain and Trick Room. Features include item/move and ability/type interactions, contact risk, recovery, known immunity clues, and switches against revealed coverage. Unknown enemy attributes remain unknown. These are tactical input features, not exact damage calculations or a complete interpretation of arbitrary custom callbacks. Mega/Ultra variants currently use pre-transformation feature estimates. Identity changes/Illusion, volatile ability changes, item suppression, grounding, exact speed and every battle effect are not comprehensively modeled.
+
+Gen 7 OU is checked to exclude Team Preview. Slot 1 always leads in each supplied team. The decision policy learns actions after entry; it does not choose the lead before battle. Team generation/mutation controls ordering independently. A regression battle verifies that the supplied slot-1 Pokemon actually starts for both players without a preview request.
+
+Defaults: 64 training teams, replacing one quarter every 100 episodes, and a mixture of heuristic, uniform-random, initial-policy and archived-policy opponents. Validation rotates among heuristic, frozen initial and uniform opponents; it remains reused for model selection. New team pools are saved in `team-pools.jsonl` for inspection. Generation uses this fork's validator and the same Carletto-onward custom whitelist.
+
+`--workers 4` runs persistent CPU worker threads. Each synchronous batch uses one frozen learner snapshot, returns policy gradients, and applies their average centrally in episode order. No simultaneous shared-weight writes occur. A fixed seed and worker count are reproducible; changing the worker count changes batch size and training dynamics. Parallelism has startup and communication costs and is not guaranteed faster for short runs. Start with four workers on the desktop, not on the shared VPS.
+
+`--log-every 25` records detailed training logs every 25 episodes; `--log-every 1` records all. Every battle still has summary metadata in `battles.jsonl` and `metrics.csv`. Validation battles keep full logs. Unsampled battles avoid collecting full protocol/choice arrays in memory. Logs contain training teams; keep generated results private.
+
+Example desktop benchmark from the repository root:
+
+```sh
+time node scripts/battle-bot/train.cjs --episodes 1000 --eval-every 200 --eval-pairs 24 --workers 4 --team-pool 64 --refresh-every 100 --log-every 25 --seed 29 --output scripts/battle-bot/results/pc-v2-001
+```
+
+For a warm start, add `--resume scripts/battle-bot/results/pc-benchmark-001/best.json`. This keeps learned weights but starts a fresh opponent archive and team pool; it does not reproduce continuation of the earlier run. The live VPS bots do not change until you explicitly copy a new checkpoint and restart their client. Compare repeated seeds and a separate test pool before claiming improvement from the larger model.

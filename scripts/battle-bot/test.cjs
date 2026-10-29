@@ -262,3 +262,128 @@ test('challenge parser supports server PM challenges and legacy events', () => {
   assert.deepEqual(incomingChallenges('|pm|+loko1| Roman-003|/challenge gen7ou|gen7ou|||', 'Roman-016'), {});
   assert.deepEqual(incomingChallenges('|updatechallenges|{"challengesFrom":{"loko1":"gen7ou"}}', 'Roman-016'), {loko1: 'gen7ou'});
 });
+test('memory preserves public reveals without guessing unrevealed opponent attributes', () => {
+  const {BattleMemory} = require('./memory.cjs');
+  const m = new BattleMemory();
+  m.observe('|switch|p2a: Enemy|Gengar, L100|100/100 par');
+  assert.equal(m.opponent('p1').item, null);
+  assert.equal(m.opponent('p1').ability, null);
+  assert.equal(m.opponent('p1').status, 'par');
+  m.observe('|move|p2a: Enemy|Shadow Ball|p1a: Us');
+  m.observe('|-heal|p2a: Enemy|90/100 par|[from] item: Leftovers');
+  m.observe('|-ability|p2a: Enemy|Levitate');
+  assert.equal(m.opponent('p1').item, 'leftovers');
+  assert.equal(m.opponent('p1').ability, 'levitate');
+  assert.ok(m.opponent('p1').moves.has('shadowball'));
+  m.observe('|switch|p2a: Other|Pikachu|100/100');
+  assert.equal(m.opponent('p1').item, null);
+  m.observe('|switch|p2a: Enemy|Gengar|100/100');
+  assert.ok(m.opponent('p1').moves.has('shadowball'));
+  m.observe('|-enditem|p2a: Enemy|Leftovers');
+  assert.equal(m.opponent('p1').item, '');
+  m.observe('|-weather|RainDance');
+  m.observe('|-fieldstart|move: Electric Terrain');
+  m.observe('|-fieldstart|move: Trick Room');
+  assert.equal(m.weather, 'raindance');
+  assert.equal(m.terrain, 'electricterrain');
+  assert.equal(m.trickRoom, true);
+  m.observe('|-fieldend|move: Trick Room');
+  assert.equal(m.trickRoom, false);
+});
+test('context features distinguish item tactics and revealed ability immunities', () => {
+  const {Model, LearnedPolicy, FEATURES} = require('./learned.cjs');
+  const p = new LearnedPolicy('gen7ou', new Model());
+  p.side = 'p1';
+  p.observe('|switch|p2a: Enemy|Gengar|100/100');
+  const r = request([{id: 'protect'}, {id: 'earthquake'}]);
+  r.side.pokemon[0].item = 'leftovers';
+  r.side.pokemon[0].condition = '150/300';
+  const value = (actions, choice, feature) => actions.find(a => a.choice === choice).features[FEATURES.indexOf(feature)];
+  let actions = p.candidates(r);
+  assert.equal(value(actions, 'move 1', 'leftoversProtect'), 0.5);
+  assert.equal(value(actions, 'move 2', 'revealedImmunity'), 0);
+  p.observe('|-ability|p2a: Enemy|Levitate');
+  actions = p.candidates(r);
+  assert.equal(value(actions, 'move 2', 'revealedImmunity'), 1);
+  r.side.pokemon[0].item = 'Choice Band';
+  actions = p.candidates(r);
+  assert.equal(value(actions, 'move 1', 'choiceStatus'), 1);
+  assert.equal(value(actions, 'move 2', 'choiceAttack'), 1);
+});
+test('schema 1 policies upgrade with zero new weights and retain identical logits', () => {
+  const {Model, FEATURES, V1_FEATURES, fingerprint} = require('./learned.cjs');
+  const fs = require('node:fs'); const path = require('node:path'); const os = require('node:os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-legacy-'));
+  try {
+    const weights = V1_FEATURES.map((_, i) => i / 100);
+    const file = path.join(dir, 'old.json');
+    fs.writeFileSync(file, JSON.stringify({schema: 1, kind: 'linear-softmax-reinforce', format: 'gen7ou', features: V1_FEATURES, weights, episodes: 160, baseline: 0, fingerprint: fingerprint()}));
+    const model = Model.load(file);
+    assert.deepEqual(model.weights.slice(0, V1_FEATURES.length), weights);
+    assert.ok(model.weights.slice(V1_FEATURES.length).every(x => x === 0));
+    const a = FEATURES.map((_, i) => i === 1 ? 1 : i > V1_FEATURES.length ? 3 : 0);
+    const b = FEATURES.map(() => 0);
+    assert.ok(Math.abs(model.probabilities([{features: a}, {features: b}])[0] - 1 / (1 + Math.exp(-weights[1]))) < 1e-12);
+    assert.equal(model.episodes, 160);
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('Gen 7 OU starts the supplied slot-1 leads without Team Preview', {timeout: 30000}, async () => {
+  const {Breeder} = require('./breed.cjs');
+  const {Policy} = require('./policy.cjs');
+  const builder = new Breeder(57);
+  const pair = [builder.team(), builder.team()];
+  const first = new Map();
+  await play('gen7ou', ...pair, [1, 2, 3, 4], {baseline: false, maxTurns: 15, policyFactory: side => {
+    const p = new Policy('gen7ou', () => 0.5);
+    const choose = p.choose.bind(p);
+    p.choose = r => {
+      assert.ok(!r.teamPreview);
+      if (r.active && !first.has(side)) first.set(side, r.side.pokemon.find(x => x.active).details.split(',')[0]);
+      return choose(r);
+    };
+    return p;
+  }});
+  assert.equal(first.get('p1'), pair[0][0].species);
+  assert.equal(first.get('p2'), pair[1][0].species);
+});
+test('worker rollouts match direct gradients and training rotates legal teams', {timeout: 30000}, async () => {
+  const {rollout} = require('./rollout.cjs');
+  const {RolloutPool} = require('./workers.cjs');
+  const {Model} = require('./learned.cjs');
+  const {Breeder} = require('./breed.cjs');
+  const {train} = require('./train.cjs');
+  const fs = require('node:fs'); const path = require('node:path'); const os = require('node:os');
+  const model = new Model(); const builder = new Breeder(19);
+  const job = {name: 'Roman-016', episode: 1, weights: model.weights, baseline: 0, opponentKind: 'heuristic', opponentWeights: model.weights, learnerSide: 'p1', teams: [builder.team(), builder.team()], randomSeed: 7, battleSeed: [1, 2, 3, 4], maxTurns: 20};
+  const pool = new RolloutPool(2);
+  try {
+    const [a, b] = await Promise.all([rollout(job), pool.run(job)]);
+    assert.deepEqual(a.gradient, b.gradient);
+    assert.equal(a.reward, b.reward);
+  } finally {await pool.close();}
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ps-parallel-'));
+  try {
+    const {report} = await train({episodes: 4, workers: 2, teamPool: 6, refreshEvery: 2, logEvery: 2, evalEvery: 4, evalPairs: 1, maxTurns: 20, output: dir});
+    assert.equal(report.teamRefreshes, 1);
+    const versions = fs.readFileSync(path.join(dir, 'team-pools.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+    assert.equal(versions.length, 2);
+    assert.ok(versions.flatMap(v => v.teams).every(team => builder.legal(team)));
+    assert.equal(fs.existsSync(path.join(dir, 'battles', 'train-1.log')), false);
+    assert.equal(fs.existsSync(path.join(dir, 'battles', 'train-2.log')), true);
+    assert.equal(Model.load(path.join(dir, 'latest.json')).episodes, 4);
+  } finally {fs.rmSync(dir, {recursive: true});}
+});
+test('canonical simulator fingerprint ignores Windows CRLF line endings', () => {
+  const fs = require('node:fs');
+  const {fingerprint} = require('./learned.cjs');
+  const expected = fingerprint();
+  const original = fs.readFileSync;
+  try {
+    fs.readFileSync = function (file, encoding) {
+      const value = original.apply(this, arguments);
+      if (String(file).endsWith('.ts') && encoding === 'utf8') return value.replace(/\r?\n/g, '\r\n');
+      return value;
+    };
+    assert.equal(fingerprint(), expected);
+  } finally {fs.readFileSync = original;}
+});
