@@ -24,7 +24,7 @@ test('public opponent tracking and type immunity', () => {
   p.observe('|switch|p1a: Pikachu|Pikachu|100/100');
   assert.equal(p.foe.species, 'Garchomp');
 });
-test('reads custom species and handles mega and Z choices', () => {
+test('reads custom species and handles Mega Evolution and ignores Z-Moves', () => {
   const p = new Policy();
   assert.equal(p.dex.species.get('carletto').exists, true);
   const r = request([{id: 'tackle'}]);
@@ -32,7 +32,7 @@ test('reads custom species and handles mega and Z choices', () => {
   assert.equal(p.choose(r), 'move 1 mega');
   delete r.active[0].canMegaEvo;
   r.active[0].canZMove = [{move: 'Breakneck Blitz'}];
-  assert.equal(p.choose(r), 'move 1 zmove');
+  assert.equal(p.choose(r), 'move 1');
 });
 test('full battles finish through player-specific simulator streams', {timeout: 30000}, async () => {
   const team1 = [{species: 'Pikachu', ability: 'Static', moves: ['Thunderbolt', 'Quick Attack']}];
@@ -177,7 +177,7 @@ test('learned policy masks unavailable moves and generates transformation choice
   const choices = p.candidates(r).map(a => a.choice);
   assert.ok(!choices.some(c => c.startsWith('move 1')));
   assert.ok(choices.includes('move 2 mega'));
-  assert.ok(choices.includes('move 2 zmove'));
+  assert.ok(!choices.some(c => c.endsWith(' zmove')));
   r.active[0].trapped = true;
   assert.ok(!p.candidates(r).some(a => a.choice.startsWith('switch')));
 });

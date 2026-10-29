@@ -167,8 +167,6 @@ class LearnedPolicy extends Policy {
       add(`move ${i + 1}`, move);
       if (active.canMegaEvo) add(`move ${i + 1} mega`, move);
       else if (active.canUltraBurst) add(`move ${i + 1} ultra`, move);
-      const z = active.canZMove?.[i];
-      if (z) add(`move ${i + 1} zmove`, {...z, basePower: this.dex.moves.get(move.id || move.move).zMove?.basePower || 100});
     });
     if (!active.trapped && !active.maybeTrapped) request.side.pokemon.forEach((p, i) => {
       if (!p.active && fraction(p.condition) > 0) add(`switch ${i + 1}`, null, p);

@@ -60,7 +60,6 @@ class Breeder {
     if (species.nfe) items.push('Eviolite');
     for (const item of this.dex.items.all()) {
       if (item.megaEvolves === species.name) items.push(item.name);
-      if (item.zMoveType && species.types.includes(item.zMoveType)) items.push(item.name);
     }
     for (let attempt = 0; attempt < 50; attempt++) {
       const ranked = moves.map(m => {

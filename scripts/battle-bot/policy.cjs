@@ -85,9 +85,6 @@ class Policy {
     const active = request.active?.[0];
     if (!active) return null;
     const choices = active.moves.flatMap((m, i) => m.disabled ? [] : [{choice: `move ${i + 1}`, score: this.scoreMove(m, own)}]);
-    for (const [i, z] of (active.canZMove || []).entries()) {
-      if (z && !active.moves[i]?.disabled) choices.push({choice: `move ${i + 1} zmove`, score: this.scoreMove({...z, basePower: this.dex.moves.get(active.moves[i].id || active.moves[i].move).zMove?.basePower || 100}, own) * 0.85});
-    }
     choices.sort((a, b) => b.score - a.score || this.random() - 0.5);
     if (!active.trapped && !active.maybeTrapped && switches.length && this.foe &&
         switchScore(switches[0].p) > switchScore(own) * 3 && (choices[0]?.score || 0) < 70) {
