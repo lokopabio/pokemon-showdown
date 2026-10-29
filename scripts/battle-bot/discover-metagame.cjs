@@ -26,11 +26,11 @@ async function discover({bank,python,foul,output,population=8,generations=2,seed
   fs.mkdirSync(output,{recursive:true});
   require('./legal-space.cjs').writeCatalog(path.join(output,'legal-space.json'));
   const write=(file,value)=>fs.writeFileSync(path.join(output,file),JSON.stringify(value,null,2)+'\n');
-  write('manifest.json',{schema:1,seed,population,generations,searchMs,maxTurns,bank:path.resolve(bank),bankSHA256:require('node:crypto').createHash('sha256').update(fs.readFileSync(bank)).digest('hex'),policy:'FoulPlay versus FoulPlay',calculatorSHA256:guide?.calc.sha,matchupTargets:guide?targets:undefined,holdout,limitation:'Explores full learnsets, native-supported abilities/items, natures, EVs/IVs and lead order. Bank sets are optional proposals, not legality boundaries. Results depend on search policy and simulator parity.'});
+  write('manifest.json',{schema:1,seed,population,generations,searchMs,maxTurns,bank:path.resolve(bank),bankSHA256:require('node:crypto').createHash('sha256').update(fs.readFileSync(bank)).digest('hex'),policy:'FoulPlay versus FoulPlay',generatorVersion:3,ivPolicy:'31 in every stat; Attack 0 only with no physical moves; Speed 0 only on explicitly constructed slow Trick Room sets with 0 Speed EVs and a Speed-lowering nature',trainingPanel:training.slice(0,2),calculatorSHA256:guide?.calc.sha,matchupTargets:guide?targets:undefined,holdout,limitation:'Explores full learnsets, native-supported abilities/items, natures, EVs/IVs and lead order. Bank sets are optional proposals, not legality boundaries. Results depend on search policy and simulator parity.'});
   const play=async(candidate,rivals,phase,generation)=>{
     const results=[];
     for(let rival=0;rival<rivals.length;rival++)for(let side=0;side<2;side++){
-      const row={candidate,rival:rivals[rival],phase,generation,side:side?'p2':'p1',seed:[seed,generation+1,rival+1,side+1]};
+      const row={candidate,rival:rivals[rival],phase,generation,side:side?'p2':'p1',seed:[seed,phase==='holdout'?500:1,rival+1,side+1]};
       row.attemptErrors=[];
       for(let attempt=0;attempt<2;attempt++){
         try{const result=await battle({python,foul,bank,foulBoth:true,team1:teams.get(side?rivals[rival]:candidate).team,team2:teams.get(side?candidate:rivals[rival]).team,foulSide:row.side,seed:row.seed,searchMs,maxTurns});row.result=result;row.points=result.winner==='FoulPlay'?1:result.winner==='FoulPlayOpponent'?0:0.5;results.push(row);break;}
@@ -53,7 +53,7 @@ async function discover({bank,python,foul,output,population=8,generations=2,seed
       const key=id(team);if(seen.has(key))continue;seen.add(key);add(team,'discovery');if(guide)calculations.push({id:key,...guide.team(team)});cohort.push(key);}
     if(cohort.length<population)throw new Error('Insufficient distinct candidates');
     // Common rivals and seeds within a generation; later generations face a discovered leader too.
-    const rivals=[training[generation%training.length],leaders[0]||training[(generation+1)%training.length]];
+    const rivals=training.slice(0,2); // Fixed human controls across every generation; no weak-offspring replacement.
     const standings=[];
     const evaluated=[...new Set([...cohort,...archive])].filter(key=>!rivals.includes(key));
     for(const key of evaluated){const result=await play(key,rivals,'search',generation);standings.push(result);console.log(`Generation ${generation+1}: ${standings.length}/${evaluated.length}; ${result.points}/${result.games}; ${result.errors} errors`);}
@@ -65,13 +65,13 @@ async function discover({bank,python,foul,output,population=8,generations=2,seed
   }
   const heldout=[];for(const key of archive)heldout.push(await play(key,holdout,'holdout',generations));
   // Admission is compatibility gated. Scores remain provisional, including losing teams.
-  const records=heldout.filter(r=>!r.errors&&r.games===4&&!r.capped).map(r=>({...teams.get(r.id),roles:roles(teams.get(r.id).team),screen:{games:r.games,wins:games.filter(g=>g.candidate===r.id&&g.phase==='holdout'&&g.points===1).length,selfPlay:true},heldout:r}));
+  const records=heldout.filter(r=>!r.errors&&r.games===4&&!r.capped&&r.points/r.games>=0.5).map(r=>({...teams.get(r.id),roles:roles(teams.get(r.id).team),screen:{games:r.games,wins:games.filter(g=>g.candidate===r.id&&g.phase==='holdout'&&g.points===1).length,selfPlay:true},heldout:r}));
   // Always keep independently identified bank controls available for comparison and rotation.
   for(const key of training.slice(0,2))records.push({...teams.get(key),source:'bank',roles:roles(teams.get(key).team)});
   const species={};
   for(const game of games.filter(g=>g.result))for(const [key,points]of [[game.candidate,game.points],[game.rival,1-game.points]])for(const set of teams.get(key).team){const name=set.species;const row=species[name]||(species[name]={appearances:0,points:0});row.appearances++;row.points+=points;}
   write('metagame.json',{species,interpretation:'Self-play exposure and team score associations, not causal individual strength or human usage. Search and holdout games are separately identifiable in games.jsonl.'});
-  write('holdout.json',{results:heldout,limitation:'Four held-out games per candidate are provisional. Admission checks compatibility, not superiority. Archived leaders from earlier generations are retained.'});
+  write('holdout.json',{results:heldout,limitation:'Four held-out games per candidate are provisional. Admission requires no errors/caps and at least 50% held-out score; four games do not establish superiority. Archived leaders from earlier generations are retained.'});
   write('roster.json',{schema:1,format:'gen7ou',records});write('teams.json',[...teams.values()]);
   return {tested:seen.size,completed:games.filter(g=>g.result).length,errors:games.filter(g=>g.error).length,discoveredTeams:records.filter(r=>r.source==='discovery').length,roster:path.resolve(output,'roster.json')};
 }

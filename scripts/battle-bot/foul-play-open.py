@@ -37,10 +37,12 @@ def generated_hypothesis(pkmn):
     if base_ability and base_ability not in species['abilities'] and not pkmn.original_ability:
         # Explicit changed abilities (Trace etc.) retain original_ability upstream.
         raise ValueError('Observed ability conflicts with legal species: ' + str(base_ability))
-    abilities = [a for a in species['abilities'] if a != 'moody' and a in data['nativeAbilities']]
+    abilities = [a for a in species['abilities'] if a != 'moody' and a in data['nativeAbilities'] and all(move_id(m) in species.get('abilityMoves',{}).get(a,species['moves']) for m in known if m not in getattr(pkmn,'roman_copied_moves',[]))]
     if not abilities:
-        raise ValueError('No native ability identifiers for ' + pkmn.name)
-    pool = [m for m in species['moves'] if data['moves'][m]['native'] and move_id(m) not in {move_id(k) for k in known}]
+        raise ValueError('No compatible native ability/move combination for ' + pkmn.name)
+    chosen_ability=base_ability or random.choice(abilities)
+    ability_pool=species.get('abilityMoves',{}).get(chosen_ability,species['moves'])
+    pool = [m for m in ability_pool if data['moves'][m]['native'] and move_id(m) not in {move_id(k) for k in known}]
     if len(pool) < 4 - len(known):
         raise ValueError('Insufficient native moves for ' + pkmn.name)
     moves = known + random.sample(pool, 4 - len(known))
@@ -52,7 +54,7 @@ def generated_hypothesis(pkmn):
     for _ in range(127):
         slot = random.choice([i for i in range(6) if evs[i] < 252])
         evs[slot] += 4
-    return PredictedPokemonSet(PokemonSet(ability=base_ability or random.choice(abilities),item=item,nature=random.choice(data['natures']),evs=tuple(evs),count=1),PokemonMoveset(moves=tuple(moves)))
+    return PredictedPokemonSet(PokemonSet(ability=chosen_ability,item=item,nature=random.choice(data['natures']),evs=tuple(evs),count=1),PokemonMoveset(moves=tuple(moves)))
 
 def reconcile_history(pkmn):
     """Only separate illegal older evidence that a possible Illusion user can explain."""

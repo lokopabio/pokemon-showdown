@@ -236,6 +236,15 @@ class OpenTests(unittest.TestCase):
         from fp.data.sets.roman_open import legal_catalog
         self.assertTrue(all(name in bank_sets() for name,s in legal_catalog()['species'].items() if s['selectable']))
 
+    def test_alternate_ability_move_source_is_a_legal_hypothesis(self):
+        pokemon=Pokemon('waynero',100)
+        pokemon.ability='vitalspirit'
+        pokemon.add_move('steameruption')
+        pokemon.moves_used_since_switch_in={'steameruption'}
+        sample_bank_pokemon(pokemon)
+        self.assertEqual(pokemon.ability,'vitalspirit')
+        self.assertIsNotNone(pokemon.get_move('steameruption'))
+
     def make_battle(self):
         from fp.battle.state import Battle
         from fp.data.sets.roman_open import AppearanceTracker

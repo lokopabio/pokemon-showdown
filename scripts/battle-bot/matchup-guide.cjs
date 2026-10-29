@@ -10,9 +10,9 @@ class MatchupGuide{
       const best=outgoing.sort((x,y)=>y.range[0]-x.range[0])[0];const worst=incoming.length?Math.max(...incoming.map(m=>m.range[1])):0;
       const speed=(mon,s)=>{const item=this.calc.dex.items.get(s.item).id;return Math.floor(mon.rawStats.spe*(item==='choicescarf'?1.5:['ironball','machobrace'].includes(item)?0.5:1));};
       const outspeeds=speed(a,set)>speed(b,target.set),damagePercent=best?100*best.range[0]/b.maxHP():0;
-      const survives=worst*(target.surviveHits||1)<a.maxHP();
+      const survives=incoming.length>0&&worst*(target.surviveHits||1)<a.maxHP();
       const role=target.role||'profile';
-      const met=role==='check'?survives:role==='breaker'?damagePercent>=(target.damagePercent||100):role==='revenge'?outspeeds&&damagePercent>=(target.damagePercent||100):survives&&damagePercent>=50;
+      const met=role==='check'?survives:role==='breaker'?damagePercent>=(target.damagePercent||100):role==='revenge'?outspeeds&&damagePercent>=(target.damagePercent||100):(outspeeds&&damagePercent>=100)||(survives&&damagePercent>=50&&(outspeeds||worst*2<a.maxHP()));
       report={species:set.species,target:target.set.species,role,outgoing,incoming,hp:a.maxHP(),targetHP:b.maxHP(),outspeeds,minimumDamagePercent:damagePercent,survivesTargetHits:survives,objectiveMet:met&&(!target.outspeed||outspeeds),assumptions:'Neutral field, full HP, no boosts. Survival excludes recovery, hazards and multi-turn status; speed includes Scarf/Iron Ball/Macho Brace, not ability/weather activation.'};
     }catch(error){report={species:set.species,target:target.set.species,unavailable:error.message,objectiveMet:false};}
     this.cache.set(key,report);return report;

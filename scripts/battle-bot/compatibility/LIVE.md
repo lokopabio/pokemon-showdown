@@ -80,7 +80,7 @@ The last command requires `BENITO_PASSWORD` set as described above. New build ru
 
 `discover-metagame.cjs` now uses the server Dex and TeamValidator to export `legal-space.json`: full inherited legal move pools, abilities, items and natures. A set's absence from the human bank is not evidence of illegality. Bank teams supply comparison opponents and bank sets remain optional inference proposals, not hard limits.
 
-Initial candidates are assembled independently using newly generated sets. Later generations explore species, individual moves, abilities, items, natures, legal EV allocations, IVs and lead order. Every candidate passes the custom-only/no-Mega/no-Z/no-Moody guard and whole-team Gen 7 validator. Shadow Tag remains legal. All moves have positive sampling probability. Native identifier support is separately recorded; unsupported identifiers remain visible in the catalog but are not generated for native search. Identifier coverage is not proof of mechanical parity.
+Initial candidates are assembled independently using newly generated sets. Later generations explore species, individual moves, abilities, items, natures, legal EV allocations, IVs and lead order. Every candidate passes the custom-only/no-Mega/no-Z/no-Moody guard and whole-team Gen 7 validator. Shadow Tag remains legal. The legality catalog stays complete; default proposals now apply the version 3 coherence rules below. Native identifier support is separately recorded; unsupported identifiers remain visible in the catalog but are not generated for native search. Identifier coverage is not proof of mechanical parity.
 
 Both players use Foul Play. Generations share opponents and seeds for comparisons; archived leaders are re-evaluated and retained for final independent testing instead of disappearing at a generation boundary. Failed matchups are retried once, with both attempt errors preserved. Persistent failures remain incomplete rather than counting as losses or wins. Four-game screens are provisional compatibility checks, not proof of improvement. Larger populations, multiple battle policies and broader evaluations are needed for metagame conclusions.
 
@@ -107,3 +107,17 @@ node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json
 Archive re-evaluations and retries make battle counts variable. Keep previous run folders intact. To use a new roster, pass its `roster.json` via `--roster` to `prepare-foul-play-live.cjs` with a new output directory, then start that new config as above. Live results are recorded by team; they do not automatically retrain the offline search.
 
 Artifacts include exact teams, every battle/attempt error, generation standings, archived IDs, held-out results, species exposure counts (not causal strength or human usage), the legality catalog and calculator profiles. Existing set banks no longer bound discovery or opponent hypotheses. The current generator and structural priors are starting distributions; the small runs do not establish a settled metagame.
+
+
+### Generator version 3: basic set coherence
+
+Generation and every mutation now apply the same IV policy: all IVs 31 by default, Attack 0 only when no move is Physical, and Speed 0 only for a deliberately constructed slow Trick Room plan with a setter, 0 Speed EVs and a Speed-lowering nature. Ordinary mutation never randomly lowers IVs. Trick Room plans are a rare initial proposal (5%); removing the setter restores normal Speed IVs/natures. The legality catalog remains complete; generation priors avoid species-locked items on unrelated species, Eviolite on fully evolved species, unsupported terrain seeds, Assault Vest with status moves, and Choice items with incompatible setup/support moves. Abilities with no singles benefit and negative abilities are avoided when the species has useful alternatives. Moves, EVs and natures are checked together; ordinary sets get usable direct attacks and STAB where available, rather than unsupported dependencies and doubles-only moves. These are basic proposal heuristics, not an exhaustive team-synergy engine.
+
+Each generation now faces the same human control panel and battle seeds. Offspring no longer replace those controls. Earlier leaders remain archived. A discovered team needs at least 50% held-out score with no errors/caps to enter the live roster; a 0–4 team cannot enter merely because it ran without crashing. Four games remain too few to claim strength.
+
+Testing also caught a catalog error: a move can be legal through an alternate ability even if illegal with ability slot 0. The catalog now exports the union and per-ability move legality, and inference completes sets from the chosen ability’s move pool. Reinstall these Python/data patches after pulling; no Rust rebuild is required. Use a new output directory:
+
+```powershell
+node scripts/battle-bot/prepare-foul-play-bank.cjs ../roman-foul-play
+node scripts/battle-bot/discover-metagame.cjs --bank metagame/metagame-bank.json --python ../roman-foul-play/.venv/Scripts/python.exe --foul ../roman-foul-play --output scripts/battle-bot/results/benito-discovery-003 --population 4 --generations 2 --seed 1910 --searchMs 30 --calculatorEngine scripts/battle-bot/results/calculator-engine.cjs
+```
