@@ -55,7 +55,9 @@ def bank_sets():
     from fp.battle.state import Pokemon
     for name, species in legal_catalog()['species'].items():
         if species['selectable'] and name not in result:
-            result[name] = [generated_hypothesis(Pokemon(name, 100))]
+            generated = generated_hypothesis(Pokemon(name, 100))
+            generated.roman_generated = True
+            result[name] = [generated]
     if len(result) < 6:
         raise ValueError('Need hypotheses for at least six species')
     return result

@@ -10,7 +10,7 @@ from pathlib import Path
 from fp.battle.helpers import normalize_name
 from fp.data.sets.base import PokemonSet, PokemonMoveset, PredictedPokemonSet
 from fp.search.helpers import populate_pkmn_from_set
-from fp.data import pokedex
+from fp.data import pokedex, all_move_json
 
 def move_id(name):
     name = normalize_name(name)
@@ -25,36 +25,116 @@ def learns(name, moves):
     species = legal_catalog()['species'].get(name)
     return bool(species) and all(move_id(m) in species['moves'] for m in moves)
 
-def generated_hypothesis(pkmn):
+def compatible_abilities(pkmn):
     data = legal_catalog()
     species = data['species'].get(pkmn.name)
     if species is None:
         raise ValueError('No legal catalog entry for ' + pkmn.name)
     known = [m.name for m in pkmn.moves if m.name != 'struggle']
-    if len(known) > 4 or not learns(pkmn.name, [m for m in known if m not in getattr(pkmn,'roman_copied_moves',[])]) and not getattr(pkmn,'roman_transformed',False):
+    copied = set(getattr(pkmn, 'roman_copied_moves', []))
+    if len(known) > 4 or not learns(pkmn.name, [m for m in known if m not in copied]):
         raise ValueError('Observed moves conflict with legal learnset for ' + pkmn.name + ': ' + str(known))
-    base_ability = pkmn.original_ability or pkmn.ability
-    if base_ability and base_ability not in species['abilities'] and not pkmn.original_ability:
-        # Explicit changed abilities (Trace etc.) retain original_ability upstream.
-        raise ValueError('Observed ability conflicts with legal species: ' + str(base_ability))
-    abilities = [a for a in species['abilities'] if a != 'moody' and a in data['nativeAbilities'] and all(move_id(m) in species.get('abilityMoves',{}).get(a,species['moves']) for m in known if m not in getattr(pkmn,'roman_copied_moves',[]))]
+    base = pkmn.original_ability or pkmn.ability
+    abilities = [a for a in species['abilities'] if a != 'moody' and a in data['nativeAbilities']
+                 and (not base or a == base)
+                 and all(move_id(m) in species.get('abilityMoves', {}).get(a, species['moves']) for m in known if m not in copied)]
     if not abilities:
         raise ValueError('No compatible native ability/move combination for ' + pkmn.name)
-    chosen_ability=base_ability or random.choice(abilities)
-    ability_pool=species.get('abilityMoves',{}).get(chosen_ability,species['moves'])
-    pool = [m for m in ability_pool if data['moves'][m]['native'] and move_id(m) not in {move_id(k) for k in known}]
-    if len(pool) < 4 - len(known):
+    return data, species, known, abilities
+
+def bank_compatible(pkmn, candidate):
+    data, species, known, abilities = compatible_abilities(pkmn)
+    ability = candidate.pkmn_set.ability
+    return (ability in abilities and learns(pkmn.name, candidate.pkmn_moveset.moves)
+            and all(move_id(m) in species.get('abilityMoves', {}).get(ability, species['moves']) for m in candidate.pkmn_moveset.moves)
+            and all(data['moves'].get(move_id(m), {}).get('native', False) for m in candidate.pkmn_moveset.moves)
+            and candidate.full_set_pkmn_can_have_set(pkmn, speed_check=False,
+                match_item=not getattr(pkmn, 'roman_item_changed', False)))
+
+def generated_hypothesis(pkmn, templates=()):
+    """Evidence-preserving completion; no uniform move/item/EV lottery."""
+    data, species, known, abilities = compatible_abilities(pkmn)
+    # A nearby supplied set provides correlated item/spread/move context even
+    # when a newly revealed move rules out an exact bank match.
+    plausible = [t for t in templates if t.pkmn_set.ability in abilities]
+    def overlap(t):
+        return len({move_id(m) for m in known} & {move_id(m) for m in t.pkmn_moveset.moves})
+    if plausible:
+        best = max(overlap(t) for t in plausible)
+        template = deepcopy(random.choice([t for t in plausible if overlap(t) == best]))
+        ability = template.pkmn_set.ability
+    else:
+        template = None
+        harmful = {'truant', 'slowstart', 'defeatist', 'stall', 'klutz', 'honeygather', 'illuminate', 'runaway', 'healer', 'friendguard', 'telepathy', 'symbiosis'}
+        ability = random.choice([a for a in abilities if a not in harmful] or abilities)
+    pool = [m for m in species.get('abilityMoves', {}).get(ability, species['moves']) if data['moves'][m]['native']]
+    selected = list(known)
+    # Never retain an unobserved move requiring a condition that this completion
+    # does not supply. Observed unusual moves remain hard evidence.
+    setup_physical = {'swordsdance', 'bulkup', 'dragondance', 'coil', 'curse'}
+    setup_special = {'nastyplot', 'calmmind', 'quiverdance', 'geomancy', 'tailglow'}
+    utility = {'recover', 'roost', 'slackoff', 'softboiled', 'milkdrink', 'shoreup', 'synthesis', 'stealthrock', 'spikes', 'toxicspikes', 'stickyweb', 'defog', 'rapidspin', 'taunt', 'encore', 'toxic', 'willowisp', 'thunderwave', 'spore', 'leechseed', 'protect', 'substitute', 'batonpass', 'strengthsap', 'partingshot'}
+    physical = any(m in setup_physical for m in known) or not any(m in setup_special for m in known) and species['stats']['atk'] >= species['stats']['spa']
+    category = 'Physical' if physical else 'Special'
+    def eligible(m):
+        meta = all_move_json.get(m, {})
+        if meta.get('flags', {}).get('charge') or meta.get('flags', {}).get('recharge'):
+            return False
+        if m in {'belch', 'lastresort', 'dreameater', 'snore', 'sleeptalk', 'focuspunch', 'bide', 'counter', 'mirrorcoat', 'fling', 'synchronoise', 'shelltrap', 'trickroom', 'selfdestruct', 'explosion', 'finalgambit'}:
+            return False
+        if m in setup_physical | setup_special:
+            return False  # setup plans require an existing supplied template or observation
+        return data['moves'][m]['category'] != 'Status' or m in utility
+    if template:
+        for m in template.pkmn_moveset.moves:
+            if m in pool and move_id(m) not in {move_id(k) for k in selected} and len(selected) < 4:
+                # Complete supplied combinations can carry their own prerequisites.
+                selected.append(m)
+    def merit(m):
+        meta = data['moves'][m]
+        if meta['category'] == 'Status':
+            return 25 if m in utility else 0
+        accuracy = all_move_json.get(m, {}).get('accuracy', 100)
+        accuracy = accuracy if isinstance(accuracy, (int, float)) and not isinstance(accuracy, bool) else 100
+        return meta.get('power', 0) * accuracy / 100 * (1.5 if meta['type'] in species['types'] else 1) * (1 if meta['category'] == category else 0.5)
+    remaining = [m for m in pool if eligible(m) and move_id(m) not in {move_id(k) for k in selected}]
+    def marginal(m):
+        meta = data['moves'][m]
+        redundant = meta['category'] != 'Status' and any(
+            data['moves'].get(move_id(k), {}).get('type') == meta['type'] and
+            data['moves'].get(move_id(k), {}).get('category') == meta['category'] for k in selected)
+        return merit(m) * (0.25 if redundant else 1)
+    while len(selected) < 4 and remaining:
+        move = max(remaining, key=marginal)
+        selected.append(move)
+        remaining.remove(move)
+    # Full learnsets remain available if a species has no ordinary completion.
+    for m in pool:
+        if len(selected) >= 4:
+            break
+        if move_id(m) not in {move_id(k) for k in selected}:
+            selected.append(m)
+    if len(selected) != 4:
         raise ValueError('Insufficient native moves for ' + pkmn.name)
-    moves = known + random.sample(pool, 4 - len(known))
-    items = [i['id'] for i in data['items'] if i['native'] and (pkmn.can_have_choice_item or not i['id'].startswith('choice'))]
+    categories = [data['moves'].get(move_id(m), {}).get('category') for m in selected]
     item = pkmn.item
-    if item in (None, '', 'unknownitem'):
-        item = random.choice(items) if item == 'unknownitem' else 'none'
-    evs = [0] * 6
-    for _ in range(127):
-        slot = random.choice([i for i in range(6) if evs[i] < 252])
-        evs[slot] += 4
-    return PredictedPokemonSet(PokemonSet(ability=chosen_ability,item=item,nature=random.choice(data['natures']),evs=tuple(evs),count=1),PokemonMoveset(moves=tuple(moves)))
+    if item == 'unknownitem':
+        item = template.pkmn_set.item if template else {'poisonheal':'toxicorb', 'guts':'flameorb', 'quickfeet':'toxicorb', 'harvest':'sitrusberry', 'gluttony':'sitrusberry', 'unburden':'sitrusberry', 'klutz':'none'}.get(ability, 'lifeorb' if categories.count('Status') < 2 else 'leftovers')
+        if item.startswith('choice') and (not pkmn.can_have_choice_item or 'Status' in categories and not all(m in {'trick', 'switcheroo', 'healingwish', 'memento'} or data['moves'].get(move_id(m), {}).get('category') != 'Status' for m in selected)):
+            item = 'leftovers'
+        if item == 'assaultvest' and 'Status' in categories:
+            item = 'leftovers'
+    elif item in (None, ''):
+        item = 'none'
+    if template:
+        nature, evs = template.pkmn_set.nature, template.pkmn_set.evs
+    else:
+        evs = [0] * 6
+        evs[1 if physical else 3] = 252
+        evs[5 if species['stats']['spe'] >= 70 else 0] = 252
+        evs[4] = 4
+        nature = ('jolly' if physical else 'timid') if species['stats']['spe'] >= 70 else ('adamant' if physical else 'modest')
+    return PredictedPokemonSet(PokemonSet(ability=ability, item=item, nature=nature, evs=tuple(evs), count=1), PokemonMoveset(moves=tuple(selected)))
 
 def reconcile_history(pkmn):
     """Only separate illegal older evidence that a possible Illusion user can explain."""
@@ -90,12 +170,18 @@ def sample_open_pokemon(pkmn, bank_candidates=()):
         pkmn.zoroark_disguised_as = apparent
         pkmn.moves = [old_moves[m] for m in current if m in old_moves]
         bank_candidates = ()
-    # A finite bank is a proposal distribution, never the legality boundary.
-    generated = generated_hypothesis(pkmn)
-    compatible = [s for s in bank_candidates if learns(pkmn.name,s.pkmn_moveset.moves)
-                  and s.full_set_pkmn_can_have_set(pkmn,speed_check=False,match_item=not getattr(pkmn,'roman_item_changed',False))]
-    chosen = deepcopy(random.choice(compatible)) if compatible and random.random() < 0.5 else generated
-    populate_pkmn_from_set(pkmn,chosen,source='legal-open-hypothesis')
+    # Exact compatible supplied sets are the prior. Unknown observations open
+    # a coherent completion; they never get discarded merely for being unbanked.
+    compatible = [candidate for candidate in bank_candidates if not getattr(candidate, 'roman_generated', False) and bank_compatible(pkmn, candidate)]
+    if compatible:
+        chosen = deepcopy(random.choice(compatible))
+        source = 'compatible-bank'
+    else:
+        chosen = generated_hypothesis(pkmn, bank_candidates)
+        source = 'evidence-completion'
+    populate_pkmn_from_set(pkmn, chosen, source=source)
+    pkmn.roman_hypothesis_source = source
+    pkmn.roman_compatible_bank_count = len(compatible)
 
 class AppearanceTracker:
     def __init__(self, prior=0.1):

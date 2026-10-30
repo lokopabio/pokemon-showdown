@@ -37,7 +37,8 @@ def diagnostic_pokemon(pkmn):
         return None
     return {key: deepcopy(getattr(pkmn, key, None)) for key in
             ('name', 'hp', 'max_hp', 'ability', 'original_ability', 'item', 'stats', 'types',
-             'boosts', 'volatile_statuses', 'status', 'nature', 'evs')} | {
+             'boosts', 'volatile_statuses', 'status', 'nature', 'evs',
+             'roman_hypothesis_source', 'roman_compatible_bank_count')} | {
         'moves': [{'name': m.name, 'pp': m.current_pp} for m in pkmn.moves]}
 
 def diagnostic_side(side):

@@ -290,5 +290,25 @@ class OpenTests(unittest.TestCase):
         tracker.before(battle,'|-damage|p2a: Ponshead|80/100')
         tracker.finish(battle);self.assertEqual(tracker.current['probability'],0)
 
+class InferencePriorTests(unittest.TestCase):
+    def test_known_bank_species_does_not_invoke_open_generator(self):
+        from fp.data.sets.roman_open import sample_open_pokemon
+        pokemon = Pokemon('xristian', 100)
+        with patch('fp.data.sets.roman_open.generated_hypothesis', side_effect=AssertionError('Unexpected random completion')):
+            sample_open_pokemon(pokemon, bank_sets()['xristian'])
+        self.assertEqual(pokemon.roman_hypothesis_source, 'compatible-bank')
+        self.assertGreater(pokemon.roman_compatible_bank_count, 0)
+
+    def test_observed_native_move_survives_evidence_completion(self):
+        from fp.data.sets.roman_open import sample_open_pokemon
+        pokemon = Pokemon('waynero', 100)
+        pokemon.ability = 'vitalspirit'
+        pokemon.add_move('steameruption')
+        pokemon.get_move('steameruption').current_pp = 2
+        sample_open_pokemon(pokemon, ())
+        self.assertEqual(pokemon.get_move('steameruption').current_pp, 2)
+        self.assertEqual(pokemon.ability, 'vitalspirit')
+        self.assertEqual(pokemon.roman_hypothesis_source, 'evidence-completion')
+
 if __name__ == '__main__':
     unittest.main()
