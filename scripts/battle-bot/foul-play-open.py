@@ -71,6 +71,11 @@ def reconcile_history(pkmn):
         pkmn.roman_prior_illusion_moves = [m.name for m in older]
 
 def sample_open_pokemon(pkmn, bank_candidates=()):
+    # Transform/Imposter copies the active opponent's battle state, not its origin
+    # species' legal set. Upstream protocol handling already copied stats, types,
+    # ability and moves with 5 PP; resampling would destroy that public evidence.
+    if getattr(pkmn, 'roman_transformed', False) or 'transform' in getattr(pkmn, 'volatile_statuses', []):
+        return
     reconcile_history(pkmn)
     current = list(getattr(pkmn, 'roman_appearance_moves', [m.name for m in pkmn.moves]))
     probability = getattr(pkmn, 'roman_illusion_probability', None)
@@ -163,6 +168,10 @@ class AppearanceTracker:
         pkmn.roman_transformed=record.get('transformed',False)
         pkmn.roman_illusion_probability=record['probability']
         pkmn.roman_appearance_moves=list(record['moves'])
+        if record.get('transformed'):
+            # Preserve all publicly copied moves, including those not used yet.
+            battle.roman_identity_history=self.history
+            return
         # Current appearance and confirmed earlier appearances are the only hard move evidence.
         # Unresolved old appearances stay in history instead of poisoning future records.
         certain=self.certain_moves.setdefault(pkmn.name,{})
