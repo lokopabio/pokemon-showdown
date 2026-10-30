@@ -183,3 +183,9 @@ node scripts/battle-bot/prepare-research.cjs --hours 8 --output scripts/battle-b
 ```
 
 Optional CLI limits: `--pauseMs`, `--maxMemoryMB` (Node RSS), `--maxDiskMB`, `--minFreeGB`. The supervisor's 1 GB heap cap is fixed. Keep Windows awake and the terminal open; the monitor can turn off.
+
+### Constrained candidate search
+
+`discover-metagame.cjs` now defaults to `--builder bank`. It preserves complete supplied sets from individual bank entries and training teams, retaining provenance in `candidate-bank.json`. Pabiito and Mochi are initially excluded; Fonsomate has an explicit experimental Imposter/Scarf/252 HP candidate. No random move, item, ability or EV changes occur. Mutation replaces one or two complete teammates. `--builder open` retains the old experimental full-learnset mode; `--baselineFile` is only accepted in that mode.
+
+Each generation tests fixed human controls and a balanced generated-team round robin, using both player positions. Selection weights control score and peer score equally; failed/capped matches disqualify leaders. Admission still requires the separate held-out control screen. Holdout excludes exact team combinations, not individual sets; it is not unseen-set validation. The playing policy does not learn. Peer evaluation grows quadratically, so begin with population 4, generations 2. This command does not inherit `prepare-research.cjs` resource supervision.
