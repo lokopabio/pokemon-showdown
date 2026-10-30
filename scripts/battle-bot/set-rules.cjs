@@ -11,6 +11,7 @@ class SetRules{
   usefulMove(id){const m=this.dex.moves.get(id);return !singlesDead.has(m.id)&&!['adjacentAlly','allies'].includes(m.target);}
   itemWorks(set,id,{trickRoom=false}={}){
     const item=this.dex.items.get(id),species=this.dex.species.get(set.species),attacks=this.attacks(set),has=m=>set.moves.some(x=>this.dex.moves.get(x).id===m);
+    if(this.dex.abilities.get(set.ability).id==='klutz'&&item.id&&!has('trick')&&!has('switcheroo')&&!has('fling'))return false;
     if(item.itemUser&&!item.itemUser.some(n=>this.dex.species.get(n).baseSpecies===species.baseSpecies))return false;
     if(item.onMemory&&!has('multiattack'))return false;
     if(item.onDrive&&!has('technoblast'))return false;
@@ -46,7 +47,7 @@ class SetRules{
   }
   repair(original,plan={}){
     const benchmarkValid=original.benchmark&&require('./calc-baseline.cjs').signature(original)===original.benchmark.signature;
-    if(benchmarkValid&&!plan.trickRoom)return clone(original);
+    if(benchmarkValid&&!plan.trickRoom&&this.itemWorks(original,original.item,plan))return clone(original);
     const set=clone(original),species=this.dex.species.get(set.species),pool=this.e.data.species[species.id].moves.filter(m=>this.e.data.moves[m].native&&this.usefulMove(m));
     const has=id=>set.moves.some(m=>this.dex.moves.get(m).id===id),physical=species.baseStats.atk>=species.baseStats.spa;
     const attackPool=pool.filter(m=>this.dex.moves.get(m).category!=='Status');
