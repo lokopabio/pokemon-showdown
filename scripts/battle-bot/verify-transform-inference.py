@@ -37,5 +37,17 @@ class TransformTests(unittest.TestCase):
         self.assertEqual(tracker.certain_moves, {})
         self.assertTrue(mon.roman_transformed)
 
+    def test_certain_illusion_does_not_merge_real_species_moves(self):
+        tracker = namespace['AppearanceTracker']()
+        tracker.current = {'apparent':'habiemigo','moves':['spore','reflect','lightscreen'],
+                           'probability':1.0,'confirmed':False}
+        moves = [SimpleNamespace(name=n,current_pp=10) for n in ['spore','reflect','lightscreen','psychic','shadowball']]
+        tracker.certain_moves['habiemigo'] = {m.name:deepcopy(m) for m in moves[-2:]}
+        mon = SimpleNamespace(name='habiemigo',moves=moves)
+        tracker.apply(SimpleNamespace(opponent=SimpleNamespace(active=mon)))
+        self.assertEqual({m.name for m in mon.moves},{'spore','reflect','lightscreen'})
+        self.assertEqual(set(tracker.certain_moves['habiemigo']),{'psychic','shadowball'})
+        self.assertEqual(mon.roman_illusion_probability,1.0)
+
 if __name__ == '__main__':
     unittest.main()

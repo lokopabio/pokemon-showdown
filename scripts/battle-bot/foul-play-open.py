@@ -265,7 +265,10 @@ class AppearanceTracker:
         if record['confirmed'] and not record.get('transformed') and (record['probability']==0 or pkmn.name=='chemfalse'):
             for name in record['moves']:
                 if name in known and name not in record.get('copied',[]):certain[name]=deepcopy(known[name])
-        wanted=set(record['moves'])|set(certain)
+        # A certain disguise is a different identity: keep the real species'
+        # confirmed history, but do not attach it to this appearance.
+        disguised = record['probability'] == 1.0 and pkmn.name != 'chemfalse'
+        wanted=set(record['moves']) | (set() if disguised else set(certain))
         pkmn.moves=[deepcopy(known.get(name,certain.get(name))) for name in wanted if name in known or name in certain]
         if len(pkmn.moves)>4:
             raise ValueError('More than four confirmed moves: '+str({'species':pkmn.name,'record':record,'certain':list(certain),'moves':[m.name for m in pkmn.moves]}))

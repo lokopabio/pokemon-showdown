@@ -16,6 +16,29 @@ from fp.search.standard_battles import prepare_battles
 from fp.search.poke_engine_helpers import battle_to_poke_engine_state
 from poke_engine import monte_carlo_tree_search
 
+def request_choice(request, action, reserve):
+    """The simulator request is authoritative over native move availability."""
+    forced = any(request.get('forceSwitch', []))
+    active = request.get('active', [{}])[0]
+    if action.startswith('switch '):
+        if active.get('trapped') and not forced:
+            return None
+        name = action.split(' ', 1)[1]
+        target = next((p for p in reserve if p.name == name), None)
+        if target is None:
+            return None
+        row = next((p for i,p in enumerate(request['side']['pokemon'], 1) if i == target.index), None)
+        if row is None or row.get('active') or 'fnt' in row.get('condition', ''):
+            return None
+        return f'switch {target.index}'
+    if forced:
+        return None
+    for i, move in enumerate(active.get('moves', []), 1):
+        matches = move['id'] == action or (action.startswith('hiddenpower') and move['id'].startswith('hiddenpower'))
+        if matches and not move.get('disabled', False) and move.get('pp', 1) > 0:
+            return f'move {i}'
+    return None
+
 def reconcile_own_illusion(battle, own_active):
     true_name = own_active['details'].split(',')[0].lower().replace('-', '').replace(' ', '')
     if own_active.get('ability') != 'illusion' or battle.user.active.name == true_name:
@@ -90,7 +113,7 @@ def main():
         battle.user.update_from_request_json(request)
         battle.request_json = request
         battle.rqid = request.get('rqid', 0)
-        battle.force_switch = bool(request.get('forceSwitch'))
+        battle.force_switch = any(request.get('forceSwitch', []))
         budget = int(os.environ.get('ROMAN_SEARCH_MS', '10'))
         scores = {}
         visits = 0
@@ -111,17 +134,15 @@ def main():
             visits += result.total_visits
             for action in result.side_one:
                 scores[action.move_choice] = scores.get(action.move_choice, 0) + weight * action.visits / total
-        best = max(scores, key=scores.get)
+        choices = {action: request_choice(request, action, battle.user.reserve) for action in scores}
+        discarded = {action: score for action, score in scores.items() if choices[action] is None}
+        available = {action: score for action, score in scores.items() if choices[action] is not None}
+        if not available:
+            raise ValueError('Native search returned no request-legal action: '+str(scores))
+        best = max(available, key=available.get)
         battle.user.last_selected_move = LastUsedMove(battle.user.active.name, best, battle.turn)
-        if best.startswith('switch '):
-            target = best.split(' ', 1)[1]
-            pokemon = next(p for p in battle.user.reserve if p.name == target)
-            choice = f'switch {pokemon.index}'
-        else:
-            moves = request.get('active', [{}])[0].get('moves', [])
-            index = next(i + 1 for i, m in enumerate(moves) if m['id'] == best or (best.startswith('hiddenpower') and m['id'].startswith('hiddenpower')))
-            choice = f'move {index}'
-        print(json.dumps({'choice': choice, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
+        choice = choices[best]
+        print(json.dumps({'choice': choice, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
 
 if __name__ == '__main__':
     main()
