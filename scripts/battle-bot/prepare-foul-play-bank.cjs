@@ -7,6 +7,7 @@ function prepareBank(directory) {
   directory = path.resolve(directory);
   if (execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding:'utf8'}).trim() !== FOUL) throw new Error('Unsupported Foul Play revision');
   const patches = [
+    ["fp/search/standard_battles.py","        keys = list(sample_weights.keys())[:50]\n        values = list(sample_weights.values())[:50]","        # BENITO FULL HYPOTHESIS SUPPORT: no insertion-order top-50 cutoff\n        keys = list(sample_weights.keys())\n        values = list(sample_weights.values())"],
     ['fp/battle/protocol.py', '        function_to_call = battle_modifiers_lookup.get(action)',
       '        from fp.data.sets.roman_open import AppearanceTracker\n        if not hasattr(battle, "roman_tracker"):\n            battle.roman_tracker = AppearanceTracker()\n        battle.roman_tracker.before(battle, line)\n        function_to_call = battle_modifiers_lookup.get(action)'],
     ['fp/battle/protocol.py', '            function_to_call(battle, split_msg)',
@@ -51,3 +52,4 @@ if(require.main===module) {
   prepareBank(process.argv[2]);console.log('Custom bank inference installed. Set ROMAN_METAGAME_BANK to an absolute bank path.');
 }
 module.exports = {prepareBank};
+
