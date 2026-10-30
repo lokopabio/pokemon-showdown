@@ -4,6 +4,7 @@ const {Dex,Teams,TeamValidator}=require('../../dist/sim');
 const {validateCustomTeam}=require('./foul-play-team.cjs');
 const {legal,id}=require('./foul-play-roster.cjs');
 const policy=require('./building-policy.cjs');
+const {assessCoverage}=require('./team-coverage.cjs');
 const clone=x=>JSON.parse(JSON.stringify(x));
 class CandidateBank {
  constructor(data,trainingTeams,random){
@@ -24,8 +25,12 @@ class CandidateBank {
  }
  sample(rows){return rows[Math.floor(this.random()*rows.length)];}
  set(species){const rows=this.bySpecies.get(species),total=rows.reduce((n,r)=>n+r.policy.weight,0);let draw=this.random()*total;return clone((rows.find(r=>(draw-=r.policy.weight)<0)||rows.at(-1)).set);}
- team(){for(let attempt=0;attempt<200;attempt++){const names=[...this.species],team=[];while(team.length<6){const i=Math.floor(this.random()*names.length),name=names.splice(i,1)[0];team.push(this.set(name));}if(legal(team)&&!policy.teamErrors(team).length)return team;}throw Error('Cannot construct legal bank team');}
- mutate(parent){for(let attempt=0;attempt<200;attempt++){const team=clone(parent),count=this.random()<0.5?1:2;const slots=[0,1,2,3,4,5];for(let n=0;n<count;n++){const slot=slots.splice(Math.floor(this.random()*slots.length),1)[0],used=new Set(team.filter((_,i)=>i!==slot).map(s=>Dex.species.get(s.species).id));team[slot]=this.set(this.sample(this.species.filter(s=>!used.has(s))));}if(legal(team)&&!policy.teamErrors(team).length&&id(team)!==id(parent))return team;}return this.team();}
- report(){return {policyVersion:1,preferenceWeighting:'Each unmet soft preference halves sampling weight; Rattled Carlis gets 0.2 weight. These are provisional search priors, not measured strength.',mode:'supplied complete sets',sets:this.records.size,species:this.species.length,records:[...this.records.values()],rejected:this.rejected,limitation:'Held-out team combinations are excluded from generation; individual sets may also occur in held-out teams. No claim of unseen-set evaluation.'};}
+ randomTeam(){for(let attempt=0;attempt<200;attempt++){const names=[...this.species],team=[];while(team.length<6){const i=Math.floor(this.random()*names.length),name=names.splice(i,1)[0];team.push(this.set(name));}if(legal(team)&&!policy.teamErrors(team).length)return team;}throw Error('Cannot construct legal bank team');}
+ randomMutation(parent){for(let attempt=0;attempt<200;attempt++){const team=clone(parent),count=this.random()<0.5?1:2;const slots=[0,1,2,3,4,5];for(let n=0;n<count;n++){const slot=slots.splice(Math.floor(this.random()*slots.length),1)[0],used=new Set(team.filter((_,i)=>i!==slot).map(s=>Dex.species.get(s.species).id));team[slot]=this.set(this.sample(this.species.filter(s=>!used.has(s))));}if(legal(team)&&!policy.teamErrors(team).length&&id(team)!==id(parent))return team;}return this.randomTeam();}
+ coverage(team){return assessCoverage(team,[...this.records.values()].map(r=>r.set));}
+ select(build){const first=build();if(this.random()<0.2)return first;let best=first,score=this.coverage(first).score;for(let i=1;i<8;i++){const candidate=build(),value=this.coverage(candidate).score;if(value<score){best=candidate;score=value;}}return best;}
+ team(){return this.select(()=>this.randomTeam());}
+ mutate(parent){return this.select(()=>this.randomMutation(parent));}
+ report(){return {policyVersion:2,teamSelection:{method:'Lowest shared attack-type exposure among eight legal proposals; 20% unfiltered exploration',threatSource:'Eligible complete supplied sets; no held-out team combinations',limitations:'Type/ability screen only: no damage, speed, setup, reliability or certified counters. One resistant answer remains penalized; neutral bulk is not credited.'},preferenceWeighting:'Each unmet soft preference halves sampling weight; Rattled Carlis gets 0.2 weight. These are provisional search priors, not measured strength.',mode:'supplied complete sets',sets:this.records.size,species:this.species.length,records:[...this.records.values()],rejected:this.rejected,limitation:'Held-out team combinations are excluded from generation; individual sets may also occur in held-out teams. No claim of unseen-set evaluation.'};}
 }
 module.exports={CandidateBank};
