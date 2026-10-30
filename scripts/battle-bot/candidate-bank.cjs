@@ -7,7 +7,7 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 class CandidateBank {
  constructor(data,trainingTeams,random){
   this.random=random;this.records=new Map();this.rejected=[];const dex=Dex.forFormat('gen7ou');
-  const add=(original,source)=>{const set=clone(original),species=dex.species.get(set.species);const allowedNFEs=new Set(['albeerto','fonsomate','tiopep']);const reason=species.nfe&&!allowedNFEs.has(species.id)?'NFE excluded from initial search':species.id==='tiopep'&&(dex.items.get(set.item).id!=='toxicorb'||!set.moves.some(m=>dex.moves.get(m).id==='stealthrock'))?'Tiopep restricted to Toxic Orb + Stealth Rock':null;
+  const add=(original,source)=>{const set=clone(original),species=dex.species.get(set.species);const allowedNFEs=new Set(['albeerto','fonsomate','tiopep']);const reason=species.nfe&&!allowedNFEs.has(species.id)?'NFE excluded from initial search':species.id==='tiopep'&&(dex.abilities.get(set.ability).id!=='toxicboost'||dex.items.get(set.item).id!=='toxicorb'||!set.moves.some(m=>dex.moves.get(m).id==='stealthrock'))?'Tiopep restricted to Toxic Boost + Toxic Orb + Stealth Rock':null;
    if(reason){this.rejected.push({species:species.name,source,reason});return;}
    try{validateCustomTeam(Array.from({length:6},()=>clone(set)));const problems=TeamValidator.get('gen7ou').validateTeam([clone(set)]);if(problems)throw Error(problems.join('; '));}catch(error){this.rejected.push({species:set.species,source,reason:error.message});return;}
    // Canonical spelling prevents duplicate entries from workbook/team exports.
