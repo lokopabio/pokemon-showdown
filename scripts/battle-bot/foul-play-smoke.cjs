@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {BattleStream, getPlayerStreams, Teams, TeamValidator} = require('../../dist/sim');
 const {Policy} = require('./policy.cjs');
-async function smoke({python, foul, bank, team1, team2, maxTurns = 150, foulSide = 'p1', seed = [29,303,7,1], modelFile, calculator, searchMs = 10, foulBoth = false, onDecision, onEvent}) {
+async function smoke({python, foul, bank, team1, team2, maxTurns = 150, foulSide = 'p1', seed = [29,303,7,1], modelFile, calculator, searchMs = 10, foulBoth = false, onDecision, onEvent, diagnostics=false}) {
   if(!['p1','p2'].includes(foulSide))throw new Error('Invalid Foul Play side');
   const {Model,LearnedPolicy}=require('./learned.cjs');
   const model=modelFile?Model.load(modelFile):null;
@@ -21,7 +21,7 @@ async function smoke({python, foul, bank, team1, team2, maxTurns = 150, foulSide
   const run = async (side, team, useFoul) => {
     const policy = !useFoul&&model?new LearnedPolicy('gen7ou',model,{calculator}):new Policy('gen7ou'); policy.side=side;
     policy.setTeam?.(team);
-    const bridge=useFoul?new (require('./foul-play-live.cjs').FoulPlayLive)({python,foul,bank,searchMs}):null;
+    const bridge=useFoul?new (require('./foul-play-live.cjs').FoulPlayLive)({python,foul,bank,searchMs,diagnostics}):null;
     if(bridge)bridges.push(bridge);
     let events=[];
     for await(const chunk of streams[side]) {

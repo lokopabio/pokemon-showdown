@@ -3,9 +3,10 @@ const path=require('node:path');
 const {spawn}=require('node:child_process');
 const readline=require('node:readline');
 class FoulPlayLive {
-  constructor({python,foul,bank,searchMs=100,passwordEnv}) {
+  constructor({python,foul,bank,searchMs=100,passwordEnv,diagnostics=false}) {
     this.events=[];this.pending=null;this.closed=false;this.stderr='';
     const env={...process.env,PYTHONUTF8:'1',ROMAN_FOUL_PLAY:path.resolve(foul),ROMAN_METAGAME_BANK:path.resolve(bank),ROMAN_SEARCH_MS:String(searchMs)};
+    if(diagnostics)env.ROMAN_DIAGNOSTICS='1';else delete env.ROMAN_DIAGNOSTICS;
     if(passwordEnv)delete env[passwordEnv];
     this.process=spawn(path.resolve(python),[path.join(__dirname,'foul-play-bridge.py')],{env,stdio:['pipe','pipe','pipe']});
     this.process.stdin.on('error',error=>this.fail(error));

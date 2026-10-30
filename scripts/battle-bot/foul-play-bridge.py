@@ -32,6 +32,18 @@ def reconcile_own_illusion(battle, own_active):
     battle.user.reserve.append(disguise)
     battle.user.active = real
 
+def diagnostic_pokemon(pkmn):
+    if pkmn is None:
+        return None
+    return {key: deepcopy(getattr(pkmn, key, None)) for key in
+            ('name', 'hp', 'max_hp', 'ability', 'original_ability', 'item', 'stats', 'types',
+             'boosts', 'volatile_statuses', 'status', 'nature', 'evs')} | {
+        'moves': [{'name': m.name, 'pp': m.current_pp} for m in pkmn.moves]}
+
+def diagnostic_side(side):
+    return {'active': diagnostic_pokemon(side.active),
+            'reserve': [diagnostic_pokemon(p) for p in side.reserve]}
+
 def main():
     battle = None
     for line in sys.stdin:
@@ -82,8 +94,17 @@ def main():
         scores = {}
         visits = 0
         hypotheses = 3
+        diagnostic = None
+        if os.environ.get('ROMAN_DIAGNOSTICS') == '1':
+            diagnostic = {'schema': 1, 'turn': battle.turn, 'searchMs': budget, 'hypothesisBudgetDivisor': hypotheses,
+                          'own': diagnostic_side(battle.user),
+                          'observedOpponent': diagnostic_side(battle.opponent),
+                          'samples': [], 'note': 'Opponent state contains inferences, not hidden simulator truth.'}
         for sampled, weight in prepare_battles(battle, hypotheses):
             state = battle_to_poke_engine_state(sampled)
+            if diagnostic is not None:
+                diagnostic['samples'].append({'weight': weight, 'nativeState': state.to_string(),
+                    'own': diagnostic_side(sampled.user), 'opponent': diagnostic_side(sampled.opponent)})
             result = monte_carlo_tree_search(state, max(1, budget // hypotheses), threads=1)
             total = sum(action.visits for action in result.side_one) or 1
             visits += result.total_visits
@@ -99,7 +120,7 @@ def main():
             moves = request.get('active', [{}])[0].get('moves', [])
             index = next(i + 1 for i, m in enumerate(moves) if m['id'] == best or (best.startswith('hiddenpower') and m['id'].startswith('hiddenpower')))
             choice = f'move {index}'
-        print(json.dumps({'choice': choice, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None)}), flush=True)
+        print(json.dumps({'choice': choice, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
 
 if __name__ == '__main__':
     main()
