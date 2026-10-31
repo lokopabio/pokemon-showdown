@@ -16,6 +16,7 @@ from fp.search.standard_battles import prepare_battles
 from fp.search.poke_engine_helpers import battle_to_poke_engine_state
 from poke_engine import monte_carlo_tree_search
 from belief import install_prior, choose_action
+from evidence import Evidence
 if os.environ.get("BENITO_BELIEF") == "1":
     install_prior()
 
@@ -73,9 +74,11 @@ def diagnostic_side(side):
 
 def main():
     battle = None
+    evidence = Evidence()
     for line in sys.stdin:
         message = json.loads(line)
         request = message['request']
+        evidence.observe(battle, message['events'])
         if request.get('wait'):
             if battle is not None:
                 battle.msg_list = message['events']
@@ -127,12 +130,29 @@ def main():
             diagnostic = {'schema': 1, 'turn': battle.turn, 'searchMs': budget, 'hypothesisBudgetDivisor': hypotheses,
                           'own': diagnostic_side(battle.user),
                           'observedOpponent': diagnostic_side(battle.opponent),
-                          'samples': [], 'note': 'Opponent state contains inferences, not hidden simulator truth.'}
+                          'samples': [], 'evidenceRecords': len(evidence.records), 'evidenceSkipped': evidence.skipped, 'note': 'Opponent state contains inferences, not hidden simulator truth.'}
         for sampled, weight in prepare_battles(battle, hypotheses):
+            checks = evidence.check(sampled) if os.environ.get('BENITO_EVIDENCE_AUDIT') == '1' else []
             state = battle_to_poke_engine_state(sampled)
             if diagnostic is not None:
-                diagnostic['samples'].append({'weight': weight, 'nativeState': state.to_string(),
+                diagnostic['samples'].append({'weight': weight, 'evidenceChecks': checks, 'nativeState': state.to_string(),
                     'own': diagnostic_side(sampled.user), 'opponent': diagnostic_side(sampled.opponent)})
+            if os.environ.get('BENITO_EVIDENCE_AUDIT') == '1' and sum(p.hp > 0 for p in [sampled.user.active,*sampled.user.reserve]) == 1:
+                from poke_engine import generate_instructions
+                probes = []
+                for move in sampled.user.active.moves:
+                    for reply in sampled.opponent.active.moves:
+                        initial = battle_to_poke_engine_state(sampled)
+                        outcomes = []
+                        for branch in generate_instructions(initial,move.name,reply.name):
+                            after = initial.apply_instructions(branch)
+                            def living(side):
+                                p = side.pokemon[int(str(side.active_index))]
+                                return {'hp':p.hp,'maxHP':p.maxhp}
+                            outcomes.append({'percentage':branch.percentage,'own':living(after.side_one),'opponent':living(after.side_two)})
+                        probes.append({'action':move.name,'reply':reply.name,'outcomes':outcomes})
+                if diagnostic is not None:
+                    diagnostic['samples'][-1]['lastMemberTransitions'] = probes
             result = monte_carlo_tree_search(state, max(1, budget // hypotheses), threads=1)
             scenario_results.append({'weight': weight, 'actions': [{'action': a.move_choice, 'visits': a.visits, 'totalScore': a.total_score} for a in result.side_one]})
             total = sum(action.visits for action in result.side_one) or 1
