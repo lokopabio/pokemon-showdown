@@ -53,3 +53,18 @@ class PrivacyTests(unittest.TestCase):
   initial=types.SimpleNamespace(side_one=side([100,100]),apply_instructions=lambda b:after)
   r=metrics(initial,[types.SimpleNamespace(percentage=100)])
   self.assertEqual(r['lostMembers'],1);self.assertEqual(r['terminalLoss'],0);self.assertAlmostEqual(r['teamHPLoss'],1/6)
+
+class NativeBoundaryTests(unittest.TestCase):
+ def test_mcts_switches_are_translated_on_both_sides(self):
+  from action_model import branches_for
+  received=[]
+  def strict_native(state,action,reply):
+   if action.startswith('switch ') or reply.startswith('switch '):raise ValueError('Native parser rejects prefixed switch')
+   received.append((action,reply));return ['branch']
+  self.assertEqual(branches_for(strict_native,None,'switch pabio','switch airrivas'),['branch'])
+  self.assertEqual(received,[('pabio','airrivas')])
+ def test_move_names_and_native_no_move(self):
+  from action_model import transition_action
+  self.assertEqual(transition_action('moonblast'),'moonblast')
+  self.assertEqual(transition_action('No Move'),'none')
+  with self.assertRaises(ValueError):transition_action('switch ')

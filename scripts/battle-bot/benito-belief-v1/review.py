@@ -57,15 +57,23 @@ def main():
                 import threading
                 watchdog=threading.Timer( max(120,len(messages)*35),child.kill);watchdog.start()
                 try:
+                    applied=0
+                    skipped_errors=[]
                     with temp.open('w',encoding='utf-8') as stream:
                         for index,message in enumerate(messages):
                             child.stdin.write(json.dumps(message)+'\n');child.stdin.flush()
                             line=child.stdout.readline()
                             if not line:raise RuntimeError('Bridge stopped; inspect '+str(err))
                             result=json.loads(line)
+                            applied+=bool(result.get('riskObjectives'))
+                            skipped_errors.extend(result.get('responseErrors',[]))
                             stream.write(json.dumps({'decision':index+1,'rqid':message['request'].get('rqid'),'playedChoice':message.get('playedChoice'),'result':result})+'\n');stream.flush()
                     child.stdin.close()
                     if child.wait(timeout=30)!=0:raise RuntimeError('Bridge failed; inspect '+str(err))
+                    if a.action_model and mode=='candidate':
+                        print(f'Response model applied: {applied} decisions; skipped errors: {len(skipped_errors)}',flush=True)
+                        if applied==0:
+                            raise RuntimeError('Response model never applied: '+str(skipped_errors[:5]))
                     temp.replace(final)
                 finally:
                     watchdog.cancel()

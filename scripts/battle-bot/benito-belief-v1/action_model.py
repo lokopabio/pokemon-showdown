@@ -5,6 +5,17 @@ Not a trained human policy or information-gain search. Coefficients are uncalibr
 import math
 from copy import deepcopy
 
+def transition_action(action):
+    """MCTS output prefixes switches; native MoveChoice parser accepts bare IDs."""
+    if action.startswith('switch '):
+        target=action.split(' ',1)[1].strip()
+        if not target or ' ' in target:raise ValueError('Invalid switch target')
+        return target
+    return 'none' if action.lower() in ('no move','none') else action
+
+def branches_for(generate, state, action, reply):
+    return generate(state,transition_action(action),transition_action(reply))
+
 def distribution(actions, floor=.15):
     if not actions or not 0<=floor<=1:raise ValueError('Invalid response prior')
     if any(r.visits<0 for r in actions):raise ValueError('Negative visits')
@@ -131,7 +142,7 @@ def response_scenario(sampled,result,knowledge,model_ms):
         matrix[action.move_choice]={}
         for reply in replies:
             initial=battle_to_poke_engine_state(sampled)
-            matrix[action.move_choice][reply]=metrics(initial,generate_instructions(initial,action.move_choice,reply))
+            matrix[action.move_choice][reply]=metrics(initial,branches_for(generate_instructions,initial,action.move_choice,reply))
     public_roster=[public.user.active,*public.user.reserve]
     return {'replies':replies,'matrix':matrix,'publicView':{'revealedSpecies':list(knowledge.own),
             'hypotheticalBotTeam':[{'species':p.name,'ability':p.ability,'item':p.item,'moves':[m.name for m in p.moves]} for p in public_roster]},
