@@ -45,7 +45,7 @@ def choose_action(samples, legal, downside=0.25):
         raise ValueError('No action visited in every scenario')
     return max(out, key=lambda a:out[a]['objective']), out
 
-def install_prior():
+def install_prior(evidence=None, beliefs=None, context=None):
     # Scoped to this child process; external Foul Play files are untouched.
     import inspect
     from fp.data.sets import roman_open
@@ -53,6 +53,21 @@ def install_prior():
     old = 'random.choice(compatible)'
     if source.count(old) != 1:
         raise ValueError('Unexpected sampler; refusing experimental patch')
-    roman_open.__dict__['_belief_affinity'] = lambda p,c: affinity(c.pkmn_set.ability, [m.name for m in p.moves], roman_open.all_move_json)
+    def candidate_weight(pkmn, candidate):
+        prior=affinity(candidate.pkmn_set.ability,[m.name for m in pkmn.moves],roman_open.all_move_json)
+        if evidence is None or beliefs is None or context is None or context() is None:return prior
+        import json
+        from copy import deepcopy
+        signature=json.dumps({'ability':candidate.pkmn_set.ability,'item':candidate.pkmn_set.item,
+                              'nature':candidate.pkmn_set.nature,'evs':candidate.pkmn_set.evs,
+                              'moves':list(candidate.pkmn_moveset.moves)},sort_keys=True)
+        def evaluate():
+            sampled=deepcopy(context())
+            target=next((p for p in [sampled.opponent.active,*sampled.opponent.reserve] if p.name==pkmn.name),None)
+            if target is None:return []
+            roman_open.populate_pkmn_from_set(target,deepcopy(candidate),source='persistent-bank-belief')
+            return [c for c in evidence.check(sampled) if c['species']==pkmn.name]
+        return beliefs.weight(pkmn.name,signature,evidence.revision,prior,evaluate)
+    roman_open.__dict__['_belief_affinity'] = candidate_weight
     source = source.replace(old, 'random.choices(compatible, weights=[_belief_affinity(pkmn,c) for c in compatible], k=1)[0]')
     exec(compile(source, '<benito experimental prior>', 'exec'), roman_open.__dict__)

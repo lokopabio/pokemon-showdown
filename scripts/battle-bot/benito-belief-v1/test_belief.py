@@ -74,3 +74,49 @@ class EvidenceTests(unittest.TestCase):
   self.assertFalse(native_damage_envelope([258,387],400,90)['damageCompatible'])
   self.assertTrue(native_damage_envelope([258,387],79,0)['damageCompatible'])
   with self.assertRaises(ValueError):native_damage_envelope([258],307,58)
+
+class PosteriorTests(unittest.TestCase):
+ def test_true_set_retained_and_incompatible_set_downweighted(self):
+  from posterior import SetBeliefs
+  b=SetBeliefs();good=[{'species':'x','move':'moonblast','damageCompatible':True,'speedCompatible':True}]
+  bad=[{'species':'x','move':'moonblast','damageCompatible':False,'speedCompatible':None}]
+  self.assertEqual(b.weight('x','true',1,1,lambda:good),1)
+  self.assertAlmostEqual(b.weight('x','wrong',1,1,lambda:bad),.05)
+  self.assertFalse(b.summary()['species']['x']['allConflict'])
+ def test_cache_does_not_double_count_and_new_evidence_rechecks(self):
+  from posterior import SetBeliefs
+  b=SetBeliefs();calls=[]
+  def evaluate():calls.append(1);return [{'species':'x','move':'a','damageCompatible':False}]*10
+  for _ in range(4):self.assertEqual(b.weight('x','set',1,1,evaluate),.05)
+  self.assertEqual(len(calls),1)
+  self.assertEqual(b.weight('x','set',2,1,evaluate),.05);self.assertEqual(len(calls),2)
+ def test_updated_weights_reach_action_comparison(self):
+  from posterior import SetBeliefs
+  from belief import choose_action
+  b=SetBeliefs()
+  make=lambda w,a,c:{'weight':w,'actions':[{'action':'attack','visits':10,'totalScore':a*10},{'action':'switch','visits':10,'totalScore':c*10}]}
+  self.assertEqual(choose_action([make(1,.9,.5),make(1,0,.5)],['attack','switch'])[0],'switch')
+  weight=b.weight('x','conflicting',1,1,lambda:[{'species':'x','move':'a','damageCompatible':False}])
+  self.assertEqual(choose_action([make(1,.9,.5),make(weight,0,.5)],['attack','switch'])[0],'attack')
+ def test_all_conflict_remains_visible(self):
+  from posterior import SetBeliefs
+  b=SetBeliefs();b.weight('x','a',1,1,lambda:[{'species':'x','move':'a','damageCompatible':False}])
+  self.assertTrue(b.summary()['species']['x']['allConflict'])
+ def test_sampler_hook_receives_evidence_weights(self):
+  import types,sys,random
+  from unittest.mock import patch
+  from belief import install_prior
+  from posterior import SetBeliefs
+  module=types.ModuleType('test_roman_open');module.random=random;module.all_move_json={}
+  module.sample_open_pokemon=lambda pkmn,bank_candidates:None
+  def populate(target,candidate,source=None):target.guess=candidate.pkmn_set.item
+  module.populate_pkmn_from_set=populate
+  p=types.SimpleNamespace(name='x',moves=[])
+  context=types.SimpleNamespace(opponent=types.SimpleNamespace(active=p,reserve=[]))
+  evidence=types.SimpleNamespace(revision=1,check=lambda c:[{'species':'x','move':'a','damageCompatible':c.opponent.active.guess=='choicescarf'}])
+  candidates=[types.SimpleNamespace(pkmn_set=types.SimpleNamespace(ability='megalauncher',item=item,nature='timid',evs=[0]*6),pkmn_moveset=types.SimpleNamespace(moves=['a'])) for item in ['choicescarf','choicespecs']]
+  source='def sample_open_pokemon(pkmn, bank_candidates=()):\n    compatible=bank_candidates\n    return random.choice(compatible)\n'
+  with patch.dict(sys.modules,{'fp.data.sets':types.SimpleNamespace(roman_open=module)}),patch('inspect.getsource',return_value=source),patch('random.choices',return_value=[candidates[0]]) as choose:
+   install_prior(evidence,SetBeliefs(),lambda:context)
+   module.sample_open_pokemon(p,candidates)
+   self.assertEqual(choose.call_args.kwargs['weights'],[1,.05])

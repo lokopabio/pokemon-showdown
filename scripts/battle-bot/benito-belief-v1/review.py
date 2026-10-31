@@ -34,7 +34,7 @@ def main():
     out=pathlib.Path(a.output);out.mkdir(parents=True,exist_ok=True)
     manifest={'schema':1,'logSHA256':hashlib.sha256(raw).hexdigest(),'bankSHA256':hashlib.sha256(bank).hexdigest(),
               'evidenceAudit':a.evidence_audit,'searchMs':a.search_ms,'bridgeSHA256':hashlib.sha256((root/'bridge.py').read_bytes()).hexdigest(),
-              'evidenceSHA256':hashlib.sha256((root/'evidence.py').read_bytes()).hexdigest(),'beliefSHA256':hashlib.sha256((root/'belief.py').read_bytes()).hexdigest(),
+              'evidenceSHA256':hashlib.sha256((root/'evidence.py').read_bytes()).hexdigest(),'posteriorSHA256':hashlib.sha256((root/'posterior.py').read_bytes()).hexdigest(),'beliefSHA256':hashlib.sha256((root/'belief.py').read_bytes()).hexdigest(),
               'foul':str(pathlib.Path(a.foul).resolve()),'python':sys.executable,
               'scope':'Fresh sampled hypotheses on recorded public trajectories. Not original thoughts, new games, learning, or a strength comparison.'}
     mp=out/'manifest.json'

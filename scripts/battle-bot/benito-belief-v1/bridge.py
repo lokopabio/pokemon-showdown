@@ -17,8 +17,8 @@ from fp.search.poke_engine_helpers import battle_to_poke_engine_state
 from poke_engine import monte_carlo_tree_search
 from belief import install_prior, choose_action
 from evidence import Evidence
-if os.environ.get("BENITO_BELIEF") == "1":
-    install_prior()
+from posterior import SetBeliefs
+
 
 def request_choice(request, action, reserve):
     """The simulator request is authoritative over native move availability."""
@@ -75,6 +75,9 @@ def diagnostic_side(side):
 def main():
     battle = None
     evidence = Evidence()
+    beliefs = SetBeliefs()
+    if os.environ.get("BENITO_BELIEF") == "1":
+        install_prior(evidence,beliefs,lambda: battle)
     for line in sys.stdin:
         message = json.loads(line)
         request = message['request']
@@ -123,6 +126,7 @@ def main():
         budget = int(os.environ.get('ROMAN_SEARCH_MS', '10'))
         scores = {}
         scenario_results = []
+        beliefs.begin_decision()
         visits = 0
         hypotheses = 3
         diagnostic = None
@@ -178,7 +182,7 @@ def main():
                 best = 'switch ' + target.name
         battle.user.last_selected_move = LastUsedMove(battle.user.active.name, best, battle.turn)
         choice = choices[proposed]
-        print(json.dumps({'choice': choice, 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
+        print(json.dumps({'choice': choice, 'beliefs': beliefs.summary(), 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
 
 if __name__ == '__main__':
     main()

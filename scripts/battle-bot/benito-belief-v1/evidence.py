@@ -63,15 +63,17 @@ def extract(events, own, opponent, before_hp):
             'orderStable':not any(len(f)>1 and f[1] in ('-boost','-unboost') for f in fields),'ownFirst':moves[0][2][:2]==own,'beforeHP':before_hp,'afterHP':after_hp}
 
 class Evidence:
-    def __init__(self):self.records=[];self.skipped=0
+    def __init__(self):self.records=[];self.skipped=0;self.revision=0
     def observe(self,battle,events):
         if battle is None or battle.opponent.active is None:return
         if any(line.startswith(('|-item|','|-enditem|','|-transform|','|replace|')) for line in events):
             self.records=[]
+            self.revision+=1
         record=extract(events,battle.user.name,battle.opponent.name,battle.user.active.hp)
         if record is None:self.skipped+=1;return
         record['species']=battle.opponent.active.name
         record['context']=deepcopy(battle)
+        self.revision+=1
         self.records.append(record)
         self.records=self.records[-24:]
     def check(self,sampled):
