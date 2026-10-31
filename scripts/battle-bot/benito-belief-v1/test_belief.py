@@ -62,7 +62,15 @@ class EvidenceTests(unittest.TestCase):
   own=actor('own');opponent=actor('opponent')
   context=types.SimpleNamespace(user=types.SimpleNamespace(active=own,side_conditions={}),opponent=types.SimpleNamespace(active=opponent,reserve=[],side_conditions={}),weather=None,field=None,get_effective_speed=lambda side:100)
   evidence=Evidence();evidence.records=[{'species':'opponent','context':context,'ownMove':'tackle','opponentMove':'acrobatics','ownFirst':True,'orderStable':True,'beforeHP':100,'afterHP':55}]
-  modules={'fp.search.poke_engine_helpers':types.SimpleNamespace(battle_to_poke_engine_state=lambda c:c),'fp.data':types.SimpleNamespace(all_move_json={'tackle':{'category':'physical','priority':0},'acrobatics':{'category':'physical','basePower':55,'priority':0}}),'poke_engine':types.SimpleNamespace(calculate_damage=lambda *args:([1],[44,45,46]))}
+  modules={'fp.search.poke_engine_helpers':types.SimpleNamespace(battle_to_poke_engine_state=lambda c:c),'fp.data':types.SimpleNamespace(all_move_json={'tackle':{'category':'physical','priority':0},'acrobatics':{'category':'physical','basePower':55,'priority':0}}),'poke_engine':types.SimpleNamespace(calculate_damage=lambda *args:([1,2],[46,69]))}
   with patch.dict(sys.modules,modules):
    checks=evidence.check(context)
   self.assertEqual(len(checks),1);self.assertTrue(checks[0]['damageCompatible']);self.assertTrue(checks[0]['speedCompatible'])
+
+ def test_native_maximum_pair_is_not_a_roll_list(self):
+  from evidence import native_damage_envelope
+  self.assertTrue(native_damage_envelope([258,387],307,58)['damageCompatible'])
+  self.assertFalse(native_damage_envelope([129,193],307,58)['damageCompatible'])
+  self.assertFalse(native_damage_envelope([258,387],400,90)['damageCompatible'])
+  self.assertTrue(native_damage_envelope([258,387],79,0)['damageCompatible'])
+  with self.assertRaises(ValueError):native_damage_envelope([258],307,58)

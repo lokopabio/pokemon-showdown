@@ -4,6 +4,7 @@ Unsupported event contexts are skipped, not treated as evidence of compatibility
 """
 from copy import deepcopy
 import re
+import math
 
 def hp(text):
     match=re.match(r'^(\d+)/(\d+)(?: |$)',text)
@@ -14,6 +15,24 @@ def interval_match(rolls, before, after):
     if not rolls or before<=after:return False
     damage=before-after
     return any((r>=damage if after==0 else r==damage) for r in rolls)
+
+def native_damage_envelope(values, before, after):
+    """Native API returns normal maximum and critical maximum, not 16 rolls.
+
+    Conservative noncritical envelope with two HP rounding allowance. This is
+    diagnostic compatibility, not exact simulator likelihood or hard rejection.
+    """
+    if len(values)!=2 or any(not math.isfinite(v) or v<0 for v in values):
+        raise ValueError('Unexpected native damage result; refusing interpretation')
+    maximum=values[0]
+    low=max(0,math.floor(maximum*.85)-2)
+    high=maximum+2
+    damage=before-after
+    compatible=(high>=damage if after==0 else low<=damage<=high)
+    return {'normalMaximum':maximum,'criticalMaximum':values[1],
+            'noncriticalConservativeBounds':[low,high],
+            'damageCompatible':compatible,'censoredKO':after==0,
+            'interpretation':'Conservative range only; not an enumerated roll likelihood.'}
 
 def extract(events, own, opponent, before_hp):
     fields=[line.split('|') for line in events]
@@ -79,7 +98,7 @@ class Evidence:
             if two.get('basePower',0)<=0:continue
             state=battle_to_poke_engine_state(context)
             _,rolls=calculate_damage(state,record['ownMove'],record['opponentMove'],record['ownFirst'])
-            damage_ok=interval_match(rolls,record['beforeHP'],record['afterHP'])
+            damage_result=native_damage_envelope(rolls,record['beforeHP'],record['afterHP'])
             speed_ok=None
             # Allow ties. Restrict ordering inference to unmodified priority-zero attacks.
             ordinary={'airlock','megalauncher','serenegrace','adaptability','furcoat','roughskin','gooey','competitive','reckless','flashfire','magicguard','intimidate','none'}
@@ -92,5 +111,5 @@ class Evidence:
                 a=context.get_effective_speed(context.user);b=context.get_effective_speed(context.opponent)
                 speed_ok=a>=b if record['ownFirst'] else b>=a
             results.append({'species':record['species'],'move':record['opponentMove'],'observedDamage':record['beforeHP']-record['afterHP'],
-                            'rolls':list(rolls),'damageCompatible':damage_ok,'speedCompatible':speed_ok})
+                            'nativeDamageResult':list(rolls),**damage_result,'speedCompatible':speed_ok})
         return results
