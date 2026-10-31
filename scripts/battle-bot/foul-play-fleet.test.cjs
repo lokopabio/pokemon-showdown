@@ -68,3 +68,29 @@ test('rotation copies only existing legal distinct teams and preserves source fl
   assert.throws(()=>load(path.join(output,'fleet.json')),/bank teams only/);
  }finally{f.cleanup();}
 });
+test('archive imports preserve player provenance, exact sets and deduplicate originals',()=>{
+ const {prepareRotation}=require('./prepare-foul-play-fleet-rotation.cjs');const f=fixture();try{
+  f.deps.sim.Teams.pack=t=>JSON.stringify(t);
+  const a=[{species:'fixture',moves:['attack']}],b=[{species:'second',moves:['attack']}],c=[{species:'archived',moves:['second','first'],item:'original'}];
+  fs.writeFileSync(path.join(f.root,'bank.json'),JSON.stringify({schema:1,format:'gen7ou',teams:[{team:a},{team:b}]}));prepare(f,f.deps);
+  const archive=path.join(f.root,'archive.json'),raw=JSON.stringify([{player:'FixturePlayer',team_id:'T1',team:a,battles:['b1']},{player:'FixturePlayer',team_id:'T2',team:c,battles:['b2']},{player:'OtherPlayer',team_id:'T3',team:[{species:'excluded',moves:['attack']}]}]);fs.writeFileSync(archive,raw);
+  const output=path.join(f.root,'augmented'),m=prepareRotation({fleet:path.join(f.output,'fleet.json'),output,archive,player:'FixturePlayer'},f.deps);
+  assert.equal(m.rosterTeams,3);assert.equal(m.archive.eligibleUniqueTeams,2);
+  const r=JSON.parse(fs.readFileSync(path.join(output,'roster.json'),'utf8')).records;
+  assert.deepEqual(r.find(x=>x.team[0].species==='archived').team,c);
+  assert.equal(r.find(x=>x.team[0].species==='fixture').provenance.length,2);
+  assert.equal(fs.readFileSync(archive,'utf8'),raw);assert(!r.some(x=>x.team[0].species==='excluded'));
+ }finally{f.cleanup();}
+});
+test('augmenting a rotating fleet retains account last-team and recorded results',()=>{
+ const {prepareRotation}=require('./prepare-foul-play-fleet-rotation.cjs');const f=fixture();try{
+  f.deps.sim.Teams.pack=t=>JSON.stringify(t);
+  const teams=[[{species:'fixture',moves:['attack']}],[{species:'other',moves:['attack']}]];
+  fs.writeFileSync(path.join(f.root,'bank.json'),JSON.stringify({schema:1,format:'gen7ou',teams:teams.map(team=>({team}))}));prepare(f,f.deps);
+  const rotation=path.join(f.root,'rotation');prepareRotation({fleet:path.join(f.output,'fleet.json'),output:rotation},f.deps);
+  const stateFile=path.join(rotation,'fixturebota/rotation-state.json'),old=JSON.parse(fs.readFileSync(stateFile,'utf8'));old.results=[{matchKey:'kept',outcome:'win'}];fs.writeFileSync(stateFile,JSON.stringify(old));
+  const archive=path.join(f.root,'archive.json');fs.writeFileSync(archive,JSON.stringify([{player:'FixturePlayer',team:[{species:'new',moves:['attack']}]}]));
+  const output=path.join(f.root,'augmented');prepareRotation({fleet:path.join(rotation,'fleet.json'),output,archive,player:'FixturePlayer'},f.deps);
+  const next=JSON.parse(fs.readFileSync(path.join(output,'fixturebota/rotation-state.json'),'utf8'));assert.equal(next.last,old.last);assert.deepEqual(next.results,old.results);
+ }finally{f.cleanup();}
+});
