@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path');const {spawn}=require('node:child_process');
+async function diagnose({run,bank,python,foul,output,games='37,38,57,101,205,217',searchMs=30},battle=require('./foul-play-smoke.cjs').smoke,comparison){
+ const selected=games.split(',').map(Number);if(!selected.length||selected.length>12||selected.some(n=>!Number.isInteger(n)||n<1)||!Number.isInteger(searchMs)||searchMs<3||searchMs>3000)throw Error('Invalid diagnostic selection');
+ if(fs.existsSync(output))throw Error('Use a new output directory');const manifest=JSON.parse(fs.readFileSync(path.join(run,'manifest.json'),'utf8')),previous=fs.readFileSync(path.join(run,'games.jsonl'),'utf8').trim().split('\n').map(JSON.parse);if(selected.some(n=>n>previous.length))throw Error('Game index outside run');
+ const all=new Map([...manifest.candidates,...manifest.panel].map(r=>[r.id,r.team]));fs.mkdirSync(output,{recursive:true});const summary=[];
+ fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify({run:path.resolve(run),selected,searchMs,liveChanges:false,note:'Diagnostic reruns of selected matchups, not exact historical position reconstruction. MCTS and hypothesis sampling are stochastic. Both policies receive only their own requests and public events.'},null,2));
+ for(const index of selected){const row=previous[index-1],file=String(index).padStart(5,'0')+'.jsonl',trace=path.join(output,file);let bytes=0,truncated=false;const write=data=>{const line=JSON.stringify(data)+'\n';if(bytes+Buffer.byteLength(line)>32*1024*1024){truncated=true;return;}fs.appendFileSync(trace,line);bytes+=Buffer.byteLength(line);};
+  const result={index,trace:file};try{result.battle=await battle({python,foul,bank,team1:all.get(row.side==='p1'?row.candidate:row.rival),team2:all.get(row.side==='p1'?row.rival:row.candidate),seed:row.seed,foulSide:row.side,foulBoth:true,maxTurns:manifest.maxTurns,searchMs,diagnostics:true,onDecision:d=>write({type:'decision',...d}),onEvent:event=>write({type:'event',event})});}catch(error){result.error=error.message;}
+  result.traceTruncated=truncated;
+  if(!result.error&&!truncated){try{if(comparison)await comparison(trace);else await new Promise((resolve,reject)=>{const child=spawn(path.resolve(python),[path.join(__dirname,'replay-native-search.py'),trace,'--output',path.join(output,String(index).padStart(5,'0')+'-budgets.jsonl')],{env:{...process.env,PYTHONUTF8:'1'},stdio:'inherit'});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(Error('Budget comparison exited '+code)));});}catch(error){result.comparisonError=error.message;}}
+  summary.push(result);fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify({results:summary,liveChanges:false},null,2));console.log(`Diagnostics ${summary.length}/${selected.length} saved`);
+ }return summary;
+}
+if(require.main===module){const a=process.argv.slice(2),o={};for(let i=0;i<a.length;i+=2){const k=a[i].replace(/^--/,'');if(!['run','bank','python','foul','output','games','searchMs'].includes(k)||a[i+1]===undefined)throw Error('Invalid option');o[k]=k==='searchMs'?Number(a[i+1]):a[i+1];}diagnose(o).then(r=>console.log(JSON.stringify(r,null,2))).catch(e=>{console.error(e);process.exitCode=1;});}
+module.exports={diagnose};

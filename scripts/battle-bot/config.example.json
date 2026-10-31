@@ -1,0 +1,9 @@
+{
+  "server": "ws://localhost:8000/showdown/websocket",
+  "username": "Roman-016",
+  "maxBattles": 1,
+  "allowedUsers": [],
+  "teams": {
+    "gen7ou": "team.txt"
+  }
+}
