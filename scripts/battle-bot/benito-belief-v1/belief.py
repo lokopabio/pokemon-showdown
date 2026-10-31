@@ -69,6 +69,17 @@ def install_prior(evidence=None, beliefs=None, context=None):
             roman_open.populate_pkmn_from_set(target,deepcopy(candidate),source='persistent-bank-belief')
             return [c for c in evidence.check(sampled) if c['species']==pkmn.name]
         return beliefs.weight(pkmn.name,signature,evidence.revision,prior,evaluate)
+    def pick(pkmn, compatible):
+        stratum=getattr(roman_open,'_belief_stratum',None)
+        if not getattr(roman_open,'_belief_public_sampling',False) and stratum and pkmn.name==stratum['species'] and stratum['candidate'] is not None:
+            candidate=stratum['candidate']
+            if not roman_open.bank_compatible(pkmn,candidate):raise ValueError('Forced coverage candidate no longer compatible')
+            return candidate
+        return roman_open.random.choices(compatible,weights=[candidate_weight(pkmn,c) for c in compatible],k=1)[0]
     roman_open.__dict__['_belief_affinity'] = candidate_weight
-    source = source.replace(old, 'random.choices(compatible, weights=[_belief_affinity(pkmn,c) for c in compatible], k=1)[0]')
+    roman_open.__dict__['_belief_pick'] = pick
+    marker='    reconcile_history(pkmn)'
+    if source.count(marker)!=1:raise ValueError('Unexpected appearance reconciliation boundary')
+    source=source.replace(marker,marker+"\n    stratum = globals().get('_belief_stratum')\n    if not globals().get('_belief_public_sampling',False) and stratum and pkmn.name == stratum['species']:\n        pkmn.roman_illusion_probability = 1.0 if stratum['illusion'] else 0.0")
+    source = source.replace(old, '_belief_pick(pkmn,compatible)')
     exec(compile(source, '<benito experimental prior>', 'exec'), roman_open.__dict__)

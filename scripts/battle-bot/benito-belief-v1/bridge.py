@@ -18,6 +18,7 @@ from poke_engine import monte_carlo_tree_search
 from belief import install_prior, choose_action
 from evidence import Evidence
 from posterior import SetBeliefs
+from coverage import prepare as prepare_coverage
 from action_model import PublicKnowledge, response_scenario, adjust
 
 
@@ -135,13 +136,19 @@ def main():
         beliefs.begin_decision()
         visits = 0
         hypotheses = 3
+        coverage = {}
+        if os.environ.get("BENITO_BELIEF") == "1":
+            sampled_scenarios,coverage = prepare_coverage(battle,prepare_battles)
+        else:
+            sampled_scenarios = list(prepare_battles(battle,hypotheses))
+        hypotheses=len(sampled_scenarios)
         diagnostic = None
         if os.environ.get('ROMAN_DIAGNOSTICS') == '1':
             diagnostic = {'schema': 1, 'turn': battle.turn, 'searchMs': budget, 'hypothesisBudgetDivisor': hypotheses,
                           'own': diagnostic_side(battle.user),
                           'observedOpponent': diagnostic_side(battle.opponent),
                           'samples': [], 'evidenceRecords': len(evidence.records), 'evidenceSkipped': evidence.skipped, 'note': 'Opponent state contains inferences, not hidden simulator truth.'}
-        for sampled, weight in prepare_battles(battle, hypotheses):
+        for sampled, weight in sampled_scenarios:
             checks = evidence.check(sampled) if os.environ.get('BENITO_EVIDENCE_AUDIT') == '1' else []
             state = battle_to_poke_engine_state(sampled)
             if diagnostic is not None:
@@ -200,7 +207,7 @@ def main():
                 best = 'switch ' + target.name
         battle.user.last_selected_move = LastUsedMove(battle.user.active.name, best, battle.turn)
         choice = choices[proposed]
-        print(json.dumps({'choice': choice, 'responseScenarios': responses, 'responseErrors': response_errors, 'riskObjectives': risk_objectives, 'beliefs': beliefs.summary(), 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
+        print(json.dumps({'choice': choice, 'coverage':coverage, 'responseScenarios': responses, 'responseErrors': response_errors, 'riskObjectives': risk_objectives, 'beliefs': beliefs.summary(), 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
 
 if __name__ == '__main__':
     main()

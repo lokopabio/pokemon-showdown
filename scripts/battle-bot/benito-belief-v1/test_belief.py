@@ -109,13 +109,14 @@ class PosteriorTests(unittest.TestCase):
   from posterior import SetBeliefs
   module=types.ModuleType('test_roman_open');module.random=random;module.all_move_json={}
   module.sample_open_pokemon=lambda pkmn,bank_candidates:None
+  module.reconcile_history=lambda pkmn:None
   def populate(target,candidate,source=None):target.guess=candidate.pkmn_set.item
   module.populate_pkmn_from_set=populate
   p=types.SimpleNamespace(name='x',moves=[])
   context=types.SimpleNamespace(opponent=types.SimpleNamespace(active=p,reserve=[]))
   evidence=types.SimpleNamespace(revision=1,check=lambda c:[{'species':'x','move':'a','damageCompatible':c.opponent.active.guess=='choicescarf'}])
   candidates=[types.SimpleNamespace(pkmn_set=types.SimpleNamespace(ability='megalauncher',item=item,nature='timid',evs=[0]*6),pkmn_moveset=types.SimpleNamespace(moves=['a'])) for item in ['choicescarf','choicespecs']]
-  source='def sample_open_pokemon(pkmn, bank_candidates=()):\n    compatible=bank_candidates\n    return random.choice(compatible)\n'
+  source='def sample_open_pokemon(pkmn, bank_candidates=()):\n    reconcile_history(pkmn)\n    compatible=bank_candidates\n    return random.choice(compatible)\n'
   with patch.dict(sys.modules,{'fp.data.sets':types.SimpleNamespace(roman_open=module)}),patch('inspect.getsource',return_value=source),patch('random.choices',return_value=[candidates[0]]) as choose:
    install_prior(evidence,SetBeliefs(),lambda:context)
    module.sample_open_pokemon(p,candidates)

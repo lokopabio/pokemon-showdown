@@ -33,7 +33,7 @@ def main():
     messages=list(frames(raw.decode('utf-8-sig')))
     out=pathlib.Path(a.output);out.mkdir(parents=True,exist_ok=True)
     manifest={'schema':1,'logSHA256':hashlib.sha256(raw).hexdigest(),'bankSHA256':hashlib.sha256(bank).hexdigest(),
-              'actionModel':a.action_model,'actionModelSHA256':hashlib.sha256((root/'action_model.py').read_bytes()).hexdigest(),'evidenceAudit':a.evidence_audit,'searchMs':a.search_ms,'bridgeSHA256':hashlib.sha256((root/'bridge.py').read_bytes()).hexdigest(),
+              'coverageSHA256':hashlib.sha256((root/'coverage.py').read_bytes()).hexdigest(),'actionModel':a.action_model,'actionModelSHA256':hashlib.sha256((root/'action_model.py').read_bytes()).hexdigest(),'evidenceAudit':a.evidence_audit,'searchMs':a.search_ms,'bridgeSHA256':hashlib.sha256((root/'bridge.py').read_bytes()).hexdigest(),
               'evidenceSHA256':hashlib.sha256((root/'evidence.py').read_bytes()).hexdigest(),'posteriorSHA256':hashlib.sha256((root/'posterior.py').read_bytes()).hexdigest(),'beliefSHA256':hashlib.sha256((root/'belief.py').read_bytes()).hexdigest(),
               'foul':str(pathlib.Path(a.foul).resolve()),'python':sys.executable,
               'scope':'Fresh sampled hypotheses on recorded public trajectories. Not original thoughts, new games, learning, or a strength comparison.'}
@@ -65,6 +65,9 @@ def main():
                             line=child.stdout.readline()
                             if not line:raise RuntimeError('Bridge stopped; inspect '+str(err))
                             result=json.loads(line)
+                            if mode=='candidate' and index==0 and result.get('coverage',{}).get('mode')=='stratified-active-bank':
+                                coverage=result['coverage']
+                                print(f"Lead coverage: apparent={1-coverage['disguiseMass']:.3f}; disguise={coverage['disguiseMass']:.3f}; scenarios={len(coverage['branches'])}",flush=True)
                             applied+=bool(result.get('riskObjectives'))
                             skipped_errors.extend(result.get('responseErrors',[]))
                             stream.write(json.dumps({'decision':index+1,'rqid':message['request'].get('rqid'),'playedChoice':message.get('playedChoice'),'result':result})+'\n');stream.flush()
