@@ -55,6 +55,7 @@ def install_prior(evidence=None, beliefs=None, context=None):
         raise ValueError('Unexpected sampler; refusing experimental patch')
     def candidate_weight(pkmn, candidate):
         prior=affinity(candidate.pkmn_set.ability,[m.name for m in pkmn.moves],roman_open.all_move_json)
+        if getattr(roman_open,'_belief_public_sampling',False):return prior
         if evidence is None or beliefs is None or context is None or context() is None:return prior
         import json
         from copy import deepcopy

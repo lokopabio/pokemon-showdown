@@ -23,7 +23,7 @@ def frames(text):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--evidence-audit',action='store_true');p.add_argument('--log',required=True);p.add_argument('--output',required=True)
+    p.add_argument('--action-model',action='store_true');p.add_argument('--evidence-audit',action='store_true');p.add_argument('--log',required=True);p.add_argument('--output',required=True)
     p.add_argument('--foul',default='../roman-foul-play');p.add_argument('--bank',default='metagame/metagame-bank.json')
     p.add_argument('--repeats',type=int,default=30);p.add_argument('--hours',type=float,default=2);p.add_argument('--search-ms',type=int,default=100)
     a=p.parse_args()
@@ -33,7 +33,7 @@ def main():
     messages=list(frames(raw.decode('utf-8-sig')))
     out=pathlib.Path(a.output);out.mkdir(parents=True,exist_ok=True)
     manifest={'schema':1,'logSHA256':hashlib.sha256(raw).hexdigest(),'bankSHA256':hashlib.sha256(bank).hexdigest(),
-              'evidenceAudit':a.evidence_audit,'searchMs':a.search_ms,'bridgeSHA256':hashlib.sha256((root/'bridge.py').read_bytes()).hexdigest(),
+              'actionModel':a.action_model,'actionModelSHA256':hashlib.sha256((root/'action_model.py').read_bytes()).hexdigest(),'evidenceAudit':a.evidence_audit,'searchMs':a.search_ms,'bridgeSHA256':hashlib.sha256((root/'bridge.py').read_bytes()).hexdigest(),
               'evidenceSHA256':hashlib.sha256((root/'evidence.py').read_bytes()).hexdigest(),'posteriorSHA256':hashlib.sha256((root/'posterior.py').read_bytes()).hexdigest(),'beliefSHA256':hashlib.sha256((root/'belief.py').read_bytes()).hexdigest(),
               'foul':str(pathlib.Path(a.foul).resolve()),'python':sys.executable,
               'scope':'Fresh sampled hypotheses on recorded public trajectories. Not original thoughts, new games, learning, or a strength comparison.'}
@@ -48,7 +48,7 @@ def main():
             if final.exists():continue
             env={**os.environ,'PYTHONUTF8':'1','ROMAN_FOUL_PLAY':str(pathlib.Path(a.foul).resolve()),
                  'ROMAN_METAGAME_BANK':str(pathlib.Path(a.bank).resolve()),'ROMAN_SEARCH_MS':str(a.search_ms),
-                 'ROMAN_DIAGNOSTICS':'1','BENITO_EVIDENCE_AUDIT':'1' if a.evidence_audit else '0','BENITO_BELIEF':'1' if mode=='candidate' else '0'}
+                 'ROMAN_DIAGNOSTICS':'1','BENITO_ACTION_MODEL':'1' if a.action_model else '0','BENITO_EVIDENCE_AUDIT':'1' if a.evidence_audit else '0','BENITO_BELIEF':'1' if mode=='candidate' else '0'}
             env.pop('BENITO_PASSWORD',None)
             temp=final.with_suffix('.partial');err=final.with_suffix('.stderr')
             with err.open('w') as errors:

@@ -18,6 +18,7 @@ from poke_engine import monte_carlo_tree_search
 from belief import install_prior, choose_action
 from evidence import Evidence
 from posterior import SetBeliefs
+from action_model import PublicKnowledge, response_scenario, adjust
 
 
 def request_choice(request, action, reserve):
@@ -76,12 +77,14 @@ def main():
     battle = None
     evidence = Evidence()
     beliefs = SetBeliefs()
+    knowledge = PublicKnowledge()
     if os.environ.get("BENITO_BELIEF") == "1":
         install_prior(evidence,beliefs,lambda: battle)
     for line in sys.stdin:
         message = json.loads(line)
         request = message['request']
         evidence.observe(battle, message['events'])
+        knowledge.observe(message['events'],request.get('side',{}).get('id',battle.user.name if battle else None))
         if request.get('wait'):
             if battle is not None:
                 battle.msg_list = message['events']
@@ -126,6 +129,9 @@ def main():
         budget = int(os.environ.get('ROMAN_SEARCH_MS', '10'))
         scores = {}
         scenario_results = []
+        responses = []
+        response_errors = []
+        action_model = os.environ.get("BENITO_ACTION_MODEL") == "1" and os.environ.get("BENITO_BELIEF") == "1" and not battle.force_switch
         beliefs.begin_decision()
         visits = 0
         hypotheses = 3
@@ -157,7 +163,13 @@ def main():
                         probes.append({'action':move.name,'reply':reply.name,'outcomes':outcomes})
                 if diagnostic is not None:
                     diagnostic['samples'][-1]['lastMemberTransitions'] = probes
-            result = monte_carlo_tree_search(state, max(1, budget // hypotheses), threads=1)
+            result = monte_carlo_tree_search(state, max(1, int(budget * (.75 if action_model else 1)) // hypotheses), threads=1)
+            if action_model:
+                try:
+                    response = response_scenario(sampled,result,knowledge,max(1,budget // (4*hypotheses)))
+                    responses.append({'weight':weight,**response})
+                except ValueError as error:
+                    response_errors.append(str(error))
             scenario_results.append({'weight': weight, 'actions': [{'action': a.move_choice, 'visits': a.visits, 'totalScore': a.total_score} for a in result.side_one]})
             total = sum(action.visits for action in result.side_one) or 1
             visits += result.total_visits
@@ -172,6 +184,12 @@ def main():
         objectives = {}
         if os.environ.get('BENITO_BELIEF') == '1':
             best, objectives = choose_action(scenario_results, available)
+        risk_objectives = {}
+        if action_model and len(responses)==hypotheses:
+            try:
+                best,risk_objectives = adjust(objectives,responses)
+            except ValueError as error:
+                response_errors.append(str(error))
         proposed = best
         played = message.get('playedChoice')
         if played:
@@ -182,7 +200,7 @@ def main():
                 best = 'switch ' + target.name
         battle.user.last_selected_move = LastUsedMove(battle.user.active.name, best, battle.turn)
         choice = choices[proposed]
-        print(json.dumps({'choice': choice, 'beliefs': beliefs.summary(), 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
+        print(json.dumps({'choice': choice, 'responseScenarios': responses, 'responseErrors': response_errors, 'riskObjectives': risk_objectives, 'beliefs': beliefs.summary(), 'scenarioResults': scenario_results, 'objectives': objectives, 'visits': visits, 'hypotheses': hypotheses, 'actions': scores, 'discardedUnavailable': discarded, 'identity': getattr(getattr(battle,'roman_tracker',None),'current',None), **({'diagnostic': diagnostic} if diagnostic is not None else {})}), flush=True)
 
 if __name__ == '__main__':
     main()
