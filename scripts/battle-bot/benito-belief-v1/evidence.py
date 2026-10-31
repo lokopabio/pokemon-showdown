@@ -32,7 +32,7 @@ def extract(events, own, opponent, before_hp):
     hit_index=fields.index(hits[0])
     if any(len(f)>1 and f[1] in ('-boost','-unboost') for f in fields[:hit_index]):return None
     for heal in heals:
-        if fields.index(heal)>hit_index:return None
+        if fields.index(heal)>hit_index:continue
         recovered=hp(heal[3])
         if recovered is None:return None
         before_hp=recovered[0]
@@ -75,7 +75,7 @@ class Evidence:
             if candidate.item!=old.item and old.item not in ('unknownitem',None):continue
             one=all_move_json.get(record['ownMove'],{});two=all_move_json.get(record['opponentMove'],{})
             # Only ordinary direct damage moves; conditional/multihit moves need separate evidence models.
-            if two.get('category') not in ('Physical','Special') or two.get('multihit') or two.get('damage') or two.get('damageCallback') or two.get('basePowerCallback'):continue
+            if str(two.get('category','')).lower() not in ('physical','special') or two.get('multihit') or two.get('damage') or two.get('damageCallback') or two.get('basePowerCallback'):continue
             if two.get('basePower',0)<=0:continue
             state=battle_to_poke_engine_state(context)
             _,rolls=calculate_damage(state,record['ownMove'],record['opponentMove'],record['ownFirst'])
@@ -84,7 +84,7 @@ class Evidence:
             # Allow ties. Restrict ordering inference to unmodified priority-zero attacks.
             ordinary={'airlock','megalauncher','serenegrace','adaptability','furcoat','roughskin','gooey','competitive','reckless','flashfire','magicguard','intimidate','none'}
             actors=[context.user.active,context.opponent.active]
-            if (record['orderStable'] and one.get('priority',0)==two.get('priority',0)==0 and one.get('category') in ('Physical','Special')
+            if (record['orderStable'] and one.get('priority',0)==two.get('priority',0)==0 and str(one.get('category','')).lower() in ('physical','special')
                 and not context.weather and not context.field and not getattr(context,'trick_room',False)
                 and all(p.ability in ordinary and not p.status and not p.volatile_statuses for p in actors)
                 and all(p.item in ('choicescarf','choicespecs','choiceband','leftovers','none',None,'lifeorb','powerherb','rockyhelmet') for p in actors)

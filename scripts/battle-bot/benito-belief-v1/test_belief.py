@@ -49,3 +49,20 @@ class EvidenceTests(unittest.TestCase):
   e=['|move|p1a: A|Acrobatics|p2a: L','|-damage|p2a: L|58/351','|move|p2a: L|Coil|p2a: L','|-boost|p2a: L|def|1']
   r=extract(e,'p2','p1',307)
   self.assertIsNotNone(r);self.assertFalse(r['orderStable'])
+ def test_leftovers_after_damage_preserves_observation(self):
+  from evidence import extract
+  e=['|move|p1a: A|Acrobatics|p2a: L','|-damage|p2a: L|58/351','|move|p2a: L|Coil|p2a: L','|-boost|p2a: L|def|1','|-heal|p2a: L|79/351|[from] item: Leftovers']
+  r=extract(e,'p2','p1',307)
+  self.assertEqual(r['beforeHP']-r['afterHP'],249)
+ def test_native_check_accepts_lowercase_move_categories(self):
+  import types,sys
+  from unittest.mock import patch
+  from evidence import Evidence
+  actor=lambda name:types.SimpleNamespace(name=name,hp=100,max_hp=100,boosts={},volatile_statuses=[],status=None,item='none',ability='airlock')
+  own=actor('own');opponent=actor('opponent')
+  context=types.SimpleNamespace(user=types.SimpleNamespace(active=own,side_conditions={}),opponent=types.SimpleNamespace(active=opponent,reserve=[],side_conditions={}),weather=None,field=None,get_effective_speed=lambda side:100)
+  evidence=Evidence();evidence.records=[{'species':'opponent','context':context,'ownMove':'tackle','opponentMove':'acrobatics','ownFirst':True,'orderStable':True,'beforeHP':100,'afterHP':55}]
+  modules={'fp.search.poke_engine_helpers':types.SimpleNamespace(battle_to_poke_engine_state=lambda c:c),'fp.data':types.SimpleNamespace(all_move_json={'tackle':{'category':'physical','priority':0},'acrobatics':{'category':'physical','basePower':55,'priority':0}}),'poke_engine':types.SimpleNamespace(calculate_damage=lambda *args:([1],[44,45,46]))}
+  with patch.dict(sys.modules,modules):
+   checks=evidence.check(context)
+  self.assertEqual(len(checks),1);self.assertTrue(checks[0]['damageCompatible']);self.assertTrue(checks[0]['speedCompatible'])
