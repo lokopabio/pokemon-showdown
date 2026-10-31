@@ -16,6 +16,7 @@ const SECONDS = 1000;
 const PERIODIC_MATCH_INTERVAL = 60 * SECONDS;
 
 import type { ChallengeType } from './room-battle';
+import { allowSameIPBotMatch } from './bot-ladder-policy';
 import { BattleReady, BattleChallenge, GameChallenge, BattleInvite, challenges } from './ladders-challenges';
 
 /**
@@ -344,7 +345,8 @@ class Ladder extends LadderStore {
 		}
 
 		// users must have different IPs
-		if (new Set(users.map(user => user.latestIp)).size !== users.length) return false;
+		if (new Set(users.map(user => user.latestIp)).size !== users.length &&
+			!allowSameIPBotMatch(formatid, users, Config.sameipbotladderusers)) return false;
 
 		// users must not have been matched immediately previously
 		for (const user of users) {
@@ -513,3 +515,4 @@ export const Ladders = Object.assign(getLadder, {
 	formatsListPrefix: LadderStore.formatsListPrefix,
 	disabled: false as boolean | 'db',
 });
+
