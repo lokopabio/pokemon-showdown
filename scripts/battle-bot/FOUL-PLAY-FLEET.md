@@ -27,3 +27,17 @@ Expect an Online message for every account. Keep the terminal open; Ctrl+C close
 Rollback: stop the fleet and restart the prior client config/service. No builders, bank teams, models or old configs need restoration because this workflow did not change them.
 
 Validation: node --test scripts/battle-bot/foul-play-fleet.test.cjs covers source preservation, baseline config generation, credential isolation, duplicate rejection, existing-account team preservation and missing-credential preflight. Additional preparation was checked against the real custom Gen7 validator without opening connections. Remote logins require the owner's runtime and credentials. PowerShell execution has not been tested in the Linux development environment.
+
+## Rotate existing bank teams
+
+Stop the fleet, then prepare a separate rotating configuration:
+
+```
+node scripts/battle-bot/prepare-foul-play-fleet-rotation.cjs --fleet PATH_TO_CURRENT_FLEET_JSON --output NEW_ROTATING_DIRECTORY
+```
+
+This reads the current shared bank, validates original complete teams, removes exact duplicates, and writes a shared bank-only roster plus independent account state files. No new teams are built, mutated or admitted by self-play. Ineligible originals are listed in the new local manifest. Existing fixed-team configs, bank files, builders and histories remain intact. The Foul Play battle policy and search budget are copied unchanged.
+
+Launch the new fleet.json with the existing PowerShell fleet launcher. Selection advances when a challenge is accepted, before the battle starts, so a cancelled challenge can also advance rotation. Each account cycles independently, persists across restarts, and avoids immediate repeats. Different initial offsets spread accounts across the roster, but do not guarantee all accounts always use different teams. The current fixed team initializes the last-team marker so the first selected roster team differs when possible. Rotation results are recorded, but do not train the battle policy or rank team strength.
+
+Stop the fleet before changing banks or rotation data. Restarting with the same rotating manifest continues its state. To return to fixed teams, stop and launch the earlier manifest. The launcher permits only source=bank roster entries; generated/discovery/variant teams are not enabled by this rollout.

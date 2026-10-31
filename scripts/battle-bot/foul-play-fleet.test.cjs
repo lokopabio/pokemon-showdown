@@ -50,3 +50,21 @@ test('worker constructor cannot inherit any fleet account password; environment 
 test('missing credentials prevent all connections',()=>{
  const f=fixture();try{prepare(f,f.deps);let calls=0;assert.throws(()=>start(path.join(f.output,'fleet.json'),{connect:()=>{calls++;return()=>{};},Factory:class{}}),/Missing password/);assert.equal(calls,0);}finally{f.cleanup();}
 });
+test('rotation copies only existing legal distinct teams and preserves source fleet',()=>{
+ const {prepareRotation}=require('./prepare-foul-play-fleet-rotation.cjs');
+ const f=fixture();try{
+  f.deps.sim.Teams.pack=t=>JSON.stringify(t);
+  const first=[{species:'fixture',moves:['attack']}],second=[{species:'other',moves:['attack']}];
+  fs.writeFileSync(path.join(f.root,'bank.json'),JSON.stringify({schema:1,format:'gen7ou',teams:[{team:first},{team:second},{team:structuredClone(first)},{team:[]}]}));
+  prepare(f,f.deps);const sourceFile=path.join(f.output,'fleet.json'),before=fs.readFileSync(sourceFile,'utf8');
+  const output=path.join(f.root,'rotating'),m=prepareRotation({fleet:sourceFile,output},f.deps);
+  assert.equal(m.rosterTeams,2);assert.equal(m.skipped.length,1);assert.equal(m.accounts.length,2);
+  assert.equal(fs.readFileSync(sourceFile,'utf8'),before);
+  const entries=load(path.join(output,'fleet.json'));
+  for(const e of entries){assert.equal(e.config.foulPlay.searchMs,1000);assert(e.config.foulRoster);assert.equal(e.config.model,undefined);}
+  assert.notEqual(entries[0].config.username,entries[1].config.username);
+  assert.throws(()=>prepareRotation({fleet:sourceFile,output},f.deps),/Output exists/);
+  const rosterFile=path.join(output,'roster.json'),r=JSON.parse(fs.readFileSync(rosterFile));r.records[0].source='variant';fs.writeFileSync(rosterFile,JSON.stringify(r));
+  assert.throws(()=>load(path.join(output,'fleet.json')),/bank teams only/);
+ }finally{f.cleanup();}
+});

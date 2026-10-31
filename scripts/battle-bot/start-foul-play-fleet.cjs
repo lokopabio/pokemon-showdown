@@ -8,7 +8,11 @@ function load(file){
   const configFile=path.resolve(base,row.config),config=JSON.parse(fs.readFileSync(configFile,'utf8').replace(/^\uFEFF/,''));
   if(config.username!==row.username||config.passwordEnv!==row.passwordEnv||seen.has(config.username.toLowerCase()))throw Error('Fleet account mismatch or duplicate');
   seen.add(config.username.toLowerCase());
-  if(!config.foulPlay||config.maxBattles!==1||Object.keys(config.teams||{}).join(',')!=='gen7ou'||['model','teamPool','foulRoster','calculator'].some(k=>config[k]))throw Error('Fleet requires baseline Foul Play, one Gen7 OU battle per account');
+  if(!config.foulPlay||config.maxBattles!==1||Object.keys(config.teams||{}).join(',')!=='gen7ou'||['model','teamPool','calculator'].some(k=>config[k]))throw Error('Fleet requires baseline Foul Play, one Gen7 OU battle per account');
+  if(config.foulRoster){
+   const roster=JSON.parse(fs.readFileSync(path.resolve(path.dirname(configFile),config.foulRoster.file),'utf8').replace(/^\uFEFF/,''));
+   if(roster.schema!==1||roster.format!=='gen7ou'||!Array.isArray(roster.records)||roster.records.length<2||roster.records.some(r=>r.source!=='bank'))throw Error('Fleet rotation accepts existing bank teams only');
+  }
   for(const key of ['python','foul','bank'])if(!fs.existsSync(path.resolve(path.dirname(configFile),config.foulPlay[key])))throw Error('Missing runtime path for '+config.username);
   if(!fs.existsSync(path.resolve(path.dirname(configFile),config.teams.gen7ou)))throw Error('Missing team for '+config.username);
   return {config,base:path.dirname(configFile)};
