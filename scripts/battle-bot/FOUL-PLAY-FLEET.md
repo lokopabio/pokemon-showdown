@@ -47,3 +47,19 @@ Stop the fleet before changing banks or rotation data. Restarting with the same 
 The rotation preparer also accepts --archive PATH_TO_UNIQUE_TEAMS_JSON --player PLAYER_NAME. The archive is a JSON array of records with player and team, optionally team_id and battles. Matching complete teams pass the same custom guards and Gen7 validator; exact duplicate packed teams merge provenance rather than duplicate roster entries. Player attribution is retained as provenance, not asserted authorship or a strength ranking. Sets, nicknames and all team/move ordering remain unchanged. Source=bank denotes original curated human teams accepted by the existing roster loader; provenance distinguishes the supplied bank from human-battle-archive origins.
 
 Original bank-only records and archive records are interleaved so the added collection is encountered during normal rotation. Existing last-team markers and bounded result histories are copied from a source rotating fleet when present. Independent cycles continue in a newly prepared directory; source histories remain unchanged. The local manifest reports selected archive records, eligible unique archive teams and every rejected entry with its reason. No private archive data is published with this code. The search inference bank is unchanged: this operation adds playable original teams to the rotation only.
+
+## Optional Gen7 OU ladder searches
+
+Stop the fleet, update the source, then enable the chosen fleet:
+
+```
+node scripts/battle-bot/enable-foul-play-fleet-ladder.cjs --fleet PATH_TO_FLEET_JSON
+```
+
+Restart with the same PowerShell fleet launcher. Each authenticated account uploads its next roster team and sends /search gen7ou. It searches for at most one battle at a time and waits 15 seconds between searches/battles. Each new search advances team rotation. The existing custom-adapted Foul Play battle policy, native search budget and roster remain unchanged. Bot accounts can naturally meet one another through matchmaking; no particular opponent or winner is selected.
+
+The connector consumes the server's searching/games updates (including games:null), associates the selected team with the ladder battle, records its result, then schedules another search. No ladder request is sent before authenticated login or while the account is in an observed battle. Incoming challenges are ignored while a ladder search is outstanding; otherwise the existing challenge behavior remains available. Global server popup/error messages pause ladder retries until restart. Disconnect clears scheduled searches; authenticated reconnect schedules anew. Ctrl+C cancels an outstanding search and stops the fleet.
+
+Config backups ending in .before-ladder are retained. To return to challenge-only mode, stop the fleet, run the enable command with --mode off, and restart. --delayMs can set a delay from 5000 to 300000 ms. This is a foreground runtime feature and needs the terminal/host to remain running. The first actual remote search and rated match remain deployment checks; local protocol tests do not prove remote matchmaking availability or strength.
+
+Validation includes scheduler tests for duplicate searches, busy accounts, rotation pacing, cancellation, server errors, disconnect and null game lists. A local fake-WebSocket integration using the actual custom simulator and roster verified team upload -> search -> room association -> recorded roster result -> different next team. It opened no remote sockets and used no account credentials.

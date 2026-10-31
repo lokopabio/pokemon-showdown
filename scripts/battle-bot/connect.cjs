@@ -6,6 +6,7 @@ const {Policy} = require('./policy.cjs');
 const {getAssertion} = require('./auth.cjs');
 const {Model, LearnedPolicy} = require('./learned.cjs');
 const {TeamPool} = require('./team-pool.cjs');
+const {LadderController} = require('./ladder-controller.cjs');
 function incomingChallenges(line, username) {
   if (line.startsWith('|updatechallenges|')) return JSON.parse(line.slice(18)).challengesFrom || {};
   if (!line.startsWith('|pm|')) return {};
@@ -16,7 +17,7 @@ function incomingChallenges(line, username) {
   const format = message.slice(11).trim();
   return format ? {[toID(fields[2])]: format} : {};
 }
-function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} = {}) {
+function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory, ladderTimers = {}} = {}) {
   const url = new URL(config.server);
   if (!['ws:', 'wss:'].includes(url.protocol)) throw new Error('server must be a ws:// or wss:// WebSocket URL');
   const formats = Object.keys(config.teams || {});
@@ -25,6 +26,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
   const foul = config.foulPlay && {...config.foulPlay, python:path.resolve(base,config.foulPlay.python), foul:path.resolve(base,config.foulPlay.foul), bank:path.resolve(base,config.foulPlay.bank),passwordEnv:config.passwordEnv};
   if(foul&&(model||config.teamPool||formats.some(f=>f!=='gen7ou')||(config.maxBattles||1)!==1))throw new Error('Foul Play requires one Gen 7 OU battle, without model or adaptive pool.');
   if(foul){for(const key of ['python','foul','bank'])if(!fs.existsSync(foul[key]))throw new Error('Missing Foul Play '+key);if(!Number.isInteger(foul.searchMs||100)||(foul.searchMs||100)<1||(foul.searchMs||100)>10000)throw new Error('Invalid Foul Play search budget');}
+  if(config.ladder&&(!foul||formats.length!==1||formats[0]!=='gen7ou'))throw Error('Ladder mode requires baseline Foul Play Gen7 OU');
   if(config.foulRoster&&!foul)throw new Error('foulRoster requires Foul Play');
   if (model && formats.some(f => f !== 'gen7ou')) throw new Error('Learned models support gen7ou only');
   const logDirectory = config.logDirectory && path.resolve(base, config.logDirectory);
@@ -64,6 +66,13 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
   const finishedRooms = new Set();
   const send = (room, command) => socket.readyState === 1 && socket.send(`${room}|${command}`);
   const log = message => console.log(`[${config.username}] ${message}`);
+  const ladder = config.ladder ? new LadderController({format:config.ladder.format||'gen7ou',delayMs:config.ladder.delayMs??15000,
+    send:command=>send('',command),log,busy:()=>rooms.size>0||Date.now()<pendingUntil,
+    selectTeam:()=>{const selected=adaptivePool?.choose();return {selected,packed:selected?.packed||packed.gen7ou};},
+    onQueued:team=>{pendingTeam={selected:team.selected,opponent:null,format:'gen7ou',mode:'ladder'};},
+    onCancelled:()=>{if(pendingTeam?.mode==='ladder')pendingTeam=null;},
+    ...ladderTimers,
+  }) : null;
   async function login(challenge) {
     const loginSocket=socket;
     const assertion = await getAssertion(config, challenge, fetchImpl);
@@ -80,6 +89,7 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
         if (fields[3] === '1') {
           log(`Online as ${fields[2]}${foul ? ' with Foul Play search' : model ? ' with learned checkpoint' : ' with heuristic policy'}`);
           send('', '/join lobby');
+          ladder?.online();
         }
       }
       if (line.startsWith('|nametaken|')) {
@@ -87,9 +97,11 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
         stopped = true;
         socket.close();
       }
+      if(line.startsWith('|updatesearch|'))ladder?.update(JSON.parse(line.slice(14)));
       const incoming = incomingChallenges(line, config.username);
       for (const [user, format] of Object.entries(incoming)) {
         log(`Challenge from ${user}: ${format}`);
+        if(ladder?.searching)continue;
         if (!packed[format]) {log(`Unsupported format: ${format}`); continue;}
         if (config.allowedUsers?.length && !config.allowedUsers.map(toID).includes(toID(user))) continue;
         if (rooms.size >= (config.maxBattles || 1) || Date.now() < pendingUntil) continue;
@@ -105,9 +117,11 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
       if (line.startsWith('|popup|') || line.startsWith('|error|')) {
         log(`Server: ${line.slice(line.indexOf('|', 1) + 1).slice(0, 500)}`);
         pendingUntil = 0;
+        if(!room)ladder?.pause('Server rejected or interrupted the request');
       }
       if (!room.startsWith('battle-') || finishedRooms.has(room)) continue;
       pendingUntil = 0;
+      ladder?.battle();
       if (!rooms.has(room)) rooms.set(room, {policy: null, history: [], rqid: null, fallback: false, players: {}});
       const state = rooms.get(room);
       if (logDirectory && /^[a-zA-Z0-9-]+$/.test(room)) {
@@ -121,10 +135,10 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
       }
       if (line.startsWith('|tier|')) state.format = toID(line.slice(6));
       if (pendingTeam && !state.teamSelection && state.format === pendingTeam.format &&
-          Object.values(state.players).includes(toID(config.username)) && Object.values(state.players).includes(pendingTeam.opponent)) {
+          Object.values(state.players).includes(toID(config.username)) && (pendingTeam.mode==='ladder' ? Object.values(state.players).some(p=>p!==toID(config.username)) : Object.values(state.players).includes(pendingTeam.opponent))) {
         state.teamSelection = pendingTeam.selected;
-        state.policy?.setTeam(state.teamSelection.team);
-        state.opponent = pendingTeam.opponent;
+        if(state.teamSelection)state.policy?.setTeam(state.teamSelection.team);
+        state.opponent = pendingTeam.opponent||Object.values(state.players).find(p=>p!==toID(config.username));
         pendingTeam = null;
       }
       if (line.startsWith('|tier|')) {
@@ -173,12 +187,14 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
         send(room, '/leave');
         state.policy?.close?.();
         rooms.delete(room);
+        ladder?.finished();
       }
     }
   }
   function open() {
     for(const state of rooms.values())state.policy?.close?.();
     rooms.clear();
+    ladder?.disconnected();
     pendingUntil = 0;
     pendingTeam = null;
     socket = new WebSocket(url);
@@ -187,10 +203,10 @@ function connect(config, base = process.cwd(), {fetchImpl = fetch, foulFactory} 
     const currentSocket=socket;
     socket.addEventListener('message', event => {queue=queue.then(()=>socket===currentSocket&&currentSocket.readyState===1?receive(String(event.data)):undefined).catch(err=>log(`Protocol error: ${err.message}`));});
     socket.addEventListener('error', () => log('WebSocket error'));
-    socket.addEventListener('close', () => {for(const state of rooms.values())state.policy?.close?.();if (!stopped) reconnect = setTimeout(open, 5000);});
+    socket.addEventListener('close', () => {ladder?.disconnected();for(const state of rooms.values())state.policy?.close?.();if (!stopped) reconnect = setTimeout(open, 5000);});
   }
   open();
-  return () => {stopped = true; clearTimeout(reconnect); for(const state of rooms.values())state.policy?.close?.();socket.close();};
+  return () => {stopped = true; ladder?.close();clearTimeout(reconnect); for(const state of rooms.values())state.policy?.close?.();socket.close();};
 }
 if (require.main === module) {
   if (typeof WebSocket === 'undefined') throw new Error('Use Node.js 22 or later.');
@@ -200,3 +216,4 @@ if (require.main === module) {
   for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {for (const close of stop) close();});
 }
 module.exports = {connect, incomingChallenges};
+

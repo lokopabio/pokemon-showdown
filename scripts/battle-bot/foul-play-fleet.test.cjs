@@ -94,3 +94,12 @@ test('augmenting a rotating fleet retains account last-team and recorded results
   const next=JSON.parse(fs.readFileSync(path.join(output,'fixturebota/rotation-state.json'),'utf8'));assert.equal(next.last,old.last);assert.deepEqual(next.results,old.results);
  }finally{f.cleanup();}
 });
+test('ladder enable/disable preserves battle settings, rotation and original backup',()=>{
+ const {enable}=require('./enable-foul-play-fleet-ladder.cjs');const f=fixture();try{
+  prepare(f,f.deps);const file=path.join(f.output,'fixturebota/config.json'),before=fs.readFileSync(file,'utf8');
+  assert.equal(enable({fleet:path.join(f.output,'fleet.json')}),2);
+  const active=JSON.parse(fs.readFileSync(file,'utf8'));assert.equal(active.ladder.format,'gen7ou');assert.equal(active.foulPlay.searchMs,1000);assert.deepEqual(active.teams,{gen7ou:'team.txt'});
+  assert.equal(fs.readFileSync(file+'.before-ladder','utf8'),before);
+  enable({fleet:path.join(f.output,'fleet.json'),mode:'off'});assert.equal(JSON.parse(fs.readFileSync(file,'utf8')).ladder,undefined);assert.equal(fs.readFileSync(file+'.before-ladder','utf8'),before);
+ }finally{f.cleanup();}
+});
